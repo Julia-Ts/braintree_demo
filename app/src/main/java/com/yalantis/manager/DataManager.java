@@ -37,8 +37,8 @@ public class DataManager implements Manager {
 
     public void saveProfileFromServerData(GetUserDTO getProfileDTO) {
         // save into database and cache
-        User user=new User();
+        User user = new User();
         cacheManager.setUser(user);
-        dbManager.getUserTable().
+        dbManager.getUserTable().update(getProfileDTO.getUser(), getProfileDTO.getUser().getUserId());
     }
 }

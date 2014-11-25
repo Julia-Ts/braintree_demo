@@ -1,8 +1,168 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:icon">@drawable/ic_launcher</item>
+        <!--   <item name="android:homeAsUpIndicator">@drawable/btn_ab_back</item>-->
+        <item name="android:windowBackground">@color/base_background_color</item>
+        <!--   <item name="android:actionBarStyle">@style/MyActionBar</item>-->
+        <!--   <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>-->
+        <item name="android:actionBarItemBackground">@android:color/transparent</item>
     </style>
+
+    <style name="ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SplashTheme" parent="android:Theme.Holo.Light.NoActionBar" />
+
+    <style name="AppActionBarTheme" parent="@style/AppTheme">
+        <!--<item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>-->
+    </style>
+
+
+    <!--Style for UI-->
+    <style name="RelativeLayout" />
+
+    <style name="RelativeLayout.Base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+    </style>
+
+    <style name="LinearLayout" />
+
+    <style name="LinearLayout.BaseFullScreenVertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+
+    <style name="LinearLayout.BaseLanding" parent="LinearLayout.BaseFullScreenVertical">
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="ScrollView" />
+
+    <style name="ScrollView.Base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+
+    <style name="Fragment" />
+
+    <style name="Fragment.Base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="ImageView" />
+
+    <style name="ImageView.WeakGPSCircle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src"></item>
+    </style>
+
+
+    <style name="Button" />
+
+
+    <style name="Button.MenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="View" />
+
+    <style name="TextView" />
+
+
+    <style name="TextView.BaseWidth">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextView.Base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="EditText">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="EditText.ProfileField">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
+    <style name="CheckBox" />
+
+    <style name="CheckBox.LoginTerms">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ProgressBar" />
+
+    <style name="ProgressBar.LoginButtonsProgress">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ViewPager" />
+
+    <style name="ViewPager.Base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="ImageButton" />
+
+    <style name="ImageButton.DashboardArrow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+    <style name="RadioButton" />
+
+    <style name="RadioButton.Female">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="FrameLayout" />
+
+    <style name="FrameLayout.DividerHeaderActivityUser">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/base_background_color</item>
+    </style>
+
+    <style name="ListView" />
+
+    <style name="ListView.MenuListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:choiceMode">singleChoice</item>
+    </style>
+
+    <style name="CircularProgressButton" />
+
 
 </resources>

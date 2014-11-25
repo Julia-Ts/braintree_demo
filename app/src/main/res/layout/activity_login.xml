@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Base">
+
+
+    <FrameLayout
+        android:id="@+id/profile_fragment"
+        style="@style/Fragment.Login" />
+
+</RelativeLayout>

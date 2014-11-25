@@ -60,10 +60,12 @@ repositories {
     maven {
         url "http://dl.bintray.com/populov/maven"
     }
+
     mavenCentral()
     mavenLocal()
 }
 dependencies {
+    compile 'com.facebook.android:facebook-android-sdk:3.20.0'
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.4.0'

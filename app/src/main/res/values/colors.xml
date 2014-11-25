@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Grey01 (4Font) R 76 G 89 B 102-->
+    <color name="base_background_color">#EBEBEB</color>
+    <color name="base_background_color_alfa">#80EBEBEB</color>
+    <color name="header_background_half_white">#ccffffff</color>
+    <!--HomeScreen-->
+    <color name="base_text_color">#6e7883</color>
+    <color name="grey_01">#4c5966</color>
+
+
+</resources>
