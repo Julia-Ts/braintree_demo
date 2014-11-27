@@ -1,12 +1,16 @@
 package com.yalantis.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.yalantis.R;
 
 public class MainActivity extends BaseActivity {
+
+    static Intent getCallingIntent(Context context, Bundle params){
+        return new Intent(context, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

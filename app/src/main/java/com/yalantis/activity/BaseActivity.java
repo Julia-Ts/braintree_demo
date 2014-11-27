@@ -1,6 +1,8 @@
 package com.yalantis.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -11,7 +13,7 @@ import com.yalantis.event.BaseEvent;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     protected Handler handler;
 
