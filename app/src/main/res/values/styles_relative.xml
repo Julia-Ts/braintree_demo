@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RelativeLayout" />
+
+    <style name="RelativeLayout.Base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="RelativeLayout.ShareDialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/share_dialog_item_height</item>
+        <item name="android:paddingLeft">@dimen/share_dialog_padding_item</item>
+        <item name="android:paddingRight">@dimen/share_dialog_padding_item</item>
+    </style>
+
+</resources>

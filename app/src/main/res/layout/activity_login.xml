@@ -5,6 +5,6 @@
 
     <FrameLayout
         android:id="@+id/profile_fragment"
-        style="@style/Fragment.Login" />
+        style="@style/Fragment.Base" />
 
 </RelativeLayout>

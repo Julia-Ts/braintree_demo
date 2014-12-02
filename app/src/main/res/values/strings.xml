@@ -5,5 +5,7 @@
 
     <string name="facebook_app_id">1567177486844825</string>
 
+    <string name="dlg_wait">Please wait</string>
+    <string name="title_share_dialog">Share via</string>
 
 </resources>

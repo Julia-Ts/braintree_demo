@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ImageView" />
+
+    <style name="ImageView.ShareDialogImage">
+        <item name="android:layout_width">@dimen/share_dialog_image_size</item>
+        <item name="android:layout_height">@dimen/share_dialog_image_size</item>
+    </style>
+
+</resources>
