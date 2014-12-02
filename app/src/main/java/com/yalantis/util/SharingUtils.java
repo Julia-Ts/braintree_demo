@@ -207,7 +207,7 @@ public class SharingUtils {
     }
 
     private static void publish(final FragmentActivity activity, ResolveInfo info, ShareModel data) {
-        publish(activity, info, data, activity.getExternalCacheDir() + File.pathSeparator + TEMP_FILE_NAME);
+        publish(activity, info, data, activity.getExternalCacheDir() + File.separator + TEMP_FILE_NAME);
     }
 
     private static void publish(final FragmentActivity activity, ResolveInfo info, ShareModel data, String filePath) {

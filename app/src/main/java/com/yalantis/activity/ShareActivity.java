@@ -2,13 +2,13 @@ package com.yalantis.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
 import com.yalantis.R;
 import com.yalantis.model.ShareModel;
 import com.yalantis.model.ShareModelFacebook;
@@ -34,6 +34,9 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
         setContentView(R.layout.activity_share);
 
         uiHelper = new UiLifecycleHelper(this, this);
+        uiHelper.onCreate(savedInstanceState);
+
+        // share on facebook directly
 
         findViewById(R.id.btn_share_fb).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +50,15 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
             }
         });
 
+        // show share dialog
+
         final ShareModel model = new ShareModel();
         model.setDescription("template descr");
         model.setNeedCropImage(false);
         model.setObjectTitleId(R.string.app_name);
         model.setShareTypeCode(0);
-        model.setActionType("template:share");
-        model.setObjectName("template");
+        model.setActionType("comyalantis:join");
+        model.setObjectName("party");
         model.setUrl("http://google.com");
 
         findViewById(R.id.btn_share_file).setOnClickListener(new View.OnClickListener() {
@@ -101,7 +106,7 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
             Logger.e(e);
         }
 
-        return new Object[] {bm, f};
+        return new Object[]{bm, f};
     }
 
     @Override
@@ -113,7 +118,7 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
         // may not be triggered. Trigger it if it's open/closed.
         Session session = Session.getActiveSession();
         if (session != null &&
-                (session.isOpened() || session.isClosed()) ) {
+                (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session, session.getState(), null);
         }
 
@@ -123,7 +128,17 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                Toaster.showShort(String.format("Error: %s", error.toString()));
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                Toaster.showShort("Success!");
+            }
+        });
     }
 
     @Override
