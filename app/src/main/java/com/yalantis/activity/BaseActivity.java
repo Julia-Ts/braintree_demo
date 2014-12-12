@@ -1,8 +1,10 @@
 package com.yalantis.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 
 import com.yalantis.App;
 import com.yalantis.R;
@@ -11,7 +13,7 @@ import com.yalantis.event.BaseEvent;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 
     protected Handler handler;
 
@@ -64,4 +66,19 @@ public class BaseActivity extends Activity {
         super.finish();
     }
 
+    protected void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {
+        invalidateOptionsMenu();
+        String backStateName = fragment.getClass().getName();
+        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+
+        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(containerId, fragment,
+                    backStateName);
+            if (addToBackStack) {
+                transaction.addToBackStack(backStateName);
+            }
+            transaction.commit();
+        }
+    }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <Button
+        android:id="@+id/btn_share_fb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share on Facebook"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/btn_share_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share file"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/btn_share_bitmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share bitmap"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/btn_share_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share view"
+        android:layout_marginTop="30dp"/>
+
+</LinearLayout>
