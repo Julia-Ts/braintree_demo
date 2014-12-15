@@ -2,8 +2,11 @@ package com.yalantis.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -25,14 +28,14 @@ import java.io.IOException;
  * Created by Alexander Zaitsev on 02.12.2014.
  */
 public class ShareActivity extends BaseActivity implements Session.StatusCallback {
-
+    private ImageView imageView;
     private UiLifecycleHelper uiHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
-
+        imageView = (ImageView) findViewById(R.id.image_view);
         uiHelper = new UiLifecycleHelper(this, this);
         uiHelper.onCreate(savedInstanceState);
 
@@ -79,6 +82,13 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
                 SharingUtils.openShareDialog(ShareActivity.this, v, model);
             }
         });
+        findViewById(R.id.btn_crop_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
+
     }
 
     private Object[] getBitmapFile(View view) {
@@ -139,6 +149,28 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
                 Toaster.showShort("Success!");
             }
         });
+        if (requestCode == PhotoCropActivity.PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            beginCrop(data.getData());
+        } else if (requestCode == PhotoCropActivity.PHOTO_CROP_REQUEST && resultCode == RESULT_OK) {
+            handleCrop(data.getStringExtra(PhotoCropActivity.PHOTO_PATH));
+        }
+    }
+
+    private void pickImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.lbl_select_photo)), PhotoCropActivity.PICK_IMAGE_REQUEST);
+    }
+
+    private void beginCrop(Uri uri) {
+        startActivityForResult(new Intent(this, PhotoCropActivity.class).setData(uri), PhotoCropActivity.PHOTO_CROP_REQUEST);
+    }
+
+    private void handleCrop(String path) {
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        imageView.setImageBitmap(bmp);
     }
 
     @Override

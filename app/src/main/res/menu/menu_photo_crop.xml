@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/apply"
+        app:showAsAction="always"
+        android:title="@string/lbl_apply"
+        android:icon="@android:drawable/ic_menu_send"/>
+
+    <item
+        android:id="@+id/cancel"
+        app:showAsAction="always"
+        android:title="@string/lbl_cancel"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
+
+    <item
+        android:id="@+id/rotate"
+        app:showAsAction="always"
+        android:title="@string/lbl_rotate"
+        android:icon="@android:drawable/ic_menu_rotate"/>
+
+</menu>
