@@ -3,8 +3,8 @@ package com.yalantis.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 
 import com.yalantis.App;
 import com.yalantis.R;
@@ -13,7 +13,7 @@ import com.yalantis.event.BaseEvent;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends ActionBarActivity {
 
     protected Handler handler;
 

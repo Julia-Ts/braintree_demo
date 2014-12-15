@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yalantis">
+          package="com.yalantis">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".App"
@@ -12,34 +12,38 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.yalantis.activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.auth.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ShareActivity"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.facebook.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".activity.PhotoCropActivity"
+            android:label="@string/title_activity_photo_crop"/>
 
-        <provider android:authorities="com.facebook.app.NativeAppCallContentProvider1567177486844825"
+        <provider
             android:name="com.facebook.NativeAppCallContentProvider"
+            android:authorities="com.facebook.app.NativeAppCallContentProvider1567177486844825"
             android:exported="true"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
+
     </application>
 
 </manifest>
