@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 
 import com.yalantis.App;
 import com.yalantis.R;
@@ -13,7 +16,7 @@ import com.yalantis.event.BaseEvent;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends ActionBarActivity {
 
     protected Handler handler;
 
@@ -66,4 +69,19 @@ public abstract class BaseActivity extends Activity {
         super.finish();
     }
 
+    protected void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {
+        invalidateOptionsMenu();
+        String backStateName = fragment.getClass().getName();
+        boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+
+        if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(containerId, fragment,
+                    backStateName);
+            if (addToBackStack) {
+                transaction.addToBackStack(backStateName);
+            }
+            transaction.commit();
+        }
+    }
 }
