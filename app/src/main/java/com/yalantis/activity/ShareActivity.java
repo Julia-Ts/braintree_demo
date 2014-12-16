@@ -15,6 +15,7 @@ import com.facebook.widget.FacebookDialog;
 import com.yalantis.R;
 import com.yalantis.model.ShareModel;
 import com.yalantis.model.ShareModelFacebook;
+import com.yalantis.navigation.Navigator;
 import com.yalantis.util.Logger;
 import com.yalantis.util.SharingUtils;
 import com.yalantis.util.Toaster;
@@ -157,15 +158,11 @@ public class ShareActivity extends BaseActivity implements Session.StatusCallbac
     }
 
     private void pickImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.lbl_select_photo)), PhotoCropActivity.PICK_IMAGE_REQUEST);
+        Navigator.navigatePickImage(this);
     }
 
     private void beginCrop(Uri uri) {
-        startActivityForResult(new Intent(this, PhotoCropActivity.class).setData(uri), PhotoCropActivity.PHOTO_CROP_REQUEST);
+        Navigator.navigateLogin(this, uri);
     }
 
     private void handleCrop(String path) {

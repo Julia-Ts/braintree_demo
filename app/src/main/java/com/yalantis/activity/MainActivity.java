@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.facebook.Session;
-import com.facebook.android.Facebook;
 import com.yalantis.R;
-import com.yalantis.activity.auth.LoginActivity;
-import com.yalantis.util.Toaster;
+import com.yalantis.navigation.Navigator;
 
 public class MainActivity extends BaseActivity {
 
-    static Intent getCallingIntent(Context context, Bundle params){
+    static Intent getCallingIntent(Context context, Bundle params) {
         return new Intent(context, MainActivity.class);
     }
 
@@ -27,11 +25,9 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         Session session = Session.getActiveSession();
         if (session != null && session.isOpened()) {
-            startActivity(new Intent(this, ShareActivity.class));
-            finish();
+            Navigator.navigateToUserList(this);
         } else {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            Navigator.navigateLogin(this);
         }
     }
 }

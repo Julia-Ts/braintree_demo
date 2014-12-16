@@ -12,6 +12,7 @@ import com.yalantis.R;
 import com.yalantis.activity.BaseActivity;
 import com.yalantis.activity.ShareActivity;
 import com.yalantis.fragment.auth.LoginFragment;
+import com.yalantis.navigation.Navigator;
 import com.yalantis.util.Toaster;
 
 public class LoginActivity extends BaseActivity implements Session.StatusCallback {
@@ -92,8 +93,7 @@ public class LoginActivity extends BaseActivity implements Session.StatusCallbac
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
-            startActivity(new Intent(this, ShareActivity.class));
-            finish();
+            Navigator.navigateShare(this);
         } else if (state.isClosed()) {
             Toaster.showShort("Logged out facebook");
         }
