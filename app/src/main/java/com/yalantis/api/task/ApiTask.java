@@ -43,8 +43,8 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
 
     @Override
     public void success(E e, Response response) {
-        if (e instanceof BaseDTO) {
-            int code = ((BaseDTO) e).getStatus();
+        if (e != null) {
+            int code = e.getStatus();
             switch (code) {
             case 0:
                 onSuccess(e, response);
@@ -62,13 +62,13 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
     }
 
     protected void parseError(E e, Response response) {
-        String message = ((BaseDTO) e).getMessage();
-        if (!TextUtils.isEmpty(((BaseDTO) e).getMessage())) {
-            Timber.e(((BaseDTO) e).getMessage());
+        String message = e.getMessage();
+        if (!TextUtils.isEmpty(e.getMessage())) {
+            Timber.e(e.getMessage());
         }
-        ApiError error = ApiError.fromCode(((BaseDTO) e).getStatus());
+        ApiError error = ApiError.fromCode(e.getStatus());
 
-        switch (((BaseDTO) e).getMethod()) {
+        switch (e.getMethod()) {
 
         default:
             if (error != null) {

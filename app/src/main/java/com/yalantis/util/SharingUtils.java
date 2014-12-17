@@ -3,12 +3,10 @@ package com.yalantis.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,11 +21,13 @@ import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.WebDialog;
+import com.yalantis.activity.BaseActivity;
 import com.yalantis.fragment.dialog.ProgressDialogFragment;
 import com.yalantis.fragment.dialog.ShareDialogFragment;
 import com.yalantis.interfaces.IShareDialog;
 import com.yalantis.model.ShareModel;
 import com.yalantis.model.ShareModelFacebook;
+import com.yalantis.navigation.Navigator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,9 +38,10 @@ import java.util.List;
 
 /**
  * Created by Ed Baev 28.11.2014
- * @author Alexander Zaitsev
  *
- * Call static methods open...Dialog to open share dialogs
+ * @author Alexander Zaitsev
+ *         <p/>
+ *         Call static methods open...Dialog to open share dialogs
  */
 public class SharingUtils {
 
@@ -106,12 +107,11 @@ public class SharingUtils {
     }
 
     /**
-     *
      * @param activity
-     * @param file jpeg image
+     * @param file       jpeg image
      * @param shareModel
      */
-    public static void openShareDialog(final FragmentActivity activity, final File file, final ShareModel shareModel) {
+    public static void openShareDialog(final BaseActivity activity, final File file, final ShareModel shareModel) {
         try {
             Session.openActiveSessionFromCache(activity);
             ShareDialogFragment dialog = ShareDialogFragment.newInstance();
@@ -134,7 +134,7 @@ public class SharingUtils {
         }
     }
 
-    public static void openShareDialog(final FragmentActivity activity, final Bitmap bitmap, final ShareModel shareModel) {
+    public static void openShareDialog(final BaseActivity activity, final Bitmap bitmap, final ShareModel shareModel) {
         try {
             Session.openActiveSessionFromCache(activity);
             ShareDialogFragment dialog = ShareDialogFragment.newInstance();
@@ -158,7 +158,7 @@ public class SharingUtils {
         }
     }
 
-    public static void openShareDialog(final FragmentActivity activity, final View view, final ShareModel shareModel) {
+    public static void openShareDialog(final BaseActivity activity, final View view, final ShareModel shareModel) {
         try {
             Session.openActiveSessionFromCache(activity);
             ShareDialogFragment dialog = ShareDialogFragment.newInstance();
@@ -206,20 +206,13 @@ public class SharingUtils {
         uiHelper.trackPendingDialogCall(shareDialog.present());
     }
 
-    private static void publish(final FragmentActivity activity, ResolveInfo info, ShareModel data) {
+    private static void publish(BaseActivity activity, ResolveInfo info, ShareModel data) {
         publish(activity, info, data, activity.getExternalCacheDir() + File.separator + TEMP_FILE_NAME);
     }
 
-    private static void publish(final FragmentActivity activity, ResolveInfo info, ShareModel data, String filePath) {
-        File f = new File(filePath);
-        if (f.exists()) {
-            Intent targetedShare = new Intent(Intent.ACTION_SEND);
-            targetedShare.setType("image/jpeg");
-            targetedShare.setPackage(info.activityInfo.packageName);
-            targetedShare.putExtra(Intent.EXTRA_TEXT, data.getDescription());
-            targetedShare.putExtra(Intent.EXTRA_STREAM, Uri.parse(f.getAbsolutePath()));
-            activity.startActivity(targetedShare);
-        }
+    private static void publish(BaseActivity activity, ResolveInfo info, ShareModel data, String filePath) {
+        Navigator.publishImage(activity, info, data, filePath);
+
     }
 
     private static void saveFile(Context context, Bitmap bm) {
@@ -241,13 +234,13 @@ public class SharingUtils {
 
     private static class ShareTask extends AsyncTask<Void, Void, Bitmap> implements DialogInterface.OnCancelListener {
 
-        final FragmentActivity activity;
+        final BaseActivity activity;
         final View view;
         final ResolveInfo info;
         final ShareModel shareModel;
         ProgressDialogFragment progressDialog;
 
-        public ShareTask(FragmentActivity activity, View view, ResolveInfo info, ShareModel shareModel) {
+        public ShareTask(BaseActivity activity, View view, ResolveInfo info, ShareModel shareModel) {
             this.activity = activity;
             this.view = view;
             this.info = info;
@@ -314,13 +307,13 @@ public class SharingUtils {
 
     private static class SaveTask extends AsyncTask<Void, Void, Void> implements DialogInterface.OnCancelListener {
 
-        final FragmentActivity activity;
+        final BaseActivity activity;
         final Bitmap bitmap;
         final ResolveInfo info;
         final ShareModel shareModel;
         ProgressDialogFragment progressDialog;
 
-        public SaveTask(FragmentActivity activity, Bitmap bitmap, ResolveInfo info, ShareModel shareModel) {
+        public SaveTask(BaseActivity activity, Bitmap bitmap, ResolveInfo info, ShareModel shareModel) {
             this.activity = activity;
             this.bitmap = bitmap;
             this.info = info;
