@@ -10,6 +10,8 @@
     <!--HomeScreen-->
     <color name="base_text_color">#6e7883</color>
     <color name="grey_01">#4c5966</color>
+    <color name="tool_bar_color">#666</color>
+    <color name="status_bar_color">#999</color>
 
 
 </resources>
