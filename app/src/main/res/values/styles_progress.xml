@@ -9,7 +9,6 @@
     <style name="ProgressBar.LoginButtonsProgress"/>
 
     <style name="ProgressBar.CropProgress">
-        <item name="android:layout_gravity">center</item>
         <item name="android:visibility">gone</item>
     </style>
 </resources>
