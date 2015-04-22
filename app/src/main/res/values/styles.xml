@@ -1,14 +1,16 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:icon">@drawable/ic_launcher</item>
         <item name="android:windowBackground">@color/base_background_color</item>
         <item name="colorPrimary">@color/tool_bar_color</item>
         <item name="colorPrimaryDark">@color/status_bar_color</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar" />
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="AppActionBarTheme" parent="@style/AppTheme">
         <!--<item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>-->

@@ -2,6 +2,7 @@ package com.yalantis.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import java.util.List;
 public abstract class BaseListAdapter<T> extends BaseAdapter {
 
     private final Object mLock = new Object();
-    
+
     private List<T> list;
     private Context context;
     private int layoutId;
@@ -31,7 +32,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         return getLayout();
     }
 
@@ -64,7 +65,8 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
      *
      * @param items The items to add at the end of the array.
      */
-    public void addAll(T ... items) {
+    @SafeVarargs
+    public final void addAll(T... items) {
         synchronized (mLock) {
             Collections.addAll(list, items);
         }
@@ -75,7 +77,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
      * Inserts the specified object at the specified index in the array.
      *
      * @param object The object to insert into the array.
-     * @param index The index at which the object must be inserted.
+     * @param index  The index at which the object must be inserted.
      */
     public void insert(T object, int index) {
         synchronized (mLock) {
@@ -110,7 +112,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
      * Sorts the content of this adapter using the specified comparator.
      *
      * @param comparator The comparator used to sort the objects contained
-     *        in this adapter.
+     *                   in this adapter.
      */
     public void sort(Comparator<? super T> comparator) {
         synchronized (mLock) {
@@ -130,14 +132,13 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
      * {@inheritDoc}
      */
     public T getItem(int position) {
-        return (list != null && position >= 0 && position < getCount())? list.get(position) : null;
+        return (list != null && position >= 0 && position < getCount()) ? list.get(position) : null;
     }
 
     /**
      * Returns the position of the specified item in the array.
      *
      * @param item The item to retrieve the position of.
-     *
      * @return The position of the specified item.
      */
     public int getPosition(T item) {

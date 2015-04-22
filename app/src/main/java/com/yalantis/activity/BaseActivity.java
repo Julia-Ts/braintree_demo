@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.yalantis.App;
@@ -14,7 +14,7 @@ import com.yalantis.event.BaseEvent;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected Handler handler;
     protected Toolbar mToolbar;

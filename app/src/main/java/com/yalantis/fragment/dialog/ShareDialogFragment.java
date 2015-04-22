@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,7 @@ public class ShareDialogFragment extends BaseDialogFragment implements AdapterVi
     private ShareDialogAdapter adapter;
 
     public static ShareDialogFragment newInstance() {
-        ShareDialogFragment dialog = new ShareDialogFragment();
-        return dialog;
+        return new ShareDialogFragment();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ShareDialogFragment extends BaseDialogFragment implements AdapterVi
         Collections.sort(activityList, new Comparator<ResolveInfo>() {
 
             @Override
-            public int compare(ResolveInfo lhs, ResolveInfo rhs) {
+            public int compare(@NonNull ResolveInfo lhs, @NonNull ResolveInfo rhs) {
                 if (lhs.activityInfo.packageName.contains(TWITTER) || lhs.activityInfo.packageName.contains(FACEBOOK)) {
                     return -1;
                 }
@@ -94,7 +94,7 @@ public class ShareDialogFragment extends BaseDialogFragment implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
         ResolveInfo info = adapter.getItem(position);
         if (iShareDialog != null) {
             dismiss();

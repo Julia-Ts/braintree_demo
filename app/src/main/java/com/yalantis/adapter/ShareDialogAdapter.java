@@ -2,6 +2,7 @@ package com.yalantis.adapter;
 
 import android.app.Activity;
 import android.content.pm.ResolveInfo;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ public class ShareDialogAdapter extends BaseListAdapter<ResolveInfo> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
         View rowView = getInflater().inflate(R.layout.item_share_dialog, null, true);
         // set share name
         TextView shareName = (TextView) rowView.findViewById(R.id.shareName);
