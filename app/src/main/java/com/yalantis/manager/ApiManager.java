@@ -2,76 +2,109 @@ package com.yalantis.manager;
 
 import android.content.Context;
 
-import com.google.gson.GsonBuilder;
-import com.yalantis.Const;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.yalantis.api.ApiSettings;
 import com.yalantis.api.MainExecutor;
-import com.yalantis.api.request.UserApi;
-import com.yalantis.api.task.GetUserTask;
+import com.yalantis.api.rx.LoginRequest;
+import com.yalantis.api.services.TokenLessService;
+import com.yalantis.api.task.LoginTask;
+import com.yalantis.interfaces.CallbackListener;
+import com.yalantis.interfaces.LoginListener;
+import com.yalantis.interfaces.Manager;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.android.AndroidApacheClient;
-import retrofit.converter.Converter;
-import retrofit.converter.GsonConverter;
+import java.io.IOException;
+
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
 public class ApiManager implements Manager {
 
-    private Context context;
-    private MainExecutor executor;
-    private UserApi userApi;
-
-    private RestAdapter restAdapter;
+    private MainExecutor mExecutor;
+    private TokenLessService mTokenLessService;
+    private Retrofit mTokenLessRestAdapter;
 
     @Override
     public void init(Context context) {
-        this.context = context;
-        initRestModules();
-        this.executor = new MainExecutor();
-        setApi();
+        try {
+            initRestAdapters();
+            initServices();
+            mExecutor = new MainExecutor();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
-    private void initRestModules() {
-        restAdapter = new RestAdapter.Builder()
-                .setLogLevel(Const.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setEndpoint(ApiSettings.SERVER)
-                .setClient(new AndroidApacheClient())
-                .setConverter(createConverter()).setRequestInterceptor(createRequestInterceptor())
+    /**
+     * Initialization of Retrofit (rest adapter)
+     * Setting updated HttpClient if needed
+     *
+     * @throws ClassNotFoundException
+     */
+    private void initRestAdapters() throws ClassNotFoundException {
+        // Custom Client need only in cases if some header data ot something else - changed
+        OkHttpClient client = new OkHttpClient();
+        client.interceptors().add(new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                // Customize the request
+                Request request = original.newBuilder()
+                        /*
+                        .header(ApiSettings.HEADER_AUTH_TOKEN,
+                                ApiSettings.AUTH_TOKEN_PREFIX + App.getAccountManager().getAuthToken())
+                                */
+                        .method(original.method(), original.body())
+                        .build();
+                // Customize or return the response
+                return chain.proceed(request);
+            }
+        });
+
+        mTokenLessRestAdapter = new Retrofit.Builder()
+                .baseUrl(ApiSettings.SERVER)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                        // Names can be changed in release version
+                .addConverterFactory(GsonConverterFactory.create())
+                        // Client should be added in case if any changes are present
+                        // By default each Adapter have is own client
+                /*
+                .client(client)
+                */
                 .build();
     }
 
-    public void getUser(String password) {
-        executor.execute(new GetUserTask(userApi, password));
+
+    /**
+     * Initialize of Retrofit services with requests to server
+     */
+    private void initServices() {
+        mTokenLessService = mTokenLessRestAdapter.create(TokenLessService.class);
     }
 
-    private RequestInterceptor createRequestInterceptor() {
-        return new RequestInterceptor() {
-
-            @Override
-            public void intercept(RequestFacade request) {
-                // request.addQueryParam(ApiSettings.API_KEY, ApiSettings.API_KEY_VALUE);
-                // if (!TextUtils.isEmpty(App.dataManager.getToken())) {
-                // request.addQueryParam(ApiSettings.AUTH_TOKEN, App.dataManager.getToken());
-                // }
-            }
-        };
+    /**
+     * Login task with async request execution example
+     * @param listener of request execution status from outside
+     */
+    public void login(String email, String password, final CallbackListener listener) {
+        mExecutor.execute(new LoginTask(mTokenLessService, email, password, listener));
     }
 
-    private Converter createConverter() {
-        GsonBuilder builder = new GsonBuilder();
-        return new GsonConverter(builder.create());
-    }
-
-    private void setApi() {
-        this.userApi = restAdapter.create(UserApi.class);
+    /**
+     * Login request with RxJava execution example
+     * @param listener of request execution status from outside
+     */
+    public void loginRX(String email, String password, LoginListener listener) {
+        new LoginRequest(mTokenLessService, email, password, listener).login();
     }
 
     @Override
     public void clear() {
-        executor.clear();
+        mExecutor.clear();
     }
-
 }

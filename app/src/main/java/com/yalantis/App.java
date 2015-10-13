@@ -2,6 +2,10 @@ package com.yalantis;
 
 import android.app.Application;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
@@ -27,13 +31,19 @@ public class App extends Application {
         super.onCreate();
         new Logger();
         context = this;
-        spManager.init(this);
-        apiManager.init(this);
-        dataManager.init(this);
+        initManagers();
     }
 
     public static Context getContext() {
         return context;
+    }
+
+    // TODO: Move this code in new App
+    private static void initManagers() {
+        apiManager.init(context);
+        spManager.init(context);
+        apiManager.init(context);
+        dataManager.init(context);
     }
 
     public void clear() {
@@ -42,4 +52,64 @@ public class App extends Application {
         spManager.clear();
     }
 
+    // TODO: Move all code below - in new App
+
+    /**
+     * Check if Internet enabled
+     *
+     * @return true if enabled and false in other case
+     */
+    public static boolean isInternetConnectionAvailable() {
+        return isNetworkEnabled(ConnectivityManager.TYPE_MOBILE) || isNetworkEnabled(ConnectivityManager.TYPE_WIFI);
+    }
+
+    /**
+     * Check specific network status, if module is available
+     *
+     * @param networkType type of network (TYPE_WIFI or TYPE_MOBILE)
+     * @return true if connected or false in other case
+     */
+    private static boolean isNetworkEnabled(int networkType) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getNetworkInfo(networkType);
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    /**
+     * Shows snackbar with given text. Snackbar is used to show any info to user (like toast, but cooler).
+     *
+     * @param viewToAttach    view to which parent Snackbar will be attached
+     * @param messageText     text to be shown to user
+     * @param buttonText      text for clickable action
+     * @param buttonListener  listener of clickable action
+     * @param buttonTextColor clickable action text color
+     * @param showLength      length of displaying
+     */
+    public static void showSnackbar(
+            View viewToAttach, String messageText, String buttonText,
+            View.OnClickListener buttonListener, int buttonTextColor, int showLength) {
+        if (viewToAttach == null) {
+            return;
+        }
+
+        Snackbar snackbarBuilder = Snackbar.make(
+                viewToAttach,
+                messageText,
+                showLength == 1 ? Snackbar.LENGTH_LONG : showLength);
+
+        if (buttonText != null && buttonListener != null) {
+            snackbarBuilder.setAction(buttonText, buttonListener);
+            snackbarBuilder.setActionTextColor(buttonTextColor);
+        }
+
+        snackbarBuilder.show();
+    }
+
+    public static ApiManager getApiManager() {
+        return apiManager;
+    }
+
+    public static EventBus getEventBus() {
+        return eventBus;
+    }
 }

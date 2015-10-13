@@ -3,8 +3,9 @@ package com.yalantis.manager;
 import android.content.Context;
 
 import com.yalantis.db.table.UserTable;
-import com.yalantis.model.User;
-import com.yalantis.model.dto.GetUserDTO;
+import com.yalantis.interfaces.Manager;
+import com.yalantis.model.example.AuthDTO;
+import com.yalantis.model.example.User;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
@@ -35,10 +36,11 @@ public class DataManager implements Manager {
         return dbManager.getUserTable();
     }
 
-    public void saveProfileFromServerData(GetUserDTO getProfileDTO) {
+    public void saveProfileFromServerData(AuthDTO getProfileDTO) {
         // save into database and cache
         User user = new User();
         cacheManager.setUser(user);
-        dbManager.getUserTable().update(getProfileDTO.getUser(), getProfileDTO.getUser().getUserId());
+        dbManager.getUserTable().update(getProfileDTO.getUser(),
+                String.valueOf(getProfileDTO.getUser().getUserDataId()));
     }
 }

@@ -1,11 +1,8 @@
 package com.yalantis.api;
 
 import com.yalantis.api.task.ApiTask;
+import com.yalantis.interfaces.QueuedExecutorCallback;
 
-/**
- * Created by: Dmitriy Dovbnya
- * Date: 21.09.13 17:05
- */
 public class ApiTaskExecutor implements QueuedExecutorCallback {
 
     private ApiTaskQueue taskQueue = new ApiTaskQueue();
