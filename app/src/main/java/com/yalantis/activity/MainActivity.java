@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
 import com.yalantis.R;
 import com.yalantis.navigation.Navigator;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
 
@@ -17,6 +20,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+
         setContentView(R.layout.activity_main);
     }
 

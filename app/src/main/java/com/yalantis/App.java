@@ -3,12 +3,14 @@ package com.yalantis;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
 import com.yalantis.util.Logger;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
@@ -25,6 +27,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+//        Fabric.with(this, new Crashlytics());
         new Logger();
         context = this;
         spManager.init(this);

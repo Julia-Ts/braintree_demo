@@ -44,6 +44,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
+        <!-- TODO Add your own Crashlytics API key-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="cc9f6bf2eb7bea9c558343478586b25c62c12afb" />
     </application>
 
 </manifest>

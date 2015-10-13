@@ -1,21 +1,36 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        // The Fabric Gradle plugin uses an open ended version to react
+        // quickly to Android tooling updates
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
 apply from: '../gradle.properties'
 
 repositories {
     maven { url "http://mente.github.io/facebook-api-android-aar" }
     maven { url "http://dl.bintray.com/populov/maven" }
+    maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
     mavenLocal()
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.yalantis"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -67,14 +82,26 @@ android {
         abortOnError false
     }
 }
+repositories {
+    maven { url "http://mente.github.io/facebook-api-android-aar" }
+    maven {
+        url "http://dl.bintray.com/populov/maven"
+    }
+
+    mavenCentral()
+    mavenLocal()
+}
 dependencies {
     compile 'com.facebook.android:facebook-android-sdk:3.20.0'
-    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.jakewharton.timber:timber:2.5.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.edmodo:cropper:1.0.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true
+    }
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
