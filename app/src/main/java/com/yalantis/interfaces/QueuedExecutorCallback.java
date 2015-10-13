@@ -1,4 +1,4 @@
-package com.yalantis.api;
+package com.yalantis.interfaces;
 
 /**
  * Created by: Dmitriy Dovbnya
@@ -9,6 +9,6 @@ public interface QueuedExecutorCallback {
     /**
      * Method that will be called when task is finished
      */
-    public void finished();
+    void finished();
 
 }

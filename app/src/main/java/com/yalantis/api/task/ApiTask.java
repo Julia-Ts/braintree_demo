@@ -1,29 +1,22 @@
 package com.yalantis.api.task;
 
-import android.text.TextUtils;
-
 import com.google.gson.Gson;
-import com.yalantis.App;
-import com.yalantis.api.QueuedExecutorCallback;
+import com.squareup.okhttp.ResponseBody;
 import com.yalantis.event.ErrorApiEvent;
-import com.yalantis.model.ApiError;
-import com.yalantis.model.dto.BaseDTO;
+import com.yalantis.interfaces.QueuedExecutorCallback;
 import com.yalantis.model.dto.ErrorResponse;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
+import retrofit.Response;
+import retrofit.Retrofit;
 import timber.log.Timber;
 
 /**
- * Created by: Dmitriy Dovbnya
- * Date: 21.09.13 19:34
+ * Base Api Task created for performing error handling in one place
  */
-public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callback<E> {
+public abstract class ApiTask<T, E> implements Runnable, Callback<E> {
 
-    public static final int CODE_INVALID_TOKEN = -20;
     protected QueuedExecutorCallback callback;
     protected T api;
     protected String apiKey;
@@ -33,64 +26,30 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
         this.apiKey = null;
     }
 
-    protected ApiTask(T api, String apiKey) {
-        this.api = api;
-        this.apiKey = apiKey;
-    }
-
-    public void cancel() {
-    }
-
     @Override
-    public void success(E e, Response response) {
-        if (e != null) {
-            int code = e.getStatus();
-            switch (code) {
-            case 0:
-                onSuccess(e, response);
-                break;
-            case CODE_INVALID_TOKEN:
-                parseError(e, response);
-                break;
-            default:
-                parseError(e, response);
-                break;
-            }
-
+    public void onResponse(Response<E> response, Retrofit retrofit) {
+        Timber.d("success", response.code());
+        if (response.isSuccess()) {
+            onSuccess(response);
+        } else {
+            handleFailure(response);
         }
-        finished();
-    }
-
-    protected void parseError(E e, Response response) {
-        String message = e.getMessage();
-        if (!TextUtils.isEmpty(e.getMessage())) {
-            Timber.e(e.getMessage());
-        }
-        ApiError error = ApiError.fromCode(e.getStatus());
-
-        switch (e.getMethod()) {
-
-        default:
-            if (error != null) {
-                App.eventBus.postSticky(new ErrorApiEvent(error));
-            } else {
-                App.eventBus.postSticky(new ErrorApiEvent(message, true));
-            }
-            break;
-        }
-
-    }
-
-    @Override
-    public void failure(RetrofitError error) {
-        Timber.d("Failure", error);
-        onFailure(error);
         finished();
     }
 
     /**
-     * @param callback
-     *            for ApiTaskExecutor
+     * Invoked when a network or unexpected exception occurred during the HTTP request.
+     * Can be Overriten in child class for additional message throwing
+     */
+    @Override
+    public void onFailure(Throwable t) {
+        Timber.d("failure: " + t.getMessage());
+        EventBus.getDefault().post(new ErrorApiEvent(t.getMessage(), true));
+        finished();
+    }
+
+    /**
+     * @param callback for ApiTaskExecutor
      */
     public void setCallback(QueuedExecutorCallback callback) {
         this.callback = callback;
@@ -102,31 +61,46 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
         }
     }
 
-    public abstract void onSuccess(E e, Response response);
+    /**
+     * Callback for all child classes of {@link ApiTask}
+     *
+     * @param response which contains Object of type defined in child
+     */
+    protected abstract void onSuccess(Response response);
 
-    protected void onFailure(RetrofitError error) {
+    /**
+     * TODO: need to fill for concrete project, depends on server side
+     * Base error handling method with original response
+     *
+     * @param response received in onResponse callback. Have code not 200. Have no body with
+     *                 typed object defined in child. Have errorBody() and code() for handling error
+     */
+    public static void handleFailure(Response response) {
         ErrorResponse errorResponse = null;
+        // Generally we can use response.code() for specifying error
+        switch (response.code()) {
+            case 400:
+            case 403:
+            case 404:
+                break;
+        }
+        // Error handling depends on server side response
         try {
-            Response response = error.getResponse();
-            if (response != null) {
-                TypedByteArray body = (TypedByteArray) response.getBody();
-                if (body != null && body.getBytes() != null) {
-                    String json = new String(body.getBytes());
-                    Gson gson = new Gson();
-                    errorResponse = gson.fromJson(json, ErrorResponse.class);
-                }
+            ResponseBody body = response.errorBody();
+            if (body != null && body.bytes() != null) {
+                String json = new String(body.bytes());
+                Gson gson = new Gson();
+                errorResponse = gson.fromJson(json, ErrorResponse.class);
             }
         } catch (Exception e) {
+            Timber.e("onFailure", e);
+        }
 
-        }
-        if (errorResponse == null && error.isNetworkError()) {
-            EventBus.getDefault().postSticky(new ErrorApiEvent(ApiError.NO_INTERNET));
-        }
+        // Message display for case of unhandled error
         if (errorResponse == null) {
-            EventBus.getDefault().postSticky(new ErrorApiEvent(error.getMessage(), false));
+            EventBus.getDefault().postSticky(new ErrorApiEvent(response.message(), false));
         } else {
             EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrorMessage(), true));
         }
     }
-
 }

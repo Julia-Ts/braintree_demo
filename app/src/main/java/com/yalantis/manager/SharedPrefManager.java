@@ -3,6 +3,7 @@ package com.yalantis.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.yalantis.interfaces.Manager;
 import com.yalantis.util.CachedValue;
 
 import java.util.HashSet;

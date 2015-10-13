@@ -8,12 +8,17 @@ import android.view.MenuItem;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.yalantis.App;
 import com.yalantis.R;
 import com.yalantis.activity.BaseActivity;
-import com.yalantis.activity.ShareActivity;
 import com.yalantis.fragment.auth.LoginFragment;
+import com.yalantis.interfaces.CallbackListener;
+import com.yalantis.interfaces.LoginListener;
+import com.yalantis.model.example.AuthDTO;
 import com.yalantis.navigation.Navigator;
 import com.yalantis.util.Toaster;
+
+import retrofit.Response;
 
 public class LoginActivity extends BaseActivity implements Session.StatusCallback {
 
@@ -97,5 +102,40 @@ public class LoginActivity extends BaseActivity implements Session.StatusCallbac
         } else if (state.isClosed()) {
             Toaster.showShort("Logged out facebook");
         }
+    }
+
+    /**
+     * Method contains snippets for handling login via REST requests
+     */
+    private void startSignIn() {
+        /**
+         * Api request with async task
+         */
+        App.apiManager.login("Email", "Password", new CallbackListener() {
+            @Override
+            public void onSuccess(Response<AuthDTO> response) {
+                // TODO: handle received AuthDTO in response.body();
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                // TODO: handle error if needed. Usually this handling will be in ApiTask;
+            }
+        });
+
+        /**
+         * Api request with RxJava
+         */
+        App.apiManager.loginRX("Email", "Password", new LoginListener() {
+            @Override
+            public void onSuccess(AuthDTO data) {
+                // TODO: handle received AuthDTO;
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                // TODO: handle error if needed;
+            }
+        });
     }
 }

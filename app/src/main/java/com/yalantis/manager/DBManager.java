@@ -9,7 +9,8 @@ import com.yalantis.db.DBTaskExecutor;
 import com.voltazor.dblib.BaseDBLoader;
 import com.voltazor.dblib.DBError;
 import com.yalantis.db.table.UserTable;
-import com.yalantis.model.User;
+import com.yalantis.interfaces.Manager;
+import com.yalantis.model.example.User;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.

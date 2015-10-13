@@ -2,10 +2,12 @@ package com.yalantis.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.yalantis.App;
 import com.yalantis.R;
@@ -85,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (!fragmentPopped && getSupportFragmentManager().findFragmentByTag(backStateName) == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).replace(containerId, fragment,
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).replace(containerId, fragment,
                     backStateName);
             if (addToBackStack) {
                 transaction.addToBackStack(backStateName);
@@ -93,4 +95,32 @@ public abstract class BaseActivity extends AppCompatActivity {
             transaction.commit();
         }
     }
+
+    // TODO: Move all code below - in new App
+
+    /**
+     * Shows snackbar with given text. Snackbar is used to show any info to user (like toast, but cooler).
+     *
+     * @param messageText     text to be shown to user
+     * @param buttonText      text for clickable action
+     * @param buttonListener  listener of clickable action
+     * @param buttonTextColor clickable action text color
+     * @param showLength      length of displaying
+     */
+    public void showSnackbar(String messageText, String buttonText, View.OnClickListener buttonListener, int buttonTextColor, int showLength) {
+        App.showSnackbar(findViewById(android.R.id.content), messageText, buttonText, buttonListener, buttonTextColor, showLength);
+    }
+
+    public void showSnackbar(String messageText, String buttonText, View.OnClickListener buttonListener) {
+        showSnackbar(messageText, buttonText, buttonListener, getResources().getColor(R.color.color_accent), Snackbar.LENGTH_LONG);
+    }
+
+    public void showSnackbar(String messageText, int showLength) {
+        showSnackbar(messageText, null, null, 0, showLength);
+    }
+
+    public void showSnackbar(String text) {
+        showSnackbar(text, null, null, 0, Snackbar.LENGTH_LONG);
+    }
+
 }
