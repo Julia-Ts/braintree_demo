@@ -104,12 +104,4 @@ public class App extends Application {
 
         snackbarBuilder.show();
     }
-
-    public static ApiManager getApiManager() {
-        return apiManager;
-    }
-
-    public static EventBus getEventBus() {
-        return eventBus;
-    }
 }

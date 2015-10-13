@@ -27,26 +27,20 @@ public class ApiManager implements Manager {
 
     private MainExecutor mExecutor;
     private TokenLessService mTokenLessService;
-    private Retrofit mTokenLessRestAdapter;
+    private Retrofit mTokenLessRetrofit;
 
     @Override
     public void init(Context context) {
-        try {
-            initRestAdapters();
-            initServices();
-            mExecutor = new MainExecutor();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        initRetrofit();
+        initServices();
+        mExecutor = new MainExecutor();
     }
 
     /**
      * Initialization of Retrofit (rest adapter)
      * Setting updated HttpClient if needed
-     *
-     * @throws ClassNotFoundException
      */
-    private void initRestAdapters() throws ClassNotFoundException {
+    private void initRetrofit() {
         // Custom Client need only in cases if some header data ot something else - changed
         OkHttpClient client = new OkHttpClient();
         client.interceptors().add(new Interceptor() {
@@ -66,7 +60,7 @@ public class ApiManager implements Manager {
             }
         });
 
-        mTokenLessRestAdapter = new Retrofit.Builder()
+        mTokenLessRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                         // Names can be changed in release version
@@ -84,11 +78,12 @@ public class ApiManager implements Manager {
      * Initialize of Retrofit services with requests to server
      */
     private void initServices() {
-        mTokenLessService = mTokenLessRestAdapter.create(TokenLessService.class);
+        mTokenLessService = mTokenLessRetrofit.create(TokenLessService.class);
     }
 
     /**
      * Login task with async request execution example
+     *
      * @param listener of request execution status from outside
      */
     public void login(String email, String password, final CallbackListener listener) {
@@ -97,6 +92,7 @@ public class ApiManager implements Manager {
 
     /**
      * Login request with RxJava execution example
+     *
      * @param listener of request execution status from outside
      */
     public void loginRX(String email, String password, LoginListener listener) {

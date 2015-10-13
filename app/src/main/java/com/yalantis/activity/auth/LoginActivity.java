@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity implements Session.StatusCallbac
         /**
          * Api request with async task
          */
-        App.getApiManager().login("Email", "Password", new CallbackListener() {
+        App.apiManager.login("Email", "Password", new CallbackListener() {
             @Override
             public void onSuccess(Response<AuthDTO> response) {
                 // TODO: handle received AuthDTO in response.body();
@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity implements Session.StatusCallbac
         /**
          * Api request with RxJava
          */
-        App.getApiManager().loginRX("Email", "Password", new LoginListener() {
+        App.apiManager.loginRX("Email", "Password", new LoginListener() {
             @Override
             public void onSuccess(AuthDTO data) {
                 // TODO: handle received AuthDTO;
