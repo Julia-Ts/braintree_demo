@@ -1,6 +1,8 @@
 package com.yalantis.model.dto;
 
 /**
+ * Base data transfer object
+ * All sub classes should provide getters and model for data objects
  * Created by Ed
  */
 public abstract class BaseDTO {

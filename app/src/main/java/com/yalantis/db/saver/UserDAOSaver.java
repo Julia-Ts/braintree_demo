@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import com.yalantis.App;
 import com.yalantis.db.table.UserTable;
-import com.yalantis.model.User;
+import com.yalantis.model.example.User;
 
 /**
  * Created by Ed

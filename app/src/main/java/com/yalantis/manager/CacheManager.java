@@ -2,7 +2,8 @@ package com.yalantis.manager;
 
 import android.content.Context;
 
-import com.yalantis.model.User;
+import com.yalantis.interfaces.Manager;
+import com.yalantis.model.example.User;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
