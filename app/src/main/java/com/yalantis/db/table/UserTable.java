@@ -38,12 +38,12 @@ public class UserTable extends BaseTable {
 
     public void insert(User user) {
         cv = new ContentValues();
-        cv.put(USER_ID, user.getUserId());
-        cv.put(FIRST_NAME, user.getFirstName());
-        cv.put(LAST_NAME, user.getLastName());
-        cv.put(GENDER, user.getGender());
+//        cv.put(USER_ID, user.getUserId());
+//        cv.put(FIRST_NAME, user.getFirstName());
+//        cv.put(LAST_NAME, user.getLastName());
+//        cv.put(GENDER, user.getGender());
         cv.put(EMAIL, user.getEmail());
-        cv.put(LOGO, user.getLogo());
+//        cv.put(LOGO, user.getLogo());
         database.insertWithOnConflict(TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -67,22 +67,22 @@ public class UserTable extends BaseTable {
     private User extractUser(Cursor cursor) {
         User user = new User();
 
-        user.setGender(cursor.getString(cursor.getColumnIndex(GENDER)));
-        user.setUserId(cursor.getString(cursor.getColumnIndex(USER_ID)));
-        user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
-        user.setLastName(cursor.getString(cursor.getColumnIndex(LAST_NAME)));
-        user.setLogo(cursor.getString(cursor.getColumnIndex(LOGO)));
+//        user.setGender(cursor.getString(cursor.getColumnIndex(GENDER)));
+//        user.setUserId(cursor.getString(cursor.getColumnIndex(USER_ID)));
+//        user.setFirstName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
+//        user.setLastName(cursor.getString(cursor.getColumnIndex(LAST_NAME)));
+//        user.setLogo(cursor.getString(cursor.getColumnIndex(LOGO)));
         user.setEmail(cursor.getString(cursor.getColumnIndex(EMAIL)));
         return user;
     }
 
     public void update(User user, String id) {
         cv = new ContentValues();
-        updateCVIfNotNull(cv, FIRST_NAME, user.getFirstName());
-        updateCVIfNotNull(cv, LAST_NAME, user.getLastName());
-        updateCVIfNotNull(cv, GENDER, user.getGender());
+//        updateCVIfNotNull(cv, FIRST_NAME, user.getFirstName());
+//        updateCVIfNotNull(cv, LAST_NAME, user.getLastName());
+//        updateCVIfNotNull(cv, GENDER, user.getGender());
         updateCVIfNotNull(cv, EMAIL, user.getEmail());
-        updateCVIfNotNull(cv, LOGO, user.getLogo());
+//        updateCVIfNotNull(cv, LOGO, user.getLogo());
 
         database.update(TABLE_NAME, cv, USER_ID + " = '" + id + "'", null);
     }
