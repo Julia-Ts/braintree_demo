@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.facebook.widget.LoginButton;
 import com.yalantis.R;
+import com.yalantis.activity.BaseActivity;
 import com.yalantis.fragment.BaseFragment;
 
 /**

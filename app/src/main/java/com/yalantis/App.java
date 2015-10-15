@@ -5,16 +5,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDex;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
 import com.yalantis.util.Logger;
 
 import de.greenrobot.event.EventBus;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
@@ -35,6 +34,12 @@ public class App extends Application {
         new Logger();
         context = this;
         initManagers();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static Context getContext() {

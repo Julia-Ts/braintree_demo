@@ -31,8 +31,9 @@ public class ApiManager implements Manager {
 
     @Override
     public void init(Context context) {
-        initRetrofit();
-        initServices();
+        // TODO: remove braces when URL will be added
+        // initRetrofit();
+        // initServices();
         mExecutor = new MainExecutor();
     }
 

@@ -1,5 +1,6 @@
 package com.yalantis.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -14,18 +15,23 @@ import com.yalantis.R;
 import com.yalantis.event.BaseEvent;
 
 /**
- * Created by Dmitriy Dovbnya on 25.09.2014.
+ * Base class for all project activities.
+ * Handles variety of views, variables and states that are commonly used in every activity.
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
+    public static final String PROGRESS_DIALOG_SHOWN = "progressDialogShown";
+
     protected Handler handler;
     protected Toolbar mToolbar;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         handler = new Handler();
+        initProgressDialog();
     }
 
     @Override
@@ -52,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         App.eventBus.unregister(this);
+        if (mProgressDialog != null && mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 
     public void removeStickyEvent(final Class<?> eventType) {
@@ -93,6 +100,41 @@ public abstract class BaseActivity extends AppCompatActivity {
                 transaction.addToBackStack(backStateName);
             }
             transaction.commit();
+        }
+    }
+
+    /**
+     * Save if progress dialog was shown, so it will be restored. (e.g. after screen rotation)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PROGRESS_DIALOG_SHOWN, mProgressDialog != null && mProgressDialog.isShowing());
+    }
+
+    /**
+     * Create an instance of progress dialog that can be used to show any progress.
+     */
+    private void initProgressDialog() {
+        mProgressDialog = new ProgressDialog(BaseActivity.this);
+        mProgressDialog.setTitle("Please wait...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+    }
+
+    /**
+     * Show progress dialog.
+     */
+    public void showProgress() {
+        mProgressDialog.show();
+    }
+
+    /**
+     * Hide progress dialog.
+     */
+    public void hideProgress() {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
