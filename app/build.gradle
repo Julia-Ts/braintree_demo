@@ -1,9 +1,24 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        // The Fabric Gradle plugin uses an open ended version to react
+        // quickly to Android tooling updates
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
 apply from: '../gradle.properties'
 
 repositories {
     maven { url "http://mente.github.io/facebook-api-android-aar" }
     maven { url "http://dl.bintray.com/populov/maven" }
+    maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
     mavenLocal()
 }
@@ -46,7 +61,10 @@ android {
             keyPassword RELEASE_KEY_ALIAS_PASSWORD
         }
         debug {
-            storeFile file('../keystore/debug.keystore')
+            storeFile file(DEBUG_STORE_FILE)
+            storePassword DEBUG_KEYSTORE_PASSWORD
+            keyAlias DEBUG_KEY_ALIAS_NAME
+            keyPassword DEBUG_KEY_ALIAS_PASSWORD
         }
     }
     
@@ -86,6 +104,9 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.edmodo:cropper:1.0.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true
+    }
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

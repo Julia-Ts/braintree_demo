@@ -3,6 +3,7 @@
 
     <string name="app_name">Yalantis Template</string>
     <string name="facebook_app_id">1567177486844825</string>
+    <string name="crashlytics_api_key">cc9f6bf2eb7bea9c558343478586b25c62c12afb</string>
     <string name="dlg_wait">Please wait</string>
     <string name="title_share_dialog">Share via</string>
     <string name="title_activity_photo_crop">PhotoCropActivity</string>

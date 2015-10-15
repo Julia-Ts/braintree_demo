@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.squareup.okhttp.ResponseBody;
 import com.yalantis.event.ErrorApiEvent;
 import com.yalantis.interfaces.QueuedExecutorCallback;
+import com.yalantis.model.dto.BaseDTO;
 import com.yalantis.model.dto.ErrorResponse;
 
 import de.greenrobot.event.EventBus;
@@ -15,7 +16,7 @@ import timber.log.Timber;
 /**
  * Base Api Task created for performing error handling in one place
  */
-public abstract class ApiTask<T, E> implements Runnable, Callback<E> {
+public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callback<E> {
 
     protected QueuedExecutorCallback callback;
     protected T api;
