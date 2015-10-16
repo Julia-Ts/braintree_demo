@@ -70,22 +70,14 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
     protected abstract void onSuccess(Response response);
 
     /**
-     * TODO: need to fill for concrete project, depends on server side
      * Base error handling method with original response
      *
      * @param response received in onResponse callback. Have code not 200. Have no body with
      *                 typed object defined in child. Have errorBody() and code() for handling error
      */
     public static void handleFailure(Response response) {
-        ErrorResponse errorResponse = null;
-        // Generally we can use response.code() for specifying error
-        switch (response.code()) {
-            case 400:
-            case 403:
-            case 404:
-                break;
-        }
         // Error handling depends on server side response
+        ErrorResponse errorResponse = null;
         try {
             ResponseBody body = response.errorBody();
             if (body != null && body.bytes() != null) {
@@ -97,11 +89,10 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
             Timber.e("onFailure", e);
         }
 
-        // Message display for case of unhandled error
         if (errorResponse == null) {
             EventBus.getDefault().postSticky(new ErrorApiEvent(response.message(), false));
         } else {
-            EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrorMessage(), true));
+            EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrors().getErrorMessage(), true));
         }
     }
 }

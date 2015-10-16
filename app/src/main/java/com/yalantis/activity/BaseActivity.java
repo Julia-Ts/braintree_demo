@@ -13,6 +13,7 @@ import android.view.View;
 import com.yalantis.App;
 import com.yalantis.R;
 import com.yalantis.event.BaseEvent;
+import com.yalantis.event.ErrorApiEvent;
 
 /**
  * Base class for all project activities.
@@ -110,6 +111,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(PROGRESS_DIALOG_SHOWN, mProgressDialog != null && mProgressDialog.isShowing());
+    }
+
+    /**
+     * Base handling of error api event.
+     * Hide progress dialog and show error message via snackbar.
+     *
+     * @param event - EventBus event.
+     */
+    public void onEvent(ErrorApiEvent event) {
+        hideProgress();
+        showSnackbar(event.message);
     }
 
     /**
