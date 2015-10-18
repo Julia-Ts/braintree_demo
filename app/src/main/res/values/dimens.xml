@@ -8,4 +8,11 @@
     <dimen name="share_dialog_image_size">35dp</dimen>
     <dimen name="share_dialog_item_margin">15dp</dimen>
     <dimen name="share_title_textsize">20sp</dimen>
+
+    <!-- Page Indicator -->
+    <dimen name="default_page_indicator_dot_radius">4dp</dimen>
+    <dimen name="default_page_indicator_gap_width">8dp</dimen>
+    <dimen name="default_page_indicator_stroke_width">1dp</dimen>
+    <!-- Page Indicator -->
+
 </resources>
