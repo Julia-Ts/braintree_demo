@@ -1,9 +1,5 @@
 package com.yalantis.api.task;
 
-import com.google.gson.Gson;
-import com.squareup.okhttp.ResponseBody;
-
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -12,7 +8,7 @@ import timber.log.Timber;
 /**
  * Base Api Task created for performing error handling in one place
  */
-public abstract class ApiTask<E> implements  Callback<E> {
+public abstract class ApiTask<E> implements Callback<E> {
 
     @Override
     public void onResponse(Response<E> response, Retrofit retrofit) {
@@ -31,7 +27,6 @@ public abstract class ApiTask<E> implements  Callback<E> {
     @Override
     public void onFailure(Throwable t) {
         Timber.d("failure: " + t.getMessage());
-//        EventBus.getDefault().post(new ErrorApiEvent(t.getMessage(), true));
     }
 
     /**

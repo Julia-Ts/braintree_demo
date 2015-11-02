@@ -1,7 +1,7 @@
 package com.yalantis.api.services;
 
 import com.yalantis.api.ApiSettings;
-import com.yalantis.model.GithubRepo;
+import com.yalantis.model.GithubRepository;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ public interface GithubService {
 
     // Using Retrofit Call
     @GET(ApiSettings.ORGANIZATION_REPOS)
-    Call<List<GithubRepo>> getOrganizationRepos(
+    Call<List<GithubRepository>> getOrganizationRepos(
             @Path(ApiSettings.PATH_ORGANIZATION) String organizationName,
             @Query(ApiSettings.PARAM_REPOS_TYPE) String reposType);
 
     // Using RxJava Observable
     @GET(ApiSettings.ORGANIZATION_REPOS)
-    Observable<List<GithubRepo>> getOrganizationReposRx(
+    Observable<List<GithubRepository>> getOrganizationReposRx(
             @Path(ApiSettings.PATH_ORGANIZATION) String organizationName,
             @Query(ApiSettings.PARAM_REPOS_TYPE) String reposType);
 

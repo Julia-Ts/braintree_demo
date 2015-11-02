@@ -26,8 +26,10 @@ public class App extends Application {
         super.onCreate();
         App.sContext = getApplicationContext();
 
-        Fabric.with(App.sContext, new Crashlytics.Builder().core(
-                new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(App.sContext, new Crashlytics.Builder().core(
+                    new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        }
         Timber.plant(BuildConfig.DEBUG ? new Timber.DebugTree() : new CrashReportingTree());
     }
 
