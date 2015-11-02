@@ -1,40 +1,36 @@
 package com.yalantis.manager;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.yalantis.api.ApiSettings;
-import com.yalantis.api.MainExecutor;
-import com.yalantis.api.rx.LoginRequest;
-import com.yalantis.api.services.TokenLessService;
-import com.yalantis.api.task.LoginTask;
-import com.yalantis.interfaces.CallbackListener;
-import com.yalantis.interfaces.LoginListener;
+import com.yalantis.api.services.GithubService;
 import com.yalantis.interfaces.Manager;
+import com.yalantis.model.GithubRepo;
 
 import java.io.IOException;
+import java.util.List;
 
+import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-/**
- * Created by Dmitriy Dovbnya on 25.09.2014.
- */
 public class ApiManager implements Manager {
 
-    private MainExecutor mExecutor;
-    private TokenLessService mTokenLessService;
-    private Retrofit mTokenLessRetrofit;
+    private GithubService mGithubService;
+    private Retrofit mRetrofit;
 
     @Override
     public void init(Context context) {
-        // TODO: remove braces when URL will be added
-        // initRetrofit();
-        // initServices();
-        mExecutor = new MainExecutor();
+         initRetrofit();
+         initServices();
     }
 
     /**
@@ -48,7 +44,6 @@ public class ApiManager implements Manager {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-                // Customize the request
                 Request request = original.newBuilder()
                         /*
                         .header(ApiSettings.HEADER_AUTH_TOKEN,
@@ -56,12 +51,11 @@ public class ApiManager implements Manager {
                                 */
                         .method(original.method(), original.body())
                         .build();
-                // Customize or return the response
                 return chain.proceed(request);
             }
         });
 
-        mTokenLessRetrofit = new Retrofit.Builder()
+        mRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                         // Names can be changed in release version
@@ -79,29 +73,22 @@ public class ApiManager implements Manager {
      * Initialize of Retrofit services with requests to server
      */
     private void initServices() {
-        mTokenLessService = mTokenLessRetrofit.create(TokenLessService.class);
+        mGithubService = mRetrofit.create(GithubService.class);
     }
 
-    /**
-     * Login task with async request execution example
-     *
-     * @param listener of request execution status from outside
-     */
-    public void login(String email, String password, final CallbackListener listener) {
-        mExecutor.execute(new LoginTask(mTokenLessService, email, password, listener));
+    public void getOrganizationRepos(@NonNull String organizationName, @NonNull String reposType, Callback<List<GithubRepo>> callback) {
+        mGithubService.getOrganizationRepos(organizationName, reposType).enqueue(callback);
     }
 
-    /**
-     * Login request with RxJava execution example
-     *
-     * @param listener of request execution status from outside
-     */
-    public void loginRX(String email, String password, LoginListener listener) {
-        new LoginRequest(mTokenLessService, email, password, listener).login();
+    public Observable<List<GithubRepo>> getOrganizationReposRx(@NonNull String organizationName, @NonNull String reposType) {
+        return mGithubService.getOrganizationReposRx(organizationName, reposType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
+
 
     @Override
     public void clear() {
-        mExecutor.clear();
+
     }
 }

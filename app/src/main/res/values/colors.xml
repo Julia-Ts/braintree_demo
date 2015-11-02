@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base colors for material themes -->
-    <color name="colorPrimary">#5e666a</color>
-    <color name="colorPrimaryDark">#41484b</color>
-    <color name="colorAccent">#e9e9e9</color>
-    <!-- Base colors for material themes -->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 
-    <color name="action_bar_color">#53c3f5</color>
-    <color name="divider">#a5acb2</color>
-    <!-- Grey01 (4Font) R 76 G 89 B 102-->
-    <color name="base_background_color">#EBEBEB</color>
-    <color name="base_background_color_alfa">#80EBEBEB</color>
-    <color name="header_background_half_white">#ccffffff</color>
-    <!--HomeScreen-->
-    <color name="base_text_color">#6e7883</color>
-    <color name="grey_01">#4c5966</color>
-    <color name="tool_bar_color">#666</color>
-    <color name="status_bar_color">#999</color>
-    <color name="color_accent">#329</color>
-
+    <color name="colorBaseBackground">#EBEBEB</color>
+    <color name="colorDivider">#A5ACB2</color>
 
 </resources>

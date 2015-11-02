@@ -2,17 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- share -->
-    <dimen name="share_dialog_item_height">30dp</dimen>
-    <dimen name="share_dialog_padding_item">24dp</dimen>
-    <dimen name="share_dialog_image_size">35dp</dimen>
-    <dimen name="share_dialog_item_margin">15dp</dimen>
-    <dimen name="share_title_textsize">20sp</dimen>
-
-    <!-- Page Indicator -->
-    <dimen name="default_page_indicator_dot_radius">4dp</dimen>
-    <dimen name="default_page_indicator_gap_width">8dp</dimen>
-    <dimen name="default_page_indicator_stroke_width">1dp</dimen>
-    <!-- Page Indicator -->
+    <dimen name="app_bar_height">180dp</dimen>
 
 </resources>

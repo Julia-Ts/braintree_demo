@@ -2,10 +2,6 @@ package com.yalantis.api.task;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.ResponseBody;
-import com.yalantis.event.ErrorApiEvent;
-import com.yalantis.interfaces.QueuedExecutorCallback;
-import com.yalantis.model.dto.BaseDTO;
-import com.yalantis.model.dto.ErrorResponse;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
@@ -16,50 +12,26 @@ import timber.log.Timber;
 /**
  * Base Api Task created for performing error handling in one place
  */
-public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callback<E> {
-
-    protected QueuedExecutorCallback callback;
-    protected T api;
-    protected String apiKey;
-
-    protected ApiTask(T api) {
-        this.api = api;
-        this.apiKey = null;
-    }
+public abstract class ApiTask<E> implements  Callback<E> {
 
     @Override
     public void onResponse(Response<E> response, Retrofit retrofit) {
         Timber.d("success", response.code());
         if (response.isSuccess()) {
-            onSuccess(response);
+            onSuccess(response.body());
         } else {
             handleFailure(response);
         }
-        finished();
     }
 
     /**
      * Invoked when a network or unexpected exception occurred during the HTTP request.
-     * Can be Overriten in child class for additional message throwing
+     * Can be Override in child class for additional message throwing
      */
     @Override
     public void onFailure(Throwable t) {
         Timber.d("failure: " + t.getMessage());
-        EventBus.getDefault().post(new ErrorApiEvent(t.getMessage(), true));
-        finished();
-    }
-
-    /**
-     * @param callback for ApiTaskExecutor
-     */
-    public void setCallback(QueuedExecutorCallback callback) {
-        this.callback = callback;
-    }
-
-    public void finished() {
-        if (callback != null) {
-            callback.finished();
-        }
+//        EventBus.getDefault().post(new ErrorApiEvent(t.getMessage(), true));
     }
 
     /**
@@ -67,7 +39,7 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
      *
      * @param response which contains Object of type defined in child
      */
-    protected abstract void onSuccess(Response response);
+    protected abstract void onSuccess(E response);
 
     /**
      * Base error handling method with original response
@@ -77,22 +49,22 @@ public abstract class ApiTask<T, E extends BaseDTO> implements Runnable, Callbac
      */
     public static void handleFailure(Response response) {
         // Error handling depends on server side response
-        ErrorResponse errorResponse = null;
-        try {
-            ResponseBody body = response.errorBody();
-            if (body != null && body.bytes() != null) {
-                String json = new String(body.bytes());
-                Gson gson = new Gson();
-                errorResponse = gson.fromJson(json, ErrorResponse.class);
-            }
-        } catch (Exception e) {
-            Timber.e("onFailure", e);
-        }
-
-        if (errorResponse == null) {
-            EventBus.getDefault().postSticky(new ErrorApiEvent(response.message(), false));
-        } else {
-            EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrors().getErrorMessage(), true));
-        }
+//        ErrorResponse errorResponse = null;
+//        try {
+//            ResponseBody body = response.errorBody();
+//            if (body != null && body.bytes() != null) {
+//                String json = new String(body.bytes());
+//                Gson gson = new Gson();
+//                errorResponse = gson.fromJson(json, ErrorResponse.class);
+//            }
+//        } catch (Exception e) {
+//            Timber.e("onFailure", e);
+//        }
+//
+//        if (errorResponse == null) {
+//            EventBus.getDefault().postSticky(new ErrorApiEvent(response.message(), false));
+//        } else {
+//            EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrors().getErrorMessage(), true));
+//        }
     }
 }

@@ -1,25 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:icon">@drawable/ic_launcher</item>
-        <item name="android:windowBackground">@color/base_background_color</item>
-        <item name="colorPrimary">@color/tool_bar_color</item>
-        <item name="colorPrimaryDark">@color/status_bar_color</item>
-        <item name="colorAccent">@color/color_accent</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppActionBarTheme" parent="@style/AppTheme">
-        <!--<item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>-->
-    </style>
-
-    <!--Style for UI-->
-
-    <style name="View" />
-
-    <style name="CircularProgressButton" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

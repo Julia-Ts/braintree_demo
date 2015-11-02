@@ -9,18 +9,20 @@ buildscript {
     }
 }
 
-
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 apply from: '../gradle.properties'
 
 repositories {
-    maven { url "http://mente.github.io/facebook-api-android-aar" }
     maven { url "http://dl.bintray.com/populov/maven" }
     maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
     mavenLocal()
+}
+
+def getDate() {
+    return new Date().format('dd/MM/yyyy--HH:mm')
 }
 
 android {
@@ -73,12 +75,14 @@ android {
         release {
 //            signingConfig signingConfigs.release
             proguardFile 'proguard.cfg'
-            minifyEnabled false
-
+            minifyEnabled true
+            shrinkResources true
         }
+
         debug {
 //            signingConfig signingConfigs.release
             minifyEnabled false
+            ext.enableCrashlytics = false
         }
     }
 
@@ -87,28 +91,31 @@ android {
     }
 }
 dependencies {
-    compile 'com.facebook.android:facebook-android-sdk:3.20.0'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.jakewharton.timber:timber:2.5.0'
-    compile 'com.google.android.gms:play-services:8.1.0'
+    // Android
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
 
-/*
-    Need update versions to release
-*/
+    // Injection
+    compile 'com.jakewharton:butterknife:7.0.0'
+
+    // EventBus
+    compile 'de.greenrobot:eventbus:2.4.0'
+
+    // REST
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+
+    // RX
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
-    compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.edmodo:cropper:1.0.1'
+    // Logging and Crash-reporting
+    compile 'com.jakewharton.timber:timber:2.5.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true
     }
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
