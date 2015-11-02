@@ -1,15 +1,13 @@
 package com.yalantis.presenter;
 
 import com.yalantis.App;
+import com.yalantis.api.task.ApiTask;
 import com.yalantis.contract.ExampleContract;
 import com.yalantis.model.Repository;
 
 import java.util.List;
 
 import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Created by Oleksii Shliama.
@@ -51,20 +49,15 @@ public class ExamplePresenter implements ExampleContract.Presenter {
         mView.showProgress();
 
         mReposCall = App.getApiManager().getOrganizationRepos(ORGANIZATION_NAME, REPOS_TYPE);
-        mReposCall.enqueue(new Callback<List<Repository>>() {
+        mReposCall.enqueue(new ApiTask<List<Repository>>() {
             @Override
-            public void onResponse(Response<List<Repository>> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    mView.hideProgress();
-                    onRepositoriesLoaded(response.body());
-                } else {
-                    mView.hideProgress();
-                    mView.showErrorMessage();
-                }
+            protected void onSuccess(List<Repository> response) {
+                mView.hideProgress();
+                onRepositoriesLoaded(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            protected void onError() {
                 mView.hideProgress();
                 mView.showErrorMessage();
             }

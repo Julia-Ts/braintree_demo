@@ -16,17 +16,8 @@ public abstract class ApiTask<E> implements Callback<E> {
         if (response.isSuccess()) {
             onSuccess(response.body());
         } else {
-            handleFailure(response);
+            handleApiError(response);
         }
-    }
-
-    /**
-     * Invoked when a network or unexpected exception occurred during the HTTP request.
-     * Can be Override in child class for additional message throwing
-     */
-    @Override
-    public void onFailure(Throwable t) {
-        Timber.d("failure: " + t.getMessage());
     }
 
     /**
@@ -37,29 +28,26 @@ public abstract class ApiTask<E> implements Callback<E> {
     protected abstract void onSuccess(E response);
 
     /**
+     * Callback for all child classes of {@link ApiTask}*
+     */
+    protected abstract void onError();
+
+    /**
+     * Invoked when a network or unexpected exception occurred during the HTTP request.
+     * Can be Override in child class for additional message throwing
+     */
+    @Override
+    public void onFailure(Throwable t) {
+        // TODO: Handle network/unexpected exceptions here.
+    }
+
+    /**
      * Base error handling method with original response
      *
      * @param response received in onResponse callback. Have code not 200. Have no body with
      *                 typed object defined in child. Have errorBody() and code() for handling error
      */
-    public static void handleFailure(Response response) {
-        // Error handling depends on server side response
-//        ErrorResponse errorResponse = null;
-//        try {
-//            ResponseBody body = response.errorBody();
-//            if (body != null && body.bytes() != null) {
-//                String json = new String(body.bytes());
-//                Gson gson = new Gson();
-//                errorResponse = gson.fromJson(json, ErrorResponse.class);
-//            }
-//        } catch (Exception e) {
-//            Timber.e("onFailure", e);
-//        }
-//
-//        if (errorResponse == null) {
-//            EventBus.getDefault().postSticky(new ErrorApiEvent(response.message(), false));
-//        } else {
-//            EventBus.getDefault().postSticky(new ErrorApiEvent(errorResponse.getErrors().getErrorMessage(), true));
-//        }
+    public static void handleApiError(Response response) {
+        // TODO: Parse & handle API errors here.
     }
 }
