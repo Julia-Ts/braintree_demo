@@ -1,7 +1,7 @@
 package com.yalantis.presenter;
 
 import com.yalantis.App;
-import com.yalantis.contract.MainContract;
+import com.yalantis.contract.ExampleContract;
 import com.yalantis.model.GithubRepository;
 
 import java.util.List;
@@ -14,17 +14,17 @@ import retrofit.Retrofit;
 /**
  * Created by Oleksii Shliama.
  */
-public class MainPresenter implements MainContract.Presenter {
+public class ExamplePresenter implements ExampleContract.Presenter {
 
     private static final String ORGANIZATION_NAME = "Yalantis";
     private static final String REPOS_TYPE = "public";
 
-    private MainContract.View mView;
+    private ExampleContract.View mView;
 
     private Call<List<GithubRepository>> mReposCall;
 
     @Override
-    public void attachView(MainContract.View view) {
+    public void attachView(ExampleContract.View view) {
         mView = view;
     }
 
@@ -59,6 +59,11 @@ public class MainPresenter implements MainContract.Presenter {
                 mView.showErrorMessage();
             }
         });
+    }
+
+    @Override
+    public void onRepositoryClicked(GithubRepository repository) {
+        mView.showInfoMessage("Repository has " + repository.getStarsCount() + " stars.");
     }
 
 }
