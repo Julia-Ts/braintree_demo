@@ -2,16 +2,22 @@ package com.yalantis.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GithubRepository {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
+public class Repository extends RealmObject {
+
+    public static final String ID = "id";
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
     public static final String HOMEPAGE = "homepage";
     public static final String IS_FORK = "fork";
-    public static final String STARS_COUNT = "stargazers_count";
     public static final String FORKS_COUNT = "forks";
+    public static final String STARS_COUNT = "stargazers_count";
     public static final String WATCHERS_COUNT = "watchers";
 
+    @PrimaryKey
+    @SerializedName(ID)
     private long id;
 
     @SerializedName(NAME)

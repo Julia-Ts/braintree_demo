@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 
 import com.yalantis.R;
 import com.yalantis.contract.ExampleContract;
-import com.yalantis.model.GithubRepository;
+import com.yalantis.model.Repository;
 import com.yalantis.presenter.ExamplePresenter;
 import com.yalantis.ui.adapter.RepositoryAdapter;
 import com.yalantis.ui.adapter.SimpleDividerItemDecoration;
@@ -45,12 +45,14 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
         ButterKnife.bind(this);
 
         setupRecyclerView();
+
+        mPresenter.initRepositories(true);
     }
 
     private void setupRecyclerView() {
         RepositoryAdapter adapter = new RepositoryAdapter(new RepositoryAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(GithubRepository repository) {
+            public void onItemClick(Repository repository) {
                 mPresenter.onRepositoryClicked(repository);
             }
         });
@@ -60,7 +62,7 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
     }
 
     @Override
-    public void showRepositories(List<GithubRepository> repositoryList) {
+    public void showRepositories(List<Repository> repositoryList) {
         RepositoryAdapter adapter = (RepositoryAdapter) mRecyclerView.getAdapter();
         adapter.addRepositories(repositoryList);
     }
@@ -91,7 +93,7 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
 
     @OnClick(R.id.fab)
     void onClickFab(View view) {
-        mPresenter.getRepositories();
+        mPresenter.fetchRepositories();
     }
 
     @Override

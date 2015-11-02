@@ -8,9 +8,12 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
+import com.yalantis.model.Migration;
 import com.yalantis.util.CrashReportingTree;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class App extends Application {
@@ -31,16 +34,27 @@ public class App extends Application {
                     new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         }
         Timber.plant(BuildConfig.DEBUG ? new Timber.DebugTree() : new CrashReportingTree());
+
+        setupRealmDefaultInstance();
     }
 
-    public static Context getContext() {
-        return sContext;
+    private static void setupRealmDefaultInstance() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(sContext)
+                .name(Constant.Realm.STORAGE_MAIN)
+                .schemaVersion(Migration.CURRENT_VERSION)
+                .migration(new Migration())
+                .build();
+        Realm.setDefaultConfiguration(realmConfig);
     }
 
     public void clear() {
         sApiManager.clear();
         sDataManager.clear();
         sSharedPrefManager.clear();
+    }
+
+    public static Context getContext() {
+        return sContext;
     }
 
     public static ApiManager getApiManager() {

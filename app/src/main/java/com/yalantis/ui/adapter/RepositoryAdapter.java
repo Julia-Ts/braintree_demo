@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yalantis.R;
-import com.yalantis.model.GithubRepository;
+import com.yalantis.model.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
 
     private final ItemClickListener mItemClickListener;
 
-    private List<GithubRepository> mRepositories = new ArrayList<>();
+    private List<Repository> mRepositories = new ArrayList<>();
 
     public RepositoryAdapter(@Nullable ItemClickListener itemClickListener) {
         mItemClickListener = itemClickListener;
     }
 
-    public void addRepositories(List<GithubRepository> repositoryList) {
+    public void addRepositories(List<Repository> repositoryList) {
         mRepositories.clear();
         mRepositories.addAll(repositoryList);
         notifyDataSetChanged();
@@ -43,7 +43,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
 
     @Override
     public void onBindViewHolder(RepositoryViewHolder holder, int position) {
-        GithubRepository repository = mRepositories.get(position);
+        Repository repository = mRepositories.get(position);
         holder.bindData(repository);
     }
 
@@ -61,7 +61,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
 
         private final ItemClickListener mItemClickListener;
 
-        private GithubRepository mRepository;
+        private Repository mRepository;
 
         public RepositoryViewHolder(@NonNull View itemView, @Nullable ItemClickListener itemClickListener) {
             super(itemView);
@@ -69,7 +69,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
             mItemClickListener = itemClickListener;
         }
 
-        public void bindData(GithubRepository repository) {
+        public void bindData(Repository repository) {
             mRepository = repository;
 
             titleTextView.setText(repository.getName());
@@ -86,7 +86,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
     }
 
     public interface ItemClickListener {
-        void onItemClick(GithubRepository repository);
+        void onItemClick(Repository repository);
     }
 
 }

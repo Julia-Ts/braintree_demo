@@ -2,7 +2,7 @@ package com.yalantis.presenter;
 
 import com.yalantis.App;
 import com.yalantis.contract.ExampleContract;
-import com.yalantis.model.GithubRepository;
+import com.yalantis.model.Repository;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class ExamplePresenter implements ExampleContract.Presenter {
 
     private ExampleContract.View mView;
 
-    private Call<List<GithubRepository>> mReposCall;
+    private Call<List<Repository>> mReposCall;
 
     @Override
     public void attachView(ExampleContract.View view) {
@@ -37,16 +37,26 @@ public class ExamplePresenter implements ExampleContract.Presenter {
     }
 
     @Override
-    public void getRepositories() {
+    public void initRepositories(boolean loadIfEmpty) {
+        List<Repository> storedRepositories = App.getDataManager().getRepositories();
+        if (loadIfEmpty && storedRepositories.isEmpty()) {
+            fetchRepositories();
+        } else {
+            mView.showRepositories(storedRepositories);
+        }
+    }
+
+    @Override
+    public void fetchRepositories() {
         mView.showProgress();
 
         mReposCall = App.getApiManager().getOrganizationRepos(ORGANIZATION_NAME, REPOS_TYPE);
-        mReposCall.enqueue(new Callback<List<GithubRepository>>() {
+        mReposCall.enqueue(new Callback<List<Repository>>() {
             @Override
-            public void onResponse(Response<List<GithubRepository>> response, Retrofit retrofit) {
+            public void onResponse(Response<List<Repository>> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
                     mView.hideProgress();
-                    mView.showRepositories(response.body());
+                    onRepositoriesLoaded(response.body());
                 } else {
                     mView.hideProgress();
                     mView.showErrorMessage();
@@ -61,8 +71,13 @@ public class ExamplePresenter implements ExampleContract.Presenter {
         });
     }
 
+    private void onRepositoriesLoaded(List<Repository> loadedRepositories) {
+        App.getDataManager().storeRepositories(loadedRepositories);
+        initRepositories(false);
+    }
+
     @Override
-    public void onRepositoryClicked(GithubRepository repository) {
+    public void onRepositoryClicked(Repository repository) {
         mView.showInfoMessage("Repository has " + repository.getStarsCount() + " stars.");
     }
 

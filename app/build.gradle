@@ -54,6 +54,7 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
 /*    signingConfigs {
@@ -97,6 +98,9 @@ dependencies {
 
     // Injection
     compile 'com.jakewharton:butterknife:7.0.0'
+
+    // Realm
+    compile 'io.realm:realm-android:0.84.1'
 
     // EventBus
     compile 'de.greenrobot:eventbus:2.4.0'
