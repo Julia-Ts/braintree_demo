@@ -9,9 +9,6 @@ import java.util.List;
 
 import retrofit.Call;
 
-/**
- * Created by Oleksii Shliama.
- */
 public class ExamplePresenter implements ExampleContract.Presenter {
 
     private static final String ORGANIZATION_NAME = "Yalantis";
