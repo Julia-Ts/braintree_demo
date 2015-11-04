@@ -7,12 +7,9 @@ import com.crashlytics.android.Crashlytics;
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
-import com.yalantis.model.Migration;
 import com.yalantis.util.CrashlyticsReportingTree;
 
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class App extends Application {
@@ -34,17 +31,6 @@ public class App extends Application {
             Fabric.with(App.sContext, new Crashlytics());
             Timber.plant(new CrashlyticsReportingTree());
         }
-
-        setupRealmDefaultInstance();
-    }
-
-    private static void setupRealmDefaultInstance() {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(sContext)
-                .name(Constant.Realm.STORAGE_MAIN)
-                .schemaVersion(Migration.CURRENT_VERSION)
-                .migration(new Migration())
-                .build();
-        Realm.setDefaultConfiguration(realmConfig);
     }
 
     public void clear() {

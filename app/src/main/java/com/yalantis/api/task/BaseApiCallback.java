@@ -8,7 +8,7 @@ import timber.log.Timber;
 /**
  * Base Api Task created for performing error handling in one place
  */
-public abstract class ApiTask<E> implements Callback<E> {
+public abstract class BaseApiCallback<E> implements Callback<E> {
 
     @Override
     public void onResponse(Response<E> response, Retrofit retrofit) {
@@ -21,14 +21,14 @@ public abstract class ApiTask<E> implements Callback<E> {
     }
 
     /**
-     * Callback for all child classes of {@link ApiTask}
+     * Callback for all child classes of {@link BaseApiCallback}
      *
      * @param response which contains Object of type defined in child
      */
     protected abstract void onSuccess(E response);
 
     /**
-     * Callback for all child classes of {@link ApiTask}*
+     * Callback for all child classes of {@link BaseApiCallback}*
      */
     protected abstract void onError();
 
