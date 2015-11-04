@@ -23,10 +23,6 @@ import io.realm.RealmObject;
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ApiManager implements Manager {
 
@@ -58,7 +54,6 @@ public class ApiManager implements Manager {
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(createGsonConverter())
                 .client(client)
                 .build();
@@ -92,12 +87,6 @@ public class ApiManager implements Manager {
 
     public Call<List<Repository>> getOrganizationRepos(@NonNull String organizationName, @NonNull String reposType) {
         return mGithubService.getOrganizationRepos(organizationName, reposType);
-    }
-
-    public Observable<List<Repository>> getOrganizationReposRx(@NonNull String organizationName, @NonNull String reposType) {
-        return mGithubService.getOrganizationReposRx(organizationName, reposType)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
