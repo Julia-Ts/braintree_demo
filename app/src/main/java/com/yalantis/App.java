@@ -4,12 +4,11 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.yalantis.manager.ApiManager;
 import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
 import com.yalantis.model.Migration;
-import com.yalantis.util.CrashReportingTree;
+import com.yalantis.util.CrashlyticsReportingTree;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -29,11 +28,12 @@ public class App extends Application {
         super.onCreate();
         App.sContext = getApplicationContext();
 
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(App.sContext, new Crashlytics.Builder().core(
-                    new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Fabric.with(App.sContext, new Crashlytics());
+            Timber.plant(new CrashlyticsReportingTree());
         }
-        Timber.plant(BuildConfig.DEBUG ? new Timber.DebugTree() : new CrashReportingTree());
 
         setupRealmDefaultInstance();
     }
