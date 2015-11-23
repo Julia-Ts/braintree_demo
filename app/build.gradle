@@ -106,7 +106,7 @@ dependencies {
     // REST
     compile ('com.squareup.retrofit:retrofit:2.0.0-beta2')
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.okhttp:logging-interceptor:2.6.0-SNAPSHOT'
+    compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
 
     // Logging and Crash-reporting
     compile 'com.jakewharton.timber:timber:4.1.0'
