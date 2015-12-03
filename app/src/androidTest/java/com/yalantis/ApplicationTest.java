@@ -1,4 +1,4 @@
-package com.healthjoy;
+package com.yalantis;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
