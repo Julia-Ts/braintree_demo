@@ -6,10 +6,6 @@ import android.support.annotation.NonNull;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.yalantis.api.ApiSettings;
 import com.yalantis.api.serializer.RepositorySerializer;
 import com.yalantis.api.services.GithubService;
@@ -20,9 +16,14 @@ import java.io.IOException;
 import java.util.List;
 
 import io.realm.RealmObject;
-import retrofit.Call;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
 
 public class ApiManager implements Manager {
 
@@ -39,7 +40,7 @@ public class ApiManager implements Manager {
         OkHttpClient client = new OkHttpClient();
         client.interceptors().add(new Interceptor() {
             @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+            public Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
                 Request request = original.newBuilder()
 //                        .header(ApiSettings.HEADER_AUTH_TOKEN, getAuthToken())

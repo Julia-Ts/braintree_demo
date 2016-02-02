@@ -7,7 +7,7 @@ import com.yalantis.model.Repository;
 
 import java.util.List;
 
-import retrofit.Call;
+import retrofit2.Call;
 
 public class ExamplePresenter implements ExampleContract.Presenter {
 

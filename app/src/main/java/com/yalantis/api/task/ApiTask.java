@@ -1,8 +1,7 @@
 package com.yalantis.api.task;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -11,8 +10,8 @@ import timber.log.Timber;
 public abstract class ApiTask<E> implements Callback<E> {
 
     @Override
-    public void onResponse(Response<E> response, Retrofit retrofit) {
-        Timber.d("success", response.code());
+    public void onResponse(Response<E> response) {
+        Timber.d("Success: %s", response.code());
         if (response.isSuccess()) {
             onSuccess(response.body());
         } else {

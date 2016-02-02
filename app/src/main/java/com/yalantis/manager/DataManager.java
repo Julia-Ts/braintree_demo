@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.Sort;
 import io.realm.exceptions.RealmException;
 import io.realm.exceptions.RealmMigrationNeededException;
 
@@ -33,7 +34,7 @@ public class DataManager implements Manager {
     }
 
     public List<Repository> getRepositories() {
-        return mRealm.where(Repository.class).findAllSorted("starsCount", false);
+        return mRealm.where(Repository.class).findAllSorted("starsCount", Sort.DESCENDING);
     }
 
     public void storeRepositories(final List<Repository> repositories) {
