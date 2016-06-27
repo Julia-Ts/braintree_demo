@@ -28,15 +28,9 @@ public class App extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
-            Fabric.with(App.sContext, new Crashlytics());
+            Fabric.with(this, new Crashlytics());
             Timber.plant(new CrashlyticsReportingTree());
         }
-    }
-
-    public void clear() {
-        sApiManager.clear();
-        sDataManager.clear();
-        sSharedPrefManager.clear();
     }
 
     public static Context getContext() {
@@ -65,6 +59,11 @@ public class App extends Application {
             sSharedPrefManager.init(getContext());
         }
         return sSharedPrefManager;
+    }
+
+    public static void logOut() {
+        //TODO: log out stuff
+        Timber.e("logOut");
     }
 
 }

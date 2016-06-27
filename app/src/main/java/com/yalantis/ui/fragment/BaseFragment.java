@@ -1,27 +1,82 @@
 package com.yalantis.ui.fragment;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.yalantis.Constant;
+import com.yalantis.interfaces.BaseActivityCallback;
 
-import de.greenrobot.event.EventBus;
+import butterknife.ButterKnife;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
+
+    private BaseActivityCallback mBaseActivityCallback;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mBaseActivityCallback = (BaseActivityCallback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.getClass().getSimpleName() + " must implement" + BaseActivityCallback.class.getSimpleName());
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(getLayoutResourceId(), container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    protected abstract int getLayoutResourceId();
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    public void onDetach() {
+        super.onDetach();
+        mBaseActivityCallback = null;
     }
 
-    public void onEvent(Constant.Event event) {
-
+    public void showProgress() {
+        mBaseActivityCallback.showProgress();
     }
+
+    public void hideProgress() {
+        mBaseActivityCallback.hideProgress();
+    }
+
+    public void showError(String message) {
+        mBaseActivityCallback.showError(message);
+    }
+
+    public void showError(@StringRes int strResId) {
+        mBaseActivityCallback.showError(strResId);
+    }
+
+    public void hideKeyboard() {
+        mBaseActivityCallback.hideKeyboard();
+    }
+
+    public void showMessage(String message) {
+        mBaseActivityCallback.showMessage(message);
+    }
+
+    public void showMessage(@StringRes int srtResId) {
+        mBaseActivityCallback.showMessage(srtResId);
+    }
+
+    public abstract String getFragmentTag();
 
 }
