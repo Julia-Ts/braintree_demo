@@ -5,7 +5,6 @@ import android.content.Context;
 import com.google.gson.GsonBuilder;
 import com.yalantis.api.ApiSettings;
 import com.yalantis.api.deserializer.StringDeserializer;
-import com.yalantis.api.services.NetworkService;
 import com.yalantis.interfaces.Manager;
 
 import okhttp3.OkHttpClient;
@@ -14,8 +13,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager implements Manager {
-
-    private NetworkService mNetworkService;
 
     @Override
     public void init(Context context) {
