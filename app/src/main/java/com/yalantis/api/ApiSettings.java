@@ -11,6 +11,5 @@ public final class ApiSettings {
 
     public static final String SERVER = SCHEME + HOSTNAME;
 
-    public static final String HEADER_AUTH_TOKEN = "Authorization";
 
 }

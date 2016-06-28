@@ -3,46 +3,40 @@ package com.yalantis.manager;
 import android.content.Context;
 
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.yalantis.api.ApiSettings;
+import com.yalantis.api.deserializer.StringDeserializer;
 import com.yalantis.interfaces.Manager;
 
-import java.io.IOException;
-
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager implements Manager {
 
-    private Retrofit mRetrofit;
-
     @Override
     public void init(Context context) {
-        initRetrofit();
-        initServices();
+        initServices(createRetrofit(createOkHttpClient()));
     }
 
-    private void initRetrofit() {
-        OkHttpClient client = new OkHttpClient();
-        client.interceptors().add(new Interceptor() {
-            @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                Request request = original.newBuilder()
-//                        .header(ApiSettings.HEADER_AUTH_TOKEN, getAuthToken())
-                        .method(original.method(), original.body())
-                        .build();
-                return chain.proceed(request);
-            }
-        });
+    @Override
+    public void clear() {
+
+    }
+
+    private OkHttpClient createOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.interceptors().add(interceptor);
 
-        mRetrofit = new Retrofit.Builder()
+        builder.addInterceptor(interceptor);
+
+        return builder.build();
+    }
+
+    private Retrofit createRetrofit(OkHttpClient client) {
+        return new Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addConverterFactory(createGsonConverter())
                 .client(client)
@@ -52,16 +46,16 @@ public class ApiManager implements Manager {
     private GsonConverterFactory createGsonConverter() {
         GsonBuilder builder = new GsonBuilder();
         builder.serializeNulls();
+        builder.registerTypeAdapter(String.class, new StringDeserializer());
         return GsonConverterFactory.create(builder.create());
     }
 
-    private void initServices() {
-
+    private void initServices(Retrofit retrofit) {
+        //TODO: init services
     }
 
-    @Override
-    public void clear() {
-
-    }
+    /**
+     * Api requests
+     */
 
 }
