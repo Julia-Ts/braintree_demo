@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.navi.component.support.NaviFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends NaviFragment {
 
     private BaseActivityCallback mBaseActivityCallback;
 
