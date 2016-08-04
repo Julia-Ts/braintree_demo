@@ -33,7 +33,7 @@ public class App extends Application {
         }
     }
 
-    public static Context getContext() {
+    private static Context getContext() {
         return sContext;
     }
 
