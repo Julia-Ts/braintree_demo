@@ -31,6 +31,7 @@ public abstract class BaseFragment extends NaviFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getLayoutResourceId(), container, false);
         ButterKnife.bind(this, view);
         return view;
