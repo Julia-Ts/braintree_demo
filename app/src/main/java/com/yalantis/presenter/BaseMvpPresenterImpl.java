@@ -38,7 +38,7 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
     @Override
     public void attachView(V view) {
         mView = view;
-        mSubscriptionList.add(RxNavi.observe((NaviComponent) view, Event.DESTROY).subscribe(new Action1<Void>() {
+        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
                 detachView();
