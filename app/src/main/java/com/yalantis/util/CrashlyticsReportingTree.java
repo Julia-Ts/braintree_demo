@@ -11,7 +11,8 @@ import timber.log.Timber;
  */
 
 public class CrashlyticsReportingTree extends Timber.Tree {
-    public final static int MIN_LOG_PRIORITY = Log.DEBUG;
+
+    public final static int MIN_LOG_PRIORITY = Log.ERROR;
 
     @Override
     public void log(int priority, String tag, String message, Throwable t) {
@@ -25,4 +26,5 @@ public class CrashlyticsReportingTree extends Timber.Tree {
             Crashlytics.logException(t);
         }
     }
+
 }

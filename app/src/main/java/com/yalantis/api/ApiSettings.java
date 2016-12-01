@@ -7,15 +7,9 @@ public final class ApiSettings {
 
     public static final String SCHEME = "https://";
 
-    public static final String HOSTNAME = "api.github.com/";
+    public static final String HOSTNAME = "";
 
     public static final String SERVER = SCHEME + HOSTNAME;
-
-    public static final String HEADER_AUTH_TOKEN = "Authorization";
-
-    public static final String PATH_ORGANIZATION = "organization";
-    public static final String PARAM_REPOS_TYPE = "type";
-    public static final String ORGANIZATION_REPOS = "orgs/" + "{" + PATH_ORGANIZATION + "}" + "/repos";
 
 
 }
