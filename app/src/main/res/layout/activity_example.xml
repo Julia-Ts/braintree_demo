@@ -22,7 +22,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/app_name">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -45,11 +46,10 @@
         android:id="@+id/progress_bar"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
+        android:layout_gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_anchor="@id/coordinator_layout"
-        app:layout_anchorGravity="center"/>
+        android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

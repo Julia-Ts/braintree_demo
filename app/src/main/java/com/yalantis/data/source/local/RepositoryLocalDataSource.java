@@ -2,9 +2,9 @@ package com.yalantis.data.source.local;
 
 import android.support.annotation.NonNull;
 
+import com.yalantis.data.Repository;
 import com.yalantis.data.source.RepositoryDataSource;
 import com.yalantis.data.source.base.BaseLocalDataSource;
-import com.yalantis.model.Repository;
 
 import java.util.List;
 

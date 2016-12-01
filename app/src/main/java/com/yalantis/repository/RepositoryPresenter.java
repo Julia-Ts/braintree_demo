@@ -1,7 +1,7 @@
 package com.yalantis.repository;
 
 import com.yalantis.App;
-import com.yalantis.model.Repository;
+import com.yalantis.data.Repository;
 
 import java.util.List;
 

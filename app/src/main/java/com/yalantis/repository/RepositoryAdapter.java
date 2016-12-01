@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yalantis.R;
-import com.yalantis.model.Repository;
+import com.yalantis.data.Repository;
 
 import java.util.ArrayList;
 import java.util.List;

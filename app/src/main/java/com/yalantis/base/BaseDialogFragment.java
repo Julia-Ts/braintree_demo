@@ -1,4 +1,4 @@
-package com.yalantis.ui.fragment.dialog;
+package com.yalantis.base;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;

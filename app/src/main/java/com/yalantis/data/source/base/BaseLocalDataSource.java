@@ -2,8 +2,6 @@ package com.yalantis.data.source.base;
 
 import android.content.Context;
 
-import com.yalantis.Constant;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
@@ -25,8 +23,7 @@ public abstract class BaseLocalDataSource implements BaseDataSource {
         try {
             return Realm.getDefaultInstance();
         } catch (RealmMigrationNeededException exception) {
-            Realm.deleteRealm(new RealmConfiguration.Builder(context)
-                    .name(Constant.Realm.STORAGE_MAIN).build());
+            Realm.deleteRealm(new RealmConfiguration.Builder(context).build());
             return Realm.getDefaultInstance();
         }
     }

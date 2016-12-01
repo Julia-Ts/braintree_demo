@@ -3,9 +3,9 @@ package com.yalantis.data.source;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.yalantis.data.Repository;
 import com.yalantis.data.source.local.RepositoryLocalDataSource;
 import com.yalantis.data.source.remote.RepositoryRemoteDataSource;
-import com.yalantis.model.Repository;
 
 import java.util.List;
 

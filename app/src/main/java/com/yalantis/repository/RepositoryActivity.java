@@ -12,8 +12,7 @@ import android.widget.ProgressBar;
 
 import com.yalantis.R;
 import com.yalantis.base.BaseActivity;
-import com.yalantis.model.Repository;
-import com.yalantis.ui.adapter.SimpleDividerItemDecoration;
+import com.yalantis.data.Repository;
 
 import java.util.List;
 
@@ -39,12 +38,16 @@ public class RepositoryActivity extends BaseActivity implements RepositoryContra
         mPresenter = new RepositoryPresenter();
         mPresenter.attachView(this);
 
-        setContentView(R.layout.activity_example);
         ButterKnife.bind(this);
 
         setupRecyclerView();
 
         mPresenter.initRepositories();
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_example;
     }
 
     private void setupRecyclerView() {
@@ -56,7 +59,6 @@ public class RepositoryActivity extends BaseActivity implements RepositoryContra
         });
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
     @Override

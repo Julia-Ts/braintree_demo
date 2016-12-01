@@ -2,7 +2,7 @@ package com.yalantis.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.yalantis.model.Repository;
+import com.yalantis.data.Repository;
 
 import java.util.List;
 

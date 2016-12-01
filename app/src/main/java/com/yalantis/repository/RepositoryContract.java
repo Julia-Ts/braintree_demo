@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.yalantis.base.BaseMvpPresenter;
 import com.yalantis.base.BaseMvpView;
-import com.yalantis.model.Repository;
+import com.yalantis.data.Repository;
 
 import java.util.List;
 
