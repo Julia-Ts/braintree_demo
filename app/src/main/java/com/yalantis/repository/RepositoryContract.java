@@ -1,16 +1,18 @@
-package com.yalantis.contract;
+package com.yalantis.repository;
 
 import android.support.annotation.NonNull;
 
+import com.yalantis.base.BaseMvpPresenter;
+import com.yalantis.base.BaseMvpView;
 import com.yalantis.model.Repository;
 
 import java.util.List;
 
-public class ExampleContract {
+class RepositoryContract {
 
-    public interface Presenter extends BaseMvpPresenter<View> {
+    interface Presenter extends BaseMvpPresenter<View> {
 
-        void initRepositories(boolean loadIfEmpty);
+        void initRepositories();
 
         void fetchRepositories();
 
@@ -18,7 +20,7 @@ public class ExampleContract {
 
     }
 
-    public interface View extends BaseMvpView {
+    interface View extends BaseMvpView {
 
         void showRepositories(List<Repository> repositoryList);
 

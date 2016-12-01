@@ -1,4 +1,4 @@
-package com.yalantis.ui.activity;
+package com.yalantis.repository;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,10 +11,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.yalantis.R;
-import com.yalantis.contract.ExampleContract;
+import com.yalantis.base.BaseActivity;
 import com.yalantis.model.Repository;
-import com.yalantis.presenter.ExamplePresenter;
-import com.yalantis.ui.adapter.RepositoryAdapter;
 import com.yalantis.ui.adapter.SimpleDividerItemDecoration;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ExampleActivity extends BaseActivity implements ExampleContract.View {
+public class RepositoryActivity extends BaseActivity implements RepositoryContract.View {
 
     @Bind(R.id.recycler_view_main)
     RecyclerView mRecyclerView;
@@ -32,13 +30,13 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
     @Bind(R.id.fab)
     FloatingActionButton mFloatingActionButton;
 
-    private ExamplePresenter mPresenter;
+    private RepositoryPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPresenter = new ExamplePresenter();
+        mPresenter = new RepositoryPresenter();
         mPresenter.attachView(this);
 
         setContentView(R.layout.activity_example);
@@ -46,7 +44,7 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
 
         setupRecyclerView();
 
-        mPresenter.initRepositories(true);
+        mPresenter.initRepositories();
     }
 
     private void setupRecyclerView() {
@@ -98,7 +96,7 @@ public class ExampleActivity extends BaseActivity implements ExampleContract.Vie
 
     @Override
     public Context getContext() {
-        return ExampleActivity.this;
+        return RepositoryActivity.this;
     }
 
     @Override
