@@ -1,4 +1,4 @@
-package com.yalantis.repository;
+package com.yalantis.flow.repository;
 
 import com.yalantis.App;
 import com.yalantis.data.Repository;
@@ -28,26 +28,30 @@ class RepositoryPresenter implements RepositoryContract.Presenter {
 
     @Override
     public void initRepositories() {
-        mSubscriptions.add(App.getReposRepository().getRepositories(ORGANIZATION_NAME).subscribe(new Action1<List<Repository>>() {
-            @Override
-            public void call(List<Repository> repositories) {
-                mView.hideProgress();
-                mView.showRepositories(repositories);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                mView.hideProgress();
-                mView.showErrorMessage();
-            }
-        }));
+        fetchRepositories(true);
     }
 
     @Override
     public void fetchRepositories() {
         mView.showProgress();
-        App.getReposRepository().refreshRepositories();
-        initRepositories();
+        fetchRepositories(false);
+    }
+
+    private void fetchRepositories(boolean local) {
+        mSubscriptions.add(App.getReposRepository().getRepositories(ORGANIZATION_NAME, local)
+                .subscribe(new Action1<List<Repository>>() {
+                    @Override
+                    public void call(List<Repository> repositories) {
+                        mView.hideProgress();
+                        mView.showRepositories(repositories);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mView.hideProgress();
+                        mView.showErrorMessage();
+                    }
+                }));
     }
 
     @Override

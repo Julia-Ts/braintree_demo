@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.yalantis.data.Migration;
-import com.yalantis.data.source.ReposRepository;
+import com.yalantis.data.source.repository.ReposRepository;
 import com.yalantis.manager.SharedPrefManager;
 import com.yalantis.util.CrashlyticsReportingTree;
 

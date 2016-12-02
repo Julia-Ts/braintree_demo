@@ -1,9 +1,8 @@
-package com.yalantis.data.source.local;
+package com.yalantis.data.source.repository;
 
 import android.support.annotation.NonNull;
 
 import com.yalantis.data.Repository;
-import com.yalantis.data.source.RepositoryDataSource;
 import com.yalantis.data.source.base.BaseLocalDataSource;
 
 import java.util.List;
@@ -11,21 +10,18 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.Sort;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by irinagalata on 12/1/16.
  */
 
-public class RepositoryLocalDataSource extends BaseLocalDataSource implements RepositoryDataSource {
+class RepositoryLocalDataSource extends BaseLocalDataSource implements RepositoryDataSource {
 
     @Override
-    public Observable<List<Repository>> getRepositories(@NonNull String organization) {
-        return Observable.just((List<Repository>) mRealm.where(Repository.class).findAllSorted("starsCount", Sort.DESCENDING));
-    }
-
-    @Override
-    public void refreshRepositories() {
-
+    public Single<List<Repository>> getRepositories(@NonNull String organization) {
+        return Observable.just((List<Repository>) mRealm.where(Repository.class)
+                .findAllSorted("starsCount", Sort.DESCENDING)).toSingle();
     }
 
     @Override
@@ -50,7 +46,7 @@ public class RepositoryLocalDataSource extends BaseLocalDataSource implements Re
 
     @Override
     public boolean isEmpty() {
-        return mRealm.where(Repository.class).findAll().isEmpty();
+        return mRealm.where(Repository.class).count() > 0;
     }
 
 }

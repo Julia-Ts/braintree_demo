@@ -1,4 +1,4 @@
-package com.yalantis.repository;
+package com.yalantis.flow.repository;
 
 import android.support.annotation.NonNull;
 
