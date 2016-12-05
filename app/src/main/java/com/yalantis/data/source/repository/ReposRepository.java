@@ -18,12 +18,10 @@ import rx.functions.Action1;
 
 public class ReposRepository implements Manager {
 
-    private volatile static ReposRepository sInstance = null;
-
     private RepositoryLocalDataSource mLocalSource;
     private RepositoryRemoteDataSource mRemoteSource;
 
-    private ReposRepository(Context context) {
+    public ReposRepository(Context context) {
         mLocalSource = new RepositoryLocalDataSource();
         mRemoteSource = new RepositoryRemoteDataSource();
 
@@ -31,14 +29,15 @@ public class ReposRepository implements Manager {
         mRemoteSource.init(context);
     }
 
-    public synchronized static ReposRepository getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new ReposRepository(context);
-        }
-
-        return sInstance;
-    }
-
+    /**
+     * Retrieves the repositories lists from multiple sources and concatenates them to single observable.
+     * {@link Observable#concatWith(Observable)} can be replaced by any other method to control the streams.
+     *
+     * @param organization Name of the organization to get repositories
+     * @param local        if {@code true} returns repositories from both local and remote sources,
+     *                     if {@code false} returns from remote only
+     * @return {@link Observable} that emits the lists of repositories
+     */
     public Observable<List<Repository>> getRepositories(@NonNull String organization, boolean local) {
         if (!mLocalSource.isEmpty() && local) {
             return mLocalSource.getRepositories(organization).concatWith(getRemoteRepositories(organization));

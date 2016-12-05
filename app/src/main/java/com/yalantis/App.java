@@ -27,7 +27,7 @@ public class App extends Application {
     public static void logOut(Context context) {
         //TODO: log out stuff
         SharedPrefManager.getInstance(context).clear();
-        ReposRepository.getInstance(context).clear();
+        new ReposRepository(context).clear();
         Timber.e("logOut");
     }
 

@@ -17,7 +17,7 @@ class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> 
     @Override
     public void attachView(RepositoryContract.View view) {
         super.attachView(view);
-        mRepository = ReposRepository.getInstance(view.getContext());
+        mRepository = new ReposRepository(view.getContext());
     }
 
     @Override
