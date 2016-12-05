@@ -1,4 +1,4 @@
-package com.yalantis.ui.fragment.dialog;
+package com.yalantis.dialog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.yalantis.R;
+import com.yalantis.base.BaseDialogFragment;
 
 public class ProgressDialogFragment extends BaseDialogFragment {
 

@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.yalantis.R;
 import com.yalantis.api.body.ErrorBody;
-import com.yalantis.contract.BaseMvpView;
+import com.yalantis.base.BaseMvpView;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketException;

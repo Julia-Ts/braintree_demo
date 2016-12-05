@@ -1,4 +1,4 @@
-package com.yalantis.contract;
+package com.yalantis.base;
 
 public interface BaseMvpPresenter<V extends BaseMvpView> {
 

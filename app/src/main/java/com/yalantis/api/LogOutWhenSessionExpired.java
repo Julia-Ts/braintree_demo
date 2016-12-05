@@ -1,5 +1,6 @@
 package com.yalantis.api;
 
+import android.content.Context;
 import android.widget.Toast;
 
 import com.yalantis.App;
@@ -17,6 +18,12 @@ import rx.functions.Func1;
  */
 public class LogOutWhenSessionExpired implements Func1<Observable<? extends Throwable>, Observable<?>> {
 
+    private Context mContext;
+
+    public LogOutWhenSessionExpired(Context context) {
+        this.mContext = context;
+    }
+
     @Override
     public Observable<?> call(Observable<? extends Throwable> observable) {
         return observable.observeOn(AndroidSchedulers.mainThread()).flatMap(new Func1<Throwable, Observable<?>>() {
@@ -31,14 +38,13 @@ public class LogOutWhenSessionExpired implements Func1<Observable<? extends Thro
                             return Observable.empty().observeOn(AndroidSchedulers.mainThread()).doOnCompleted(new Action0() {
                                 @Override
                                 public void call() {
-                                    Toast.makeText(App.getContext(), R.string.your_session_expired, Toast.LENGTH_SHORT).show();
-                                    App.logOut();
+                                    Toast.makeText(mContext, R.string.your_session_expired, Toast.LENGTH_SHORT).show();
+                                    App.logOut(mContext);
                                 }
                             });
                         }
                     }
                 }
-
                 // If cannot be handled - pass the original error through.
                 return Observable.error(throwable);
             }

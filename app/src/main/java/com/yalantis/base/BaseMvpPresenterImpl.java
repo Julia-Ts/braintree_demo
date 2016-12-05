@@ -1,16 +1,10 @@
-package com.yalantis.presenter;
+package com.yalantis.base;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import com.trello.navi.Event;
-import com.trello.navi.NaviComponent;
 import com.trello.navi.rx.RxNavi;
-import com.yalantis.App;
-import com.yalantis.contract.BaseMvpPresenter;
-import com.yalantis.contract.BaseMvpView;
-import com.yalantis.manager.ApiManager;
-import com.yalantis.manager.DataManager;
 import com.yalantis.manager.SharedPrefManager;
 
 import rx.Subscription;
@@ -22,11 +16,9 @@ import rx.internal.util.SubscriptionList;
  */
 public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements BaseMvpPresenter<V> {
 
+    protected SharedPrefManager mSpManager;
     protected V mView;
-    protected final ApiManager mApiManager = App.getApiManager();
-    protected final DataManager mDataManager = App.getDataManager();
-    protected final SharedPrefManager mSpManager = App.getSharedPrefManager();
-    protected SubscriptionList mSubscriptionList = new SubscriptionList();
+    private SubscriptionList mSubscriptionList = new SubscriptionList();
 
     /**
      * Attach view to presenter, also here we have subscription
@@ -38,6 +30,7 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
     @Override
     public void attachView(V view) {
         mView = view;
+        mSpManager = SharedPrefManager.getInstance(view.getContext());
         mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {

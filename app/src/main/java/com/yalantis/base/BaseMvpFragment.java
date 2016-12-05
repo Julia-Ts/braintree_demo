@@ -1,4 +1,4 @@
-package com.yalantis.ui.fragment;
+package com.yalantis.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,9 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.yalantis.contract.BaseMvpPresenter;
-import com.yalantis.contract.BaseMvpView;
 
 
 public abstract class BaseMvpFragment<T extends BaseMvpPresenter> extends BaseFragment implements BaseMvpView {

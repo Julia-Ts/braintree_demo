@@ -1,4 +1,4 @@
-package com.yalantis.ui.activity;
+package com.yalantis.base;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.trello.navi.component.support.NaviAppCompatActivity;
+import com.yalantis.dialog.ProgressDialogFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
-import com.yalantis.ui.fragment.dialog.ProgressDialogFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

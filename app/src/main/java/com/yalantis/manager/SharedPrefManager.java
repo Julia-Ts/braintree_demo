@@ -15,17 +15,15 @@ import java.util.Set;
 public class SharedPrefManager implements Manager {
 
     private static final String NAME = "sharedPrefs";
-
     private static final String API_KEY = "api_key";
-
+    private volatile static SharedPrefManager sInstance;
     private SharedPreferences sp;
 
     private Set<CachedValue> cachedValues;
 
     private CachedValue<String> apiKey;
 
-    @Override
-    public void init(Context context) {
+    private SharedPrefManager(Context context) {
         sp = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         CachedValue.initialize(sp);
         cachedValues = new HashSet<>();
@@ -33,16 +31,22 @@ public class SharedPrefManager implements Manager {
         cachedValues.add(apiKey = new CachedValue<>(API_KEY, String.class));
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey.setValue(apiKey);
+    public synchronized static SharedPrefManager getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new SharedPrefManager(context);
+        }
+
+        return sInstance;
     }
 
     public String getApiKey() {
         return apiKey.getValue();
     }
 
+    public void setApiKey(String apiKey) {
+        this.apiKey.setValue(apiKey);
+    }
 
-    @Override
     public void clear() {
         for (CachedValue value : cachedValues) {
             value.delete();
