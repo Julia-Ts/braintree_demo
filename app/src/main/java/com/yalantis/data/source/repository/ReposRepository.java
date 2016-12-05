@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.yalantis.data.Repository;
+import com.yalantis.interfaces.Manager;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ import rx.functions.Action1;
  * Created by irinagalata on 12/1/16.
  */
 
-public class ReposRepository {
+public class ReposRepository implements Manager {
 
-    private static ReposRepository sInstance = null;
+    private volatile static ReposRepository sInstance = null;
 
     private RepositoryLocalDataSource mLocalSource;
     private RepositoryRemoteDataSource mRemoteSource;
@@ -30,7 +31,7 @@ public class ReposRepository {
         mRemoteSource.init(context);
     }
 
-    public static ReposRepository getInstance(Context context) {
+    public synchronized static ReposRepository getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new ReposRepository(context);
         }
@@ -62,6 +63,11 @@ public class ReposRepository {
 
     public void clearRepositories() {
         mLocalSource.clearRepositories();
+    }
+
+    @Override
+    public void clear() {
+        clearRepositories();
     }
 
 }

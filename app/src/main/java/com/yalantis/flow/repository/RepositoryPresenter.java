@@ -1,29 +1,23 @@
 package com.yalantis.flow.repository;
 
-import com.yalantis.App;
+import com.yalantis.base.BaseMvpPresenterImpl;
 import com.yalantis.data.Repository;
+import com.yalantis.data.source.repository.ReposRepository;
 
 import java.util.List;
 
 import rx.functions.Action1;
-import rx.internal.util.SubscriptionList;
 
-class RepositoryPresenter implements RepositoryContract.Presenter {
+class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> implements RepositoryContract.Presenter {
 
     private static final String ORGANIZATION_NAME = "Yalantis";
 
-    private RepositoryContract.View mView;
-    private SubscriptionList mSubscriptions = new SubscriptionList();
+    private ReposRepository mRepository;
 
     @Override
     public void attachView(RepositoryContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void detachView() {
-        mView = null;
-        mSubscriptions.unsubscribe();
+        super.attachView(view);
+        mRepository = ReposRepository.getInstance(view.getContext());
     }
 
     @Override
@@ -38,7 +32,7 @@ class RepositoryPresenter implements RepositoryContract.Presenter {
     }
 
     private void fetchRepositories(boolean local) {
-        mSubscriptions.add(App.getReposRepository().getRepositories(ORGANIZATION_NAME, local)
+        addSubscription(mRepository.getRepositories(ORGANIZATION_NAME, local)
                 .subscribe(new Action1<List<Repository>>() {
                     @Override
                     public void call(List<Repository> repositories) {
