@@ -22,7 +22,7 @@ internal class RepositoryLocalDataSource : BaseLocalDataSource(), RepositoryData
     }
 
     override fun clearRepositories() {
-        mRealm.executeTransaction { realm -> realm.clear(Repository::class.java) }
+        mRealm.executeTransaction { realm -> realm.delete(Repository::class.java) }
     }
 
     override fun isEmpty(): Boolean = mRealm.where<Repository>(Repository::class.java).count() > 0

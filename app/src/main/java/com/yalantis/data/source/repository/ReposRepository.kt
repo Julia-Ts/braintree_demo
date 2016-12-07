@@ -1,6 +1,5 @@
 package com.yalantis.data.source.repository
 
-import android.content.Context
 import com.yalantis.data.Repository
 import com.yalantis.interfaces.Manager
 import rx.Observable
@@ -10,13 +9,13 @@ import rx.Single
  * Created by irinagalata on 12/1/16.
  */
 
-class ReposRepository(context: Context) : Manager {
+class ReposRepository() : Manager {
 
     private val mLocalSource: RepositoryLocalDataSource = RepositoryLocalDataSource().apply {
-        init(context)
+        init()
     }
     private val mRemoteSource: RepositoryRemoteDataSource = RepositoryRemoteDataSource().apply {
-        init(context)
+        init()
     }
 
     fun getRepositories(organization: String, local: Boolean): Observable<List<Repository>> {

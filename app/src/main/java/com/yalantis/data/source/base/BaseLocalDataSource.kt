@@ -1,7 +1,5 @@
 package com.yalantis.data.source.base
 
-import android.content.Context
-
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.exceptions.RealmMigrationNeededException
@@ -14,23 +12,22 @@ abstract class BaseLocalDataSource : BaseDataSource {
 
     protected lateinit var mRealm: Realm
 
-    override fun init(context: Context) {
-        mRealm = getRealmInstance(context)
+    override fun init() {
+        mRealm = getRealmInstance()
     }
 
-    private fun getRealmInstance(context: Context): Realm {
+    private fun getRealmInstance(): Realm {
         try {
             return Realm.getDefaultInstance()
         } catch (exception: RealmMigrationNeededException) {
-            Realm.deleteRealm(RealmConfiguration.Builder(context).build())
+            Realm.deleteRealm(RealmConfiguration.Builder().build())
             return Realm.getDefaultInstance()
         }
-
     }
 
     override fun clear() {
         if (!mRealm.isClosed) {
-            mRealm!!.close()
+            mRealm.close()
         }
     }
 

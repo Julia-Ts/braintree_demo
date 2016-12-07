@@ -1,6 +1,5 @@
 package com.yalantis.data.source.base
 
-import android.content.Context
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
@@ -23,7 +22,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
     protected lateinit var mGithubService: GithubService
     private lateinit var mRetrofit: Retrofit
 
-    override fun init(context: Context) {
+    override fun init() {
         initRetrofit()
         initServices()
     }

@@ -38,6 +38,6 @@ class LogOutWhenSessionExpired(private val mContext: Context) : Func1<Observable
 
     fun logOut() {
         SharedPrefManager.getInstance(mContext).clear()
-        ReposRepository(mContext).clear()
+        ReposRepository().clear()
     }
 }

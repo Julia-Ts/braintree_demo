@@ -16,6 +16,7 @@ class RepositoryActivity : BaseActivity<RepositoryPresenter, ActivityExampleBind
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding.presenter = presenter
         setupRecyclerView()
         presenter.initRepositories()
     }
