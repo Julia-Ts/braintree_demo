@@ -1,8 +1,6 @@
 package com.yalantis.base
 
 import android.support.annotation.StringRes
-import com.trello.navi.Event
-import com.trello.navi.rx.RxNavi
 import com.yalantis.manager.SharedPrefManager
 import rx.Subscription
 import rx.internal.util.SubscriptionList
@@ -10,7 +8,7 @@ import rx.internal.util.SubscriptionList
 /**
  * Created by voltazor on 20/03/16.
  */
-abstract class BaseMvpPresenterImpl<V : BaseMvpView> : BaseMvpPresenter<V> {
+abstract class BasePresenterImplementation<V : BaseView> : BasePresenter {
 
     protected lateinit var mSpManager: SharedPrefManager
     protected var mView: V? = null
@@ -21,12 +19,12 @@ abstract class BaseMvpPresenterImpl<V : BaseMvpView> : BaseMvpPresenter<V> {
      * for destroy event. On destroy event we should detach view
      * and destroy presenter
 
-     * @param view extend BaseMvpView
+     * @param view extend BaseView
      */
-    override fun attachView(view: V) {
-        mView = view
+    @Suppress("UNCHECKED_CAST")
+    override fun attachView(view: BaseView) {
+        mView = view as V
         mSpManager = SharedPrefManager.getInstance(view.getContext())
-        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe { detachView() })
     }
 
     /**

@@ -1,41 +1,32 @@
 package com.yalantis.base
 
 import android.content.Context
+import android.databinding.DataBindingUtil
+import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import butterknife.Bind
-import butterknife.ButterKnife
-import com.trello.navi.component.support.NaviAppCompatActivity
 import com.yalantis.dialog.ProgressDialogFragment
-import com.yalantis.interfaces.BaseActivityCallback
 
-abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
-
-    @Bind(android.R.id.content)
-    protected var mRootView: View? = null
+abstract class BaseActivity<out T : BasePresenter, K : ViewDataBinding> : AppCompatActivity(), BaseView {
 
     private var mProgressDialog: ProgressDialogFragment? = null
-
-    abstract fun getLayoutResourceId(): Int
+    abstract protected val presenter: T
+    abstract protected val layoutResourceId: Int
+    protected lateinit var binding: K
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutResourceId())
+        binding = DataBindingUtil.setContentView(this, layoutResourceId)
+        presenter.attachView(this)
     }
 
     override fun setContentView(layoutId: Int) {
         super.setContentView(layoutId)
-        ButterKnife.bind(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        ButterKnife.unbind(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -48,7 +39,7 @@ abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showError(error: String) {
+    override fun showError(error: String?) {
         showMessage(error)
     }
 
@@ -56,9 +47,9 @@ abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
         showError(getString(strResId))
     }
 
-    override fun showMessage(message: String) {
-        mRootView?.let {
-            Snackbar.make(mRootView!!, message, Snackbar.LENGTH_SHORT).show()
+    override fun showMessage(message: String?) {
+        message?.let {
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -81,10 +72,10 @@ abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
         }
     }
 
-    override fun hideKeyboard() {
+    fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = this.currentFocus
-        if (view != null) {
+        view?.let {
             inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
@@ -93,7 +84,7 @@ abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
         val oldFragment = supportFragmentManager.findFragmentById(containerId)
 
         val transaction = supportFragmentManager.beginTransaction()
-        if (oldFragment != null) {
+        oldFragment?.let {
             transaction.detach(oldFragment)
         }
         transaction.attach(fragment)
@@ -104,4 +95,8 @@ abstract class BaseActivity : NaviAppCompatActivity(), BaseActivityCallback {
         transaction.commit()
     }
 
+    override fun onDestroy() {
+        presenter.detachView()
+        super.onDestroy()
+    }
 }

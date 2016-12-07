@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.yalantis.R;
 import com.yalantis.api.body.ErrorBody;
-import com.yalantis.base.BaseMvpView;
+import com.yalantis.base.BaseView;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketException;
@@ -22,7 +22,7 @@ import timber.log.Timber;
  */
 public class GeneralErrorHandler implements Action1<Throwable> {
 
-    private final WeakReference<BaseMvpView> mViewReference;
+    private final WeakReference<BaseView> mViewReference;
     private final Map<Integer, String> mCodeMessageMap;
     private final FailureCallback mFailureCallback;
     private final boolean mShowError;
@@ -31,31 +31,31 @@ public class GeneralErrorHandler implements Action1<Throwable> {
         this(null, false, null, null);
     }
 
-    public GeneralErrorHandler(BaseMvpView view) {
+    public GeneralErrorHandler(BaseView view) {
         this(view, false, null, null);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, boolean showError) {
+    public GeneralErrorHandler(BaseView view, boolean showError) {
         this(view, showError, null, null);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, Map<Integer, String> codeMessageMap) {
+    public GeneralErrorHandler(BaseView view, Map<Integer, String> codeMessageMap) {
         this(view, true, codeMessageMap, null);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, Map<Integer, String> codeMessageMap, FailureCallback failureCallback) {
+    public GeneralErrorHandler(BaseView view, Map<Integer, String> codeMessageMap, FailureCallback failureCallback) {
         this(view, true, codeMessageMap, failureCallback);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, FailureCallback failureCallback) {
+    public GeneralErrorHandler(BaseView view, FailureCallback failureCallback) {
         this(view, true, null, failureCallback);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, boolean showError, FailureCallback failureCallback) {
+    public GeneralErrorHandler(BaseView view, boolean showError, FailureCallback failureCallback) {
         this(view, showError, null, failureCallback);
     }
 
-    public GeneralErrorHandler(BaseMvpView view, boolean showError, @Nullable Map<Integer, String> codeMessageMap, FailureCallback failureCallback) {
+    public GeneralErrorHandler(BaseView view, boolean showError, @Nullable Map<Integer, String> codeMessageMap, FailureCallback failureCallback) {
         mViewReference = new WeakReference<>(view);
         mFailureCallback = failureCallback;
         mCodeMessageMap = codeMessageMap;
@@ -99,7 +99,7 @@ public class GeneralErrorHandler implements Action1<Throwable> {
 
     private void showErrorIfRequired(@StringRes int strResId) {
         if (mShowError) {
-            BaseMvpView view = mViewReference.get();
+            BaseView view = mViewReference.get();
             if (view != null) {
                 view.showError(strResId);
             }
@@ -108,7 +108,7 @@ public class GeneralErrorHandler implements Action1<Throwable> {
 
     private void showErrorIfRequired(String error) {
         if (mShowError && !TextUtils.isEmpty(error)) {
-            BaseMvpView view = mViewReference.get();
+            BaseView view = mViewReference.get();
             if (view != null) {
                 view.showError(error);
             }

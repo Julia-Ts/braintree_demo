@@ -1,18 +1,15 @@
 package com.yalantis.flow.repository
 
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.Bind
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.yalantis.R
 import com.yalantis.data.Repository
+import com.yalantis.databinding.ItemRepositoryBinding
 import java.util.*
 
-internal class RepositoryAdapter(private val mItemClickListener: RepositoryAdapter.ItemClickListener?) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
+internal class RepositoryAdapter(val repoClick: (Repository) -> Unit) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
 
     private val mRepositories = ArrayList<Repository>()
 
@@ -23,49 +20,19 @@ internal class RepositoryAdapter(private val mItemClickListener: RepositoryAdapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_repository, parent, false)
-        return RepositoryViewHolder(itemView, mItemClickListener)
+        val binding: ItemRepositoryBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_repository, parent, false)
+        return RepositoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int) {
         val repository = mRepositories[position]
-        holder.bindData(repository)
+        holder.binding.repo = repository
+        holder.binding.root.setOnClickListener { repoClick(repository) }
     }
 
     override fun getItemCount(): Int {
         return mRepositories.size
     }
 
-    internal interface ItemClickListener {
-        fun onItemClick(repository: Repository)
-    }
-
-    internal class RepositoryViewHolder(itemView: View, private val mItemClickListener: ItemClickListener?) : RecyclerView.ViewHolder(itemView) {
-        @Bind(R.id.text_view_title)
-        var titleTextView: TextView? = null
-        @Bind(R.id.text_view_description)
-        var descriptionTextView: TextView? = null
-        private var mRepository: Repository? = null
-
-        init {
-            ButterKnife.bind(this, itemView)
-        }
-
-        fun bindData(repository: Repository) {
-            mRepository = repository
-
-            titleTextView!!.text = repository.name
-            descriptionTextView!!.text = repository.description
-        }
-
-        @OnClick(R.id.linear_layout_content)
-        fun onClickListItem() {
-            mRepository?.let {
-                mItemClickListener?.onItemClick(mRepository!!)
-            }
-        }
-
-    }
-
+    internal class RepositoryViewHolder(val binding: ItemRepositoryBinding) : RecyclerView.ViewHolder(binding.root)
 }

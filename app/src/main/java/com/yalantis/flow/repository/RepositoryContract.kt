@@ -1,12 +1,12 @@
 package com.yalantis.flow.repository
 
-import com.yalantis.base.BaseMvpPresenter
-import com.yalantis.base.BaseMvpView
+import com.yalantis.base.BasePresenter
+import com.yalantis.base.BaseView
 import com.yalantis.data.Repository
 
 class RepositoryContract {
 
-    internal interface Presenter : BaseMvpPresenter<View> {
+    internal interface Presenter : BasePresenter {
 
         fun initRepositories()
 
@@ -16,18 +16,9 @@ class RepositoryContract {
 
     }
 
-    interface View : BaseMvpView {
+    interface View : BaseView {
 
         fun showRepositories(repositoryList: List<Repository>)
-
-        override fun showProgress()
-
-        override fun hideProgress()
-
-        fun showInfoMessage(message: String)
-
-        fun showErrorMessage()
-
     }
 
 }

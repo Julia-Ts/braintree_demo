@@ -2,9 +2,8 @@ package com.yalantis.base
 
 import android.content.Context
 import android.support.annotation.StringRes
-import com.trello.navi.NaviComponent
 
-interface BaseMvpView : NaviComponent {
+interface BaseView {
 
     fun getContext(): Context
 
@@ -14,10 +13,10 @@ interface BaseMvpView : NaviComponent {
 
     fun showError(@StringRes strResId: Int)
 
-    fun showError(error: String)
+    fun showError(error: String?)
 
     fun showMessage(@StringRes srtResId: Int)
 
-    fun showMessage(message: String)
+    fun showMessage(message: String?)
 
 }
