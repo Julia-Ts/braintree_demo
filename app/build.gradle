@@ -34,7 +34,7 @@ android {
         applicationId "com.yalantis"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
+        versionCode System.getenv("BUILD_NUMBER") as Integer ?: 1
         versionName "1.0"
         multiDexEnabled true
     }

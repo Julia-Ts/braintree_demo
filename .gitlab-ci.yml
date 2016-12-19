@@ -1,0 +1,49 @@
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - export ANDROID_HOME=/opt/android
+
+assemble:
+  stage: build
+  script:
+    - ./gradlew assembleRelease
+  tags:
+    - android
+  artifacts:
+    paths:
+      - ./android/build/outputs/apk/android-release.apk
+    when: on_success
+    expire_in: 1 week
+  except:
+    - develop
+
+junit:
+  stage: test
+  script:
+    - ./gradlew common:test
+  tags:
+    - android
+  artifacts:
+    paths:
+      - ./common/build/reports/tests/debug/index.html
+    when: on_failure
+    expire_in: 1 week
+
+cache:
+  paths:
+    - build-number
+
+deploy-to-crashlytics:
+  stage: deploy
+  script:
+    - touch build-number
+    - BUILD_NUMBER=$(<build-number) && echo $((++BUILD_NUMBER)) > build-number
+    - BUILD_NUMBER=$BUILD_NUMBER ./gradlew assembleRelease crashlyticsUpRelease
+  only:
+    - develop
+  tags:
+    - android
+
