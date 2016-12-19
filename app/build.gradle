@@ -34,7 +34,7 @@ android {
         applicationId "com.yalantis"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
+        versionCode System.getenv("BUILD_NUMBER") as Integer ?: 1
         versionName "1.0"
         multiDexEnabled true
     }
@@ -69,13 +69,12 @@ android {
     
     buildTypes {
         release {
-//            signingConfig signingConfigs.release
-            proguardFile 'proguard.cfg'
+            signingConfig signingConfigs.release
+            proguardFile 'proguard-rules.pro'
             minifyEnabled true
             shrinkResources true
             ext.enableCrashlytics = true
             ext.betaDistributionReleaseNotes = getDate()
-            ext.betaDistributionGroupAliases = "android"
         }
         debug {
 //            signingConfig signingConfigs.release
@@ -119,4 +118,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
         transitive = true
     }
+    testCompile 'junit:junit:4.12'
 }
