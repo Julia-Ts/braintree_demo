@@ -14,7 +14,7 @@ assemble:
     - android
   artifacts:
     paths:
-      - ./android/build/outputs/apk/android-release.apk
+      - ./app/build/outputs/apk/app-release*.apk
     when: on_success
     expire_in: 1 week
   except:
@@ -23,12 +23,12 @@ assemble:
 junit:
   stage: test
   script:
-    - ./gradlew common:test
+    - ./gradlew app:test
   tags:
     - android
   artifacts:
     paths:
-      - ./common/build/reports/tests/debug/index.html
+      - ./app/build/reports/tests/debug/index.html
     when: on_failure
     expire_in: 1 week
 

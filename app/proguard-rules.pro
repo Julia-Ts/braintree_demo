@@ -187,9 +187,6 @@
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 
-# Application classes that will be serialized/deserialized over Gson
--keep class com.brotechllc.thebroapp.model.** { *; }
-
 #Rx
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
@@ -234,6 +231,3 @@
 -dontwarn com.google.api.**
 -dontwarn com.mopub.**
 
-# Application classes that will be serialized/deserialized over Gson
--keep class com.brotechllc.thebroapp.model.** { *; }
--keep class com.brotechllc.thebroapp.api.body.** { *; }
