@@ -28,7 +28,7 @@ junit:
     - android
   artifacts:
     paths:
-      - ./app/build/reports/tests/debug/index.html
+      - ./app/build/reports/tests/debug/*
     when: on_failure
     expire_in: 1 week
 
