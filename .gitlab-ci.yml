@@ -41,7 +41,7 @@ deploy-to-crashlytics:
   script:
     - touch build-number
     - BUILD_NUMBER=$(<build-number) && echo $((++BUILD_NUMBER)) > build-number
-    - BUILD_NUMBER=$BUILD_NUMBER ./gradlew assembleRelease crashlyticsUpRelease
+    - BUILD_NUMBER=$BUILD_NUMBER ./gradlew assembleRelease crashlyticsUpDistRelease
   only:
     - develop
   tags:
