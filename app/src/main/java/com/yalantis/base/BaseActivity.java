@@ -15,16 +15,18 @@ import com.trello.navi.component.support.NaviAppCompatActivity;
 import com.yalantis.dialog.ProgressDialogFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public abstract class BaseActivity extends NaviAppCompatActivity implements BaseActivityCallback {
 
     @Nullable
-    @Bind(android.R.id.content)
+    @BindView(android.R.id.content)
     protected View mRootView;
 
     private ProgressDialogFragment mProgressDialog;
+    private Unbinder mBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public abstract class BaseActivity extends NaviAppCompatActivity implements Base
     @Override
     public final void setContentView(int layoutId) {
         super.setContentView(layoutId);
-        ButterKnife.bind(this);
+        mBind = ButterKnife.bind(this);
     }
 
     protected abstract int getLayoutResourceId();
@@ -43,7 +45,7 @@ public abstract class BaseActivity extends NaviAppCompatActivity implements Base
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        mBind.unbind();
     }
 
     @Override

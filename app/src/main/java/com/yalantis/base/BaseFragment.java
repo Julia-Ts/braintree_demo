@@ -12,10 +12,12 @@ import com.trello.navi.component.support.NaviFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public abstract class BaseFragment extends NaviFragment {
 
     private BaseActivityCallback mBaseActivityCallback;
+    private Unbinder mBind;
 
     @Override
     public void onAttach(Context context) {
@@ -32,7 +34,7 @@ public abstract class BaseFragment extends NaviFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getLayoutResourceId(), container, false);
-        ButterKnife.bind(this, view);
+        mBind = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -41,7 +43,7 @@ public abstract class BaseFragment extends NaviFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        mBind.unbind();
     }
 
     @Override

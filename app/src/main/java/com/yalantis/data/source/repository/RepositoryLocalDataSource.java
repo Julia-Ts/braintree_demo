@@ -39,7 +39,7 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.clear(Repository.class);
+                realm.delete(Repository.class);
             }
         });
     }

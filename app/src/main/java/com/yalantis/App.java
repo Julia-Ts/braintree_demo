@@ -16,8 +16,8 @@ import timber.log.Timber;
 
 public class App extends Application {
 
-    private static void setupRealmDefaultInstance(Context context) {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
+    private static void setupRealmDefaultInstance() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(Migration.CURRENT_VERSION)
                 .migration(new Migration())
                 .build();
@@ -42,7 +42,8 @@ public class App extends Application {
             Timber.plant(new CrashlyticsReportingTree());
         }
 
-        setupRealmDefaultInstance(this);
+        Realm.init(this);
+        setupRealmDefaultInstance();
     }
 
 }
