@@ -16,14 +16,14 @@ public abstract class BaseLocalDataSource implements BaseDataSource {
 
     @Override
     public void init(Context context) {
-        mRealm = getRealmInstance(context);
+        mRealm = getRealmInstance();
     }
 
-    private Realm getRealmInstance(Context context) {
+    private Realm getRealmInstance() {
         try {
             return Realm.getDefaultInstance();
         } catch (RealmMigrationNeededException exception) {
-            Realm.deleteRealm(new RealmConfiguration.Builder(context).build());
+            Realm.deleteRealm(new RealmConfiguration.Builder().build());
             return Realm.getDefaultInstance();
         }
     }

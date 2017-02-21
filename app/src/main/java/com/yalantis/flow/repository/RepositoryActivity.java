@@ -16,17 +16,16 @@ import com.yalantis.data.Repository;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class RepositoryActivity extends BaseActivity implements RepositoryContract.View {
 
-    @Bind(R.id.recycler_view_main)
+    @BindView(R.id.recycler_view_main)
     RecyclerView mRecyclerView;
-    @Bind(R.id.progress_bar)
+    @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFloatingActionButton;
 
     private RepositoryPresenter mPresenter;
@@ -37,8 +36,6 @@ public class RepositoryActivity extends BaseActivity implements RepositoryContra
 
         mPresenter = new RepositoryPresenter();
         mPresenter.attachView(this);
-
-        ButterKnife.bind(this);
 
         setupRecyclerView();
 

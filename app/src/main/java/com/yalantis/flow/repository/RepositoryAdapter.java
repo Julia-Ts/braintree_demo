@@ -14,7 +14,7 @@ import com.yalantis.data.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -59,9 +59,9 @@ class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Repositor
     static class RepositoryViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemClickListener mItemClickListener;
-        @Bind(R.id.text_view_title)
+        @BindView(R.id.text_view_title)
         TextView titleTextView;
-        @Bind(R.id.text_view_description)
+        @BindView(R.id.text_view_description)
         TextView descriptionTextView;
         private Repository mRepository;
 
