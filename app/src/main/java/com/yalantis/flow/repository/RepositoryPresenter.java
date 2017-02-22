@@ -42,6 +42,7 @@ class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> 
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
+                        throwable.printStackTrace();
                         mView.hideProgress();
                         mView.showErrorMessage();
                     }
@@ -53,4 +54,9 @@ class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> 
         mView.showInfoMessage("Repository has " + repository.getStarsCount() + " stars.");
     }
 
+    @Override
+    public void detachView() {
+        super.detachView();
+        mRepository.clear();
+    }
 }
