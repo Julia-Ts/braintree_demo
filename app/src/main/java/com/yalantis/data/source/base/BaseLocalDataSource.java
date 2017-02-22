@@ -26,7 +26,10 @@ public abstract class BaseLocalDataSource implements BaseDataSource {
 
     /**
      * Keep in mind if you create reference to instance of Realm
-     * you always need to check isClosed() before usage.
+     * you always need to check isClosed() before usage and you
+     * can try to access from incorrect thread.
+     * That's why had better to use this method and
+     * don't create reference to instance of Realm.
      *
      * @return instance of Realm for current thread
      */
