@@ -13,6 +13,15 @@ import kotlin.reflect.KProperty
 
 abstract class BaseLocalDataSource : BaseDataSource {
 
+    /**
+     * Keep in mind if you create reference to instance of Realm
+     * you always need to check isClosed() before usage and you
+     * can try to access from incorrect thread.
+     * That's why had better to use this instance of Realm.
+     * @see ThreadLocalRealmDelegate
+     *
+     * @return instance of Realm for current thread
+     */
     val realm by ThreadLocalRealmDelegate()
 
     companion object {
