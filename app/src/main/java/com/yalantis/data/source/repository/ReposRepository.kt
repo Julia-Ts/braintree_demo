@@ -23,7 +23,6 @@ class ReposRepository() : Manager {
         if (!mLocalSource.isEmpty() && local) {
             return mLocalSource.getRepositories(organization).concatWith(getRemoteRepositories(organization))
         }
-
         return getRemoteRepositories(organization).toObservable()
     }
 

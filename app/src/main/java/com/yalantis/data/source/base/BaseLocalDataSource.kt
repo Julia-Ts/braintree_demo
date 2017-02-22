@@ -4,7 +4,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.exceptions.RealmMigrationNeededException
 import java.util.*
-import kotlin.properties.ReadWriteProperty
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -13,36 +13,42 @@ import kotlin.reflect.KProperty
 
 abstract class BaseLocalDataSource : BaseDataSource {
 
-    var realm by ThreadLocalRealmDelegate()
+    val realm by ThreadLocalRealmDelegate()
 
     companion object {
         @JvmStatic
         private val THREAD_LOCAL_REALM = ThreadLocal<Realm?>()
         @JvmStatic
-        private val REALMS_LIST = ArrayList<Realm?>()
+        private val REALMS_LIST = HashSet<Realm?>()
     }
 
     override fun init() {
 
     }
 
-    fun clearRealm() {
+    fun closeCurrentThreadRealm() {
         val realm = THREAD_LOCAL_REALM.get()
-        if (realm != null && !realm.isClosed) {
+        if (realm != null
+                && realm.isClosed.not()
+                && realm.isInTransaction.not()) {
             realm.close()
             REALMS_LIST.remove(realm)
         }
         THREAD_LOCAL_REALM.set(null)
     }
 
-    override fun clear() {
+    fun closeAllThreadsRealms() {
         REALMS_LIST
                 .filter { it?.isClosed?.not() ?: false }
                 .forEach { it?.close() }
         THREAD_LOCAL_REALM.remove()
     }
 
-    private class ThreadLocalRealmDelegate : ReadWriteProperty<Any?, Realm> {
+    override fun clear() {
+
+    }
+
+    private class ThreadLocalRealmDelegate : ReadOnlyProperty<Any?, Realm> {
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): Realm {
             var realm = THREAD_LOCAL_REALM.get()
@@ -52,10 +58,6 @@ abstract class BaseLocalDataSource : BaseDataSource {
             }
             REALMS_LIST.add(realm)
             return realm
-        }
-
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Realm) {
-
         }
 
         private fun getRealmInstance(): Realm {
