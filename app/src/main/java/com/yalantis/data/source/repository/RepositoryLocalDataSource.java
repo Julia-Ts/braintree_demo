@@ -3,6 +3,7 @@ package com.yalantis.data.source.repository;
 import android.support.annotation.NonNull;
 
 import com.yalantis.data.Repository;
+import com.yalantis.data.RepositoryFields;
 import com.yalantis.data.source.base.BaseLocalDataSource;
 
 import java.util.List;
@@ -22,7 +23,7 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
     public Single<List<Repository>> getRepositories(@NonNull String organization) {
         return Observable.just((List<Repository>) getRealm()
                 .where(Repository.class)
-                .findAllSorted("starsCount", Sort.DESCENDING))
+                .findAllSorted(RepositoryFields.STARS_COUNT, Sort.DESCENDING))
                 .toSingle();
     }
 
