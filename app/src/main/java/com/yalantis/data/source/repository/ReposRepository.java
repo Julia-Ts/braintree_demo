@@ -10,6 +10,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -53,7 +54,8 @@ public class ReposRepository implements Manager {
                     public void call(List<Repository> repositories) {
                         saveRepositories(repositories);
                     }
-                });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void saveRepositories(List<Repository> repositories) {
@@ -67,6 +69,7 @@ public class ReposRepository implements Manager {
     @Override
     public void clear() {
         clearRepositories();
+        mLocalSource.clear();
     }
 
 }

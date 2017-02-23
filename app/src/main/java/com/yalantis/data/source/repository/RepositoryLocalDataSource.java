@@ -3,6 +3,7 @@ package com.yalantis.data.source.repository;
 import android.support.annotation.NonNull;
 
 import com.yalantis.data.Repository;
+import com.yalantis.data.RepositoryFields;
 import com.yalantis.data.source.base.BaseLocalDataSource;
 
 import java.util.List;
@@ -20,13 +21,15 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
 
     @Override
     public Single<List<Repository>> getRepositories(@NonNull String organization) {
-        return Observable.just((List<Repository>) mRealm.where(Repository.class)
-                .findAllSorted("starsCount", Sort.DESCENDING)).toSingle();
+        return Observable.just((List<Repository>) getRealm()
+                .where(Repository.class)
+                .findAllSorted(RepositoryFields.STARS_COUNT, Sort.DESCENDING))
+                .toSingle();
     }
 
     @Override
     public void saveRepositories(final List<Repository> repositories) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+        getRealm().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.copyToRealmOrUpdate(repositories);
@@ -36,7 +39,7 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
 
     @Override
     public void clearRepositories() {
-        mRealm.executeTransaction(new Realm.Transaction() {
+        getRealm().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.delete(Repository.class);
@@ -46,7 +49,7 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
 
     @Override
     public boolean isEmpty() {
-        return mRealm.where(Repository.class).count() > 0;
+        return getRealm().where(Repository.class).count() > 0;
     }
 
 }

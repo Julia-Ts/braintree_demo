@@ -93,6 +93,9 @@ android {
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
 
+    //Realm
+    apt 'dk.ilios:realmfieldnameshelper:1.1.0'
+
     // Android
     compile "com.android.support:appcompat-v7:$rootProject.ext.android_support"
     compile "com.android.support:design:$rootProject.ext.android_support"
