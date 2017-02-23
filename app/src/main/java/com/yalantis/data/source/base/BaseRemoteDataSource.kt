@@ -12,6 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import rx.schedulers.Schedulers
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -45,7 +46,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
         mRetrofit = Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addConverterFactory(createGsonConverter())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(client)
                 .build()
     }

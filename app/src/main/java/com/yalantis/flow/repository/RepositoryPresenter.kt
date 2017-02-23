@@ -31,4 +31,9 @@ class RepositoryPresenter : BasePresenterImplementation<RepositoryContract.View>
     override fun onRepositoryClicked(repository: Repository) {
         mView?.showMessage("Repository has " + repository.starsCount + " stars.")
     }
+
+    override fun detachView() {
+        super.detachView()
+        mRepository.clear()
+    }
 }
