@@ -13,14 +13,14 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import retrofit2.adapter.rxjava.HttpException;
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 /**
  * Created by voltazor on 17/06/16.
  */
-public class GeneralErrorHandler implements Action1<Throwable> {
+public class GeneralErrorHandler implements Consumer<Throwable> {
 
     private final WeakReference<BaseMvpView> mViewReference;
     private final Map<Integer, String> mCodeMessageMap;
@@ -63,7 +63,7 @@ public class GeneralErrorHandler implements Action1<Throwable> {
     }
 
     @Override
-    public void call(Throwable throwable) {
+    public void accept(Throwable throwable) {
         Timber.e(throwable, throwable.getMessage());
         boolean isNetwork = false;
         ErrorBody errorBody = null;

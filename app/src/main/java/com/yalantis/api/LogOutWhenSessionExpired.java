@@ -14,12 +14,11 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 import retrofit2.HttpException;
-import rx.functions.Func1;
 
 /**
  * Created by voltazor on 20/06/16.
  */
-public class LogOutWhenSessionExpired implements Func1<Observable<? extends Throwable>, Observable<?>> {
+public class LogOutWhenSessionExpired implements Function<Observable<? extends Throwable>, Observable<?>> {
 
     private Context mContext;
 
@@ -28,7 +27,7 @@ public class LogOutWhenSessionExpired implements Func1<Observable<? extends Thro
     }
 
     @Override
-    public Observable<?> call(Observable<? extends Throwable> observable) {
+    public Observable<?> apply(Observable<? extends Throwable> observable) {
         return observable.observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Throwable, ObservableSource<?>>() {
 
             @Override

@@ -103,7 +103,7 @@ dependencies {
     // REST
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.ext.retrofit"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofit"
     compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttp"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okhttp"
 
@@ -115,7 +115,7 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjava2"
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
     compile "com.jakewharton.rxbinding2:rxbinding:2.0.0"
-    compile "com.trello:navi:1.0"
+    compile 'com.trello.navi2:navi:2.0'
 
     // Logging and Crash-reporting
     compile "com.jakewharton.timber:timber:4.5.1"

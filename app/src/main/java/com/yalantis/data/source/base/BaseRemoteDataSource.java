@@ -12,6 +12,7 @@ import com.yalantis.api.services.GithubService;
 
 import java.io.IOException;
 
+import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmObject;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -19,9 +20,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -59,7 +59,7 @@ public abstract class BaseRemoteDataSource implements BaseDataSource {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addConverterFactory(createGsonConverter())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(client)
                 .build();
     }

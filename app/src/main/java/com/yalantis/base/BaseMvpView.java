@@ -3,7 +3,8 @@ package com.yalantis.base;
 import android.content.Context;
 import android.support.annotation.StringRes;
 
-import com.trello.navi.NaviComponent;
+import com.trello.navi2.NaviComponent;
+
 
 public interface BaseMvpView extends NaviComponent {
 

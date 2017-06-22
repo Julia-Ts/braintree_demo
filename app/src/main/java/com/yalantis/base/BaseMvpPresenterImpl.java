@@ -3,8 +3,8 @@ package com.yalantis.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-import com.trello.navi.Event;
-import com.trello.navi.rx.RxNavi;
+import com.trello.navi2.Event;
+import com.trello.navi2.rx.RxNavi;
 import com.yalantis.manager.SharedPrefManager;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -31,22 +31,23 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
     public void attachView(V view) {
         mView = view;
         mSpManager = SharedPrefManager.getInstance(view.getContext());
-        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Consumer<Void>(){
+        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Consumer<Object>() {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Void aVoid) throws Exception {
-
+            public void accept(@io.reactivex.annotations.NonNull Object object) throws Exception {
+                detachView();
             }
         }));
     }
 
+
     /**
-     * This method adds given rx subscription to the {@link #mSubscriptionList}
+     * This method adds given rx disposable to the {@link #mSubscriptionList}
      * which is unsubscribed {@link #detachView()}
      *
-     * @param subscription - rx subscription that must be unsubscribed {@link #detachView()}
+     * @param disposable - rx disposable that must be unsubscribed {@link #detachView()}
      */
-    protected void addSubscription(@NonNull Disposable subscription) {
-        mSubscriptionList.add(subscription);
+    protected void addDisposable(@NonNull Disposable disposable) {
+        mSubscriptionList.add(disposable);
     }
 
     protected String getString(@StringRes int strResId) {

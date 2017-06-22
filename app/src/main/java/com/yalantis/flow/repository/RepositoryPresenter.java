@@ -8,7 +8,6 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
-
 class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> implements RepositoryContract.Presenter {
 
     private static final String ORGANIZATION_NAME = "Yalantis";
@@ -33,7 +32,7 @@ class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> 
     }
 
     private void fetchRepositories(boolean local) {
-        addSubscription(mRepository.getRepositories(ORGANIZATION_NAME, local)
+        addDisposable(mRepository.getRepositories(ORGANIZATION_NAME, local)
                 .subscribe(new Consumer<List<Repository>>() {
                     @Override
                     public void accept(List<Repository> repositories) {
