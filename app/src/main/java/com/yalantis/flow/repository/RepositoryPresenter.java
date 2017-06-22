@@ -6,7 +6,8 @@ import com.yalantis.data.source.repository.ReposRepository;
 
 import java.util.List;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
+
 
 class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> implements RepositoryContract.Presenter {
 
@@ -33,15 +34,15 @@ class RepositoryPresenter extends BaseMvpPresenterImpl<RepositoryContract.View> 
 
     private void fetchRepositories(boolean local) {
         addSubscription(mRepository.getRepositories(ORGANIZATION_NAME, local)
-                .subscribe(new Action1<List<Repository>>() {
+                .subscribe(new Consumer<List<Repository>>() {
                     @Override
-                    public void call(List<Repository> repositories) {
+                    public void accept(List<Repository> repositories) {
                         mView.hideProgress();
                         mView.showRepositories(repositories);
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         mView.hideProgress();
                         mView.showErrorMessage();

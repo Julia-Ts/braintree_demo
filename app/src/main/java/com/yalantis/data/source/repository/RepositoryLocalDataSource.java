@@ -8,10 +8,9 @@ import com.yalantis.data.source.base.BaseLocalDataSource;
 
 import java.util.List;
 
+import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.Sort;
-import rx.Observable;
-import rx.Single;
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -21,10 +20,9 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
 
     @Override
     public Single<List<Repository>> getRepositories(@NonNull String organization) {
-        return Observable.just((List<Repository>) getRealm()
+        return Single.just((List<Repository>) getRealm()
                 .where(Repository.class)
-                .findAllSorted(RepositoryFields.STARS_COUNT, Sort.DESCENDING))
-                .toSingle();
+                .findAllSorted(RepositoryFields.STARS_COUNT, Sort.DESCENDING));
     }
 
     @Override

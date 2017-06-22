@@ -7,8 +7,6 @@ import com.yalantis.data.source.base.BaseRemoteDataSource;
 
 import java.util.List;
 
-import rx.Single;
-
 /**
  * Created by irinagalata on 12/1/16.
  */
@@ -16,7 +14,7 @@ import rx.Single;
 class RepositoryRemoteDataSource extends BaseRemoteDataSource implements RepositoryDataSource {
 
     @Override
-    public Single<List<Repository>> getRepositories(@NonNull String organization) {
+    public io.reactivex.Single<List<Repository>> getRepositories(@NonNull String organization) {
         return mGithubService.getOrganizationRepos(organization);
     }
 

@@ -5,9 +5,9 @@ import com.yalantis.data.Repository;
 
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Single;
 
 public interface GithubService {
 

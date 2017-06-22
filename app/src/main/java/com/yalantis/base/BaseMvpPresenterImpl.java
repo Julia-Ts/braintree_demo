@@ -7,9 +7,9 @@ import com.trello.navi.Event;
 import com.trello.navi.rx.RxNavi;
 import com.yalantis.manager.SharedPrefManager;
 
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.internal.util.SubscriptionList;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by voltazor on 20/03/16.
@@ -18,7 +18,7 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
 
     protected SharedPrefManager mSpManager;
     protected V mView;
-    private SubscriptionList mSubscriptionList = new SubscriptionList();
+    private CompositeDisposable mSubscriptionList = new CompositeDisposable();
 
     /**
      * Attach view to presenter, also here we have subscription
@@ -31,10 +31,10 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
     public void attachView(V view) {
         mView = view;
         mSpManager = SharedPrefManager.getInstance(view.getContext());
-        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Action1<Void>() {
+        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Consumer<Void>(){
             @Override
-            public void call(Void aVoid) {
-                detachView();
+            public void accept(@io.reactivex.annotations.NonNull Void aVoid) throws Exception {
+
             }
         }));
     }
@@ -45,7 +45,7 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
      *
      * @param subscription - rx subscription that must be unsubscribed {@link #detachView()}
      */
-    protected void addSubscription(@NonNull Subscription subscription) {
+    protected void addSubscription(@NonNull Disposable subscription) {
         mSubscriptionList.add(subscription);
     }
 
@@ -63,7 +63,6 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
      */
     @Override
     public void detachView() {
-        mSubscriptionList.unsubscribe();
         mSubscriptionList.clear();
         mView = null;
     }
