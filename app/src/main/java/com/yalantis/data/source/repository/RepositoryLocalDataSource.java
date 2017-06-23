@@ -20,6 +20,7 @@ class RepositoryLocalDataSource extends BaseLocalDataSource implements Repositor
 
     @Override
     public Single<List<Repository>> getRepositories(@NonNull String organization) {
+        // FIXME:  Now fetching BD goes in main thread, replace with callback or wrap with "create"
         return Single.just((List<Repository>) getRealm()
                 .where(Repository.class)
                 .findAllSorted(RepositoryFields.STARS_COUNT, Sort.DESCENDING));
