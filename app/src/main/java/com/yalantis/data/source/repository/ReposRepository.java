@@ -8,10 +8,10 @@ import com.yalantis.interfaces.Manager;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -32,7 +32,6 @@ public class ReposRepository implements Manager {
 
     /**
      * Retrieves the repositories lists from multiple sources and concatenates them to single observable.
-     * {@link Observable#concatWith(Observable)} can be replaced by any other method to control the streams.
      *
      * @param organization Name of the organization to get repositories
      * @param local        if {@code true} returns repositories from both local and remote sources,
@@ -41,7 +40,7 @@ public class ReposRepository implements Manager {
      */
     public Observable<List<Repository>> getRepositories(@NonNull String organization, boolean local) {
         if (!mLocalSource.isEmpty() && local) {
-            return mLocalSource.getRepositories(organization).concatWith(getRemoteRepositories(organization));
+            return mLocalSource.getRepositories(organization).concatWith(getRemoteRepositories(organization)).toObservable();
         }
 
         return getRemoteRepositories(organization).toObservable();
@@ -49,9 +48,9 @@ public class ReposRepository implements Manager {
 
     private Single<List<Repository>> getRemoteRepositories(String organization) {
         return mRemoteSource.getRepositories(organization)
-                .doOnSuccess(new Action1<List<Repository>>() {
+                .doOnSuccess(new Consumer<List<Repository>>() {
                     @Override
-                    public void call(List<Repository> repositories) {
+                    public void accept(@io.reactivex.annotations.NonNull List<Repository> repositories) throws Exception {
                         saveRepositories(repositories);
                     }
                 })

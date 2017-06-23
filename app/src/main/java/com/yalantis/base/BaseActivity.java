@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.trello.navi.component.support.NaviAppCompatActivity;
+import com.trello.navi2.component.support.NaviAppCompatActivity;
 import com.yalantis.dialog.ProgressDialogFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
 

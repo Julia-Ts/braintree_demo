@@ -3,13 +3,13 @@ package com.yalantis.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-import com.trello.navi.Event;
-import com.trello.navi.rx.RxNavi;
+import com.trello.navi2.Event;
+import com.trello.navi2.rx.RxNavi;
 import com.yalantis.manager.SharedPrefManager;
 
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.internal.util.SubscriptionList;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by voltazor on 20/03/16.
@@ -18,7 +18,7 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
 
     protected SharedPrefManager mSpManager;
     protected V mView;
-    private SubscriptionList mSubscriptionList = new SubscriptionList();
+    private CompositeDisposable mSubscriptionList = new CompositeDisposable();
 
     /**
      * Attach view to presenter, also here we have subscription
@@ -31,22 +31,23 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
     public void attachView(V view) {
         mView = view;
         mSpManager = SharedPrefManager.getInstance(view.getContext());
-        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Action1<Void>() {
+        mSubscriptionList.add(RxNavi.observe(view, Event.DESTROY).subscribe(new Consumer<Object>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(@io.reactivex.annotations.NonNull Object object) throws Exception {
                 detachView();
             }
         }));
     }
 
+
     /**
-     * This method adds given rx subscription to the {@link #mSubscriptionList}
+     * This method adds given rx disposable to the {@link #mSubscriptionList}
      * which is unsubscribed {@link #detachView()}
      *
-     * @param subscription - rx subscription that must be unsubscribed {@link #detachView()}
+     * @param disposable - rx disposable that must be unsubscribed {@link #detachView()}
      */
-    protected void addSubscription(@NonNull Subscription subscription) {
-        mSubscriptionList.add(subscription);
+    protected void addDisposable(@NonNull Disposable disposable) {
+        mSubscriptionList.add(disposable);
     }
 
     protected String getString(@StringRes int strResId) {
@@ -63,7 +64,6 @@ public abstract class BaseMvpPresenterImpl<V extends BaseMvpView> implements Bas
      */
     @Override
     public void detachView() {
-        mSubscriptionList.unsubscribe();
         mSubscriptionList.clear();
         mView = null;
     }

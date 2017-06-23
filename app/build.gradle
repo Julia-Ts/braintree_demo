@@ -5,7 +5,7 @@ buildscript {
     dependencies {
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
-        classpath 'io.fabric.tools:gradle:1.21.2'
+        classpath 'io.fabric.tools:gradle:1.21.6'
     }
 }
 
@@ -23,13 +23,13 @@ repositories {
     mavenLocal()
 }
 
-def getDate() {
+static def getDate() {
     return new Date().format('dd/MM/yyyy--HH:mm')
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "com.yalantis"
@@ -103,7 +103,7 @@ dependencies {
     // REST
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.ext.retrofit"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofit"
     compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttp"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okhttp"
 
@@ -112,10 +112,10 @@ dependencies {
     apt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknife"
 
     // Rx
-    compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxjava2"
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjava2"
-    compile "com.jakewharton.rxbinding:rxbinding:1.0.0"
-    compile "com.trello:navi:1.0"
+    compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+    compile "com.jakewharton.rxbinding2:rxbinding:2.0.0"
+    compile 'com.trello.navi2:navi:2.0'
 
     // Logging and Crash-reporting
     compile "com.jakewharton.timber:timber:4.5.1"

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.navi.component.support.NaviFragment;
+import com.trello.navi2.component.support.NaviFragment;
 import com.yalantis.interfaces.BaseActivityCallback;
 
 import butterknife.ButterKnife;
