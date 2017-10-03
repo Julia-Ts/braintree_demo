@@ -1,15 +1,14 @@
 package com.yalantis.flow.repository
 
-import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.yalantis.R
 import com.yalantis.data.Repository
-import com.yalantis.databinding.ItemRepositoryBinding
 import java.util.*
 
-internal class RepositoryAdapter(val repoClick: (Repository) -> Unit) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
+internal class RepositoryAdapter(val onClick: (Repository) -> Unit) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
 
     private val mRepositories = ArrayList<Repository>()
 
@@ -20,19 +19,27 @@ internal class RepositoryAdapter(val repoClick: (Repository) -> Unit) : Recycler
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryViewHolder {
-        val binding: ItemRepositoryBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_repository, parent, false)
-        return RepositoryViewHolder(binding)
+        val binding: View = LayoutInflater.from(parent.context).inflate(R.layout.item_repository, parent, false)
+        return RepositoryViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int) {
         val repository = mRepositories[position]
-        holder.binding.repo = repository
-        holder.binding.root.setOnClickListener { repoClick(repository) }
     }
 
     override fun getItemCount(): Int {
         return mRepositories.size
     }
 
-    internal class RepositoryViewHolder(val binding: ItemRepositoryBinding) : RecyclerView.ViewHolder(binding.root)
+    internal class RepositoryViewHolder(val binding: View, val onClick: (Repository) -> Unit) : RecyclerView.ViewHolder(binding) {
+
+        fun bindData(repository: Repository) {
+            with(repository) {
+//                text_view_title.text = name
+//                text_view_description.text = description
+                binding.setOnClickListener { onClick(this) }
+            }
+        }
+
+    }
 }

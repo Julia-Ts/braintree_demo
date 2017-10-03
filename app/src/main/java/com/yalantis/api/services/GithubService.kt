@@ -13,4 +13,8 @@ interface GithubService {
     fun getOrganizationRepos(
             @Path(ApiSettings.PATH_ORGANIZATION) organizationName: String): Single<List<Repository>>
 
+//    @GET(ApiSettings.ORGANIZATION_REPOS)
+//    fun getRepos(
+//            @Path(ApiSettings.PATH_ORGANIZATION) organizationName: String): Single<List<NullTn>>
+
 }

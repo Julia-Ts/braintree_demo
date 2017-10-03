@@ -3,7 +3,6 @@ package com.yalantis.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.yalantis.interfaces.Manager;
 import com.yalantis.util.CachedValue;
 
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import java.util.Set;
 /**
  * Created by Dmitriy Dovbnya on 25.09.2014.
  */
-public class SharedPrefManager implements Manager {
+public class SharedPrefManager {
 
     private static final String NAME = "sharedPrefs";
     private static final String API_KEY = "api_key";

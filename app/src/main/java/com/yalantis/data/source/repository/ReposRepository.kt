@@ -10,7 +10,7 @@ import rx.android.schedulers.AndroidSchedulers
  * Created by irinagalata on 12/1/16.
  */
 
-class ReposRepository() : Manager {
+class ReposRepository : Manager {
 
     private val mLocalSource: RepositoryLocalDataSource = RepositoryLocalDataSource().apply {
         init()

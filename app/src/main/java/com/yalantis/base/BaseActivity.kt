@@ -1,27 +1,23 @@
 package com.yalantis.base
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import com.yalantis.dialog.ProgressDialogFragment
 
-abstract class BaseActivity<out T : BasePresenter, K : ViewDataBinding> : AppCompatActivity(), BaseView {
+abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseView {
 
     private var mProgressDialog: ProgressDialogFragment? = null
     abstract protected val presenter: T
     abstract protected val layoutResourceId: Int
-    protected lateinit var binding: K
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, layoutResourceId)
+        setContentView(layoutResourceId)
         presenter.attachView(this)
     }
 
@@ -49,7 +45,8 @@ abstract class BaseActivity<out T : BasePresenter, K : ViewDataBinding> : AppCom
 
     override fun showMessage(message: String?) {
         message?.let {
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+            //TODO think how realise this
+            //Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 
