@@ -13,10 +13,6 @@ import timber.log.Timber
 
 class App : Application() {
 
-    companion object {
-        const val NAME = "sharedPrefs"
-    }
-
     override fun onCreate() {
         super.onCreate()
 
