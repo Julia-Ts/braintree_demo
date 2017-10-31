@@ -5,14 +5,15 @@ import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import com.yalantis.BuildConfig
 import com.yalantis.api.ApiSettings
+import com.yalantis.api.deserializer.StringDeserializer
 import com.yalantis.api.services.GithubService
+import io.reactivex.schedulers.Schedulers
 import io.realm.RealmObject
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import rx.schedulers.Schedulers
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -20,8 +21,8 @@ import rx.schedulers.Schedulers
 
 abstract class BaseRemoteDataSource : BaseDataSource {
 
-    protected lateinit var mGithubService: GithubService
-    private lateinit var mRetrofit: Retrofit
+    protected lateinit var githubService: GithubService
+    private lateinit var retrofit: Retrofit
 
     override fun init() {
         initRetrofit()
@@ -29,7 +30,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
     }
 
     private fun initServices() {
-        mGithubService = mRetrofit.create<GithubService>(GithubService::class.java)
+        githubService = retrofit.create<GithubService>(GithubService::class.java)
     }
 
     private fun initRetrofit() {
@@ -37,16 +38,16 @@ abstract class BaseRemoteDataSource : BaseDataSource {
         val client = OkHttpClient.Builder().addInterceptor { chain ->
             val original = chain.request()
             val request = original.newBuilder()
-                    //                        .header(ApiSettings.HEADER_AUTH_TOKEN, getAuthToken())
+                    //.header(ApiSettings.HEADER_AUTH_TOKEN, getAuthToken())
                     .method(original.method(), original.body())
                     .build()
             chain.proceed(request)
         }.addInterceptor(HttpLoggingInterceptor().setLevel(level)).build()
 
-        mRetrofit = Retrofit.Builder()
+        retrofit = Retrofit.Builder()
                 .baseUrl(ApiSettings.SERVER)
                 .addConverterFactory(createGsonConverter())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(client)
                 .build()
     }
@@ -63,12 +64,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
                 return false
             }
         })
-//        try {
-//            builder.registerTypeAdapter(Class.forName("io.realm.RepositoryRealmProxy"), RepositorySerializer())
-//        } catch (e: ClassNotFoundException) {
-//            throw RuntimeException(e.message)
-//        }
-
+        builder.registerTypeAdapter(String::class.java, StringDeserializer())
         return GsonConverterFactory.create(builder.create())
     }
 

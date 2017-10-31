@@ -2,17 +2,16 @@ package com.yalantis.base
 
 import android.support.annotation.StringRes
 import com.yalantis.manager.SharedPrefManager
-import rx.Subscription
-import rx.internal.util.SubscriptionList
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by voltazor on 20/03/16.
  */
 abstract class BasePresenterImplementation<V : BaseView> : BasePresenter {
 
-    protected lateinit var mSpManager: SharedPrefManager
-    protected var mView: V? = null
-    private val mSubscriptionList = SubscriptionList()
+    protected var view: V? = null
+    private val compositeDisposable = CompositeDisposable()
 
     /**
      * Attach view to presenter, also here we have subscription
@@ -23,8 +22,8 @@ abstract class BasePresenterImplementation<V : BaseView> : BasePresenter {
      */
     @Suppress("UNCHECKED_CAST")
     override fun attachView(view: BaseView) {
-        mView = view as V
-        mSpManager = SharedPrefManager.getInstance(view.getContext())
+        this.view = view as V
+        SharedPrefManager.init(view.getContext())
     }
 
     /**
@@ -33,16 +32,16 @@ abstract class BasePresenterImplementation<V : BaseView> : BasePresenter {
 
      * @param subscription - rx subscription that must be unsubscribed [.detachView]
      */
-    protected fun addSubscription(subscription: Subscription) {
-        mSubscriptionList.add(subscription)
+    protected fun addDisposable(subscription: Disposable) {
+        compositeDisposable.add(subscription)
     }
 
     protected fun getString(@StringRes strResId: Int): String? {
-        return mView?.getContext()?.getString(strResId)
+        return view?.getContext()?.getString(strResId)
     }
 
     protected fun getString(@StringRes strResId: Int, vararg formatArgs: Any): String? {
-        return mView?.getContext()?.getString(strResId, *formatArgs)
+        return view?.getContext()?.getString(strResId, *formatArgs)
     }
 
     /**
@@ -50,9 +49,8 @@ abstract class BasePresenterImplementation<V : BaseView> : BasePresenter {
      * unsubscribing all subscriptions
      */
     override fun detachView() {
-        mSubscriptionList.unsubscribe()
-        mSubscriptionList.clear()
-        mView = null
+        compositeDisposable.dispose()
+        view = null
     }
 
 }

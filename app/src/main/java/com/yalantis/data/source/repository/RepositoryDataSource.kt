@@ -1,8 +1,8 @@
 package com.yalantis.data.source.repository
 
 import com.yalantis.data.Repository
+import io.reactivex.Single
 
-import rx.Single
 
 /**
  * Created by irinagalata on 12/1/16.

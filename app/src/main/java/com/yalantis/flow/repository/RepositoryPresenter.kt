@@ -14,22 +14,22 @@ class RepositoryPresenter : BasePresenterImplementation<RepositoryContract.View>
     }
 
     override fun fetchRepositories() {
-        mView?.showProgress()
+        view?.showProgress()
         fetchRepositories(false)
     }
 
     private fun fetchRepositories(local: Boolean) {
-        addSubscription(mRepository.getRepositories(ORGANIZATION_NAME, local).subscribe({ repositories ->
-            mView?.hideProgress()
-            mView?.showRepositories(repositories)
+        addDisposable(mRepository.getRepositories(ORGANIZATION_NAME, local).subscribe({ repositories ->
+            view?.hideProgress()
+            view?.showRepositories(repositories)
         }, { throwable ->
-            mView?.hideProgress()
-            mView?.showError(throwable.message)
+            view?.hideProgress()
+            view?.showError(throwable.message)
         }))
     }
 
     override fun onRepositoryClicked(repository: Repository) {
-        mView?.showMessage("Repository has " + repository.starsCount + " stars.")
+        view?.showMessage("Repository has " + repository.starsCount + " stars.")
     }
 
     override fun detachView() {

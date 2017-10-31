@@ -3,6 +3,7 @@ package com.yalantis.base
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -11,7 +12,7 @@ import com.yalantis.dialog.ProgressDialogFragment
 
 abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseView {
 
-    private var mProgressDialog: ProgressDialogFragment? = null
+    private var progressDialog: ProgressDialogFragment? = null
     abstract protected val presenter: T
     abstract protected val layoutResourceId: Int
 
@@ -19,10 +20,6 @@ abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseVi
         super.onCreate(savedInstanceState)
         setContentView(layoutResourceId)
         presenter.attachView(this)
-    }
-
-    override fun setContentView(layoutId: Int) {
-        super.setContentView(layoutId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -45,8 +42,7 @@ abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseVi
 
     override fun showMessage(message: String?) {
         message?.let {
-            //TODO think how realise this
-            //Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(currentFocus, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -55,17 +51,17 @@ abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseVi
     }
 
     override fun showProgress() {
-        mProgressDialog?.let {
-            mProgressDialog = ProgressDialogFragment.newInstance()
+        progressDialog?.let {
+            progressDialog = ProgressDialogFragment.newInstance()
         }
-        if (!mProgressDialog?.isAdded!!) {
-            mProgressDialog?.show(supportFragmentManager)
+        if (!progressDialog?.isAdded!!) {
+            progressDialog?.show(supportFragmentManager)
         }
     }
 
     override fun hideProgress() {
-        if (mProgressDialog != null && mProgressDialog!!.isAdded) {
-            mProgressDialog?.dismiss()
+        if (progressDialog != null && progressDialog!!.isAdded) {
+            progressDialog?.dismiss()
         }
     }
 

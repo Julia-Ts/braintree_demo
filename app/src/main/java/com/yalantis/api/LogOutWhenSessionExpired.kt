@@ -6,25 +6,25 @@ import com.yalantis.R
 import com.yalantis.api.body.ErrorBody
 import com.yalantis.data.source.repository.ReposRepository
 import com.yalantis.manager.SharedPrefManager
-import retrofit2.adapter.rxjava.HttpException
-import rx.Completable
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Func1
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Function
+import retrofit2.HttpException
 
 /**
  * Created by voltazor on 20/06/16.
  */
-class LogOutWhenSessionExpired(private val mContext: Context) : Func1<Observable<out Throwable>, Observable<Any>> {
+class LogOutWhenSessionExpired(private val mContext: Context) : Function<Observable<out Throwable>, Observable<Any>> {
 
-    override fun call(observable: Observable<out Throwable>): Observable<Any> {
-        return observable.observeOn(AndroidSchedulers.mainThread()).flatMap(Func1<Throwable, Observable<*>> { throwable ->
+    override fun apply(observable: Observable<out Throwable>): Observable<Any> {
+        return observable.observeOn(AndroidSchedulers.mainThread()).flatMap(Function<Throwable, Observable<*>> { throwable ->
             if (throwable is HttpException) {
                 val errorBody = ErrorBody.parseError(throwable.response())
                 if (errorBody != null) {
                     val code = errorBody.code
                     if (code == ErrorBody.INVALID_TOKEN) {
-                        return@Func1 Completable.complete().observeOn(AndroidSchedulers.mainThread()).doOnCompleted {
+                        return@Function Completable.complete().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
                             Toast.makeText(mContext, R.string.your_session_expired, Toast.LENGTH_SHORT).show()
                             logOut()
                         }.toObservable<Any>()
@@ -37,7 +37,7 @@ class LogOutWhenSessionExpired(private val mContext: Context) : Func1<Observable
     }
 
     fun logOut() {
-        SharedPrefManager.getInstance(mContext).clear()
+        SharedPrefManager.clear()
         ReposRepository().clear()
     }
 }

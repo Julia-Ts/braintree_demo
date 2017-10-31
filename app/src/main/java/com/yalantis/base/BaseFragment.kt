@@ -3,6 +3,7 @@ package com.yalantis.base
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,7 @@ abstract class BaseFragment<out T : BasePresenter> : Fragment(), BaseView {
 
     override fun showMessage(message: String?) {
         message?.let {
-            //Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+            view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
         }
     }
 

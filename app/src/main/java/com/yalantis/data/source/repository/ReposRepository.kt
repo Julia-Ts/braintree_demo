@@ -2,9 +2,9 @@ package com.yalantis.data.source.repository
 
 import com.yalantis.data.Repository
 import com.yalantis.interfaces.Manager
-import rx.Observable
-import rx.Single
-import rx.android.schedulers.AndroidSchedulers
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
  * Created by irinagalata on 12/1/16.
@@ -12,37 +12,36 @@ import rx.android.schedulers.AndroidSchedulers
 
 class ReposRepository : Manager {
 
-    private val mLocalSource: RepositoryLocalDataSource = RepositoryLocalDataSource().apply {
+    private val localSource: RepositoryLocalDataSource = RepositoryLocalDataSource().apply {
         init()
     }
-    private val mRemoteSource: RepositoryRemoteDataSource = RepositoryRemoteDataSource().apply {
+    private val remoteSource: RepositoryRemoteDataSource = RepositoryRemoteDataSource().apply {
         init()
     }
 
     fun getRepositories(organization: String, local: Boolean): Observable<List<Repository>> {
-        if (!mLocalSource.isEmpty() && local) {
-            return mLocalSource.getRepositories(organization).concatWith(getRemoteRepositories(organization))
+        if (!localSource.isEmpty() && local) {
+            return localSource.getRepositories(organization).concatWith(getRemoteRepositories(organization)).toObservable()
         }
         return getRemoteRepositories(organization).toObservable()
     }
 
-    private fun getRemoteRepositories(organization: String): Single<List<Repository>> {
-        return mRemoteSource.getRepositories(organization)
+    private fun getRemoteRepositories(organization: String): Single<List<Repository>> =
+            remoteSource.getRepositories(organization)
                 .doOnSuccess { repositories -> saveRepositories(repositories) }
                 .observeOn(AndroidSchedulers.mainThread())
-    }
 
     private fun saveRepositories(repositories: List<Repository>) {
-        mLocalSource.saveRepositories(repositories)
+        localSource.saveRepositories(repositories)
     }
 
     fun clearRepositories() {
-        mLocalSource.clearRepositories()
+        localSource.clearRepositories()
     }
 
     override fun clear() {
         clearRepositories()
-        mLocalSource.clear()
+        localSource.clear()
     }
 
 }

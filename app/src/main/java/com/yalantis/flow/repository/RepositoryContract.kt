@@ -6,7 +6,7 @@ import com.yalantis.data.Repository
 
 class RepositoryContract {
 
-    internal interface Presenter : BasePresenter {
+    interface Presenter : BasePresenter {
 
         fun initRepositories()
 

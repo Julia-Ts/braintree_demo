@@ -9,9 +9,9 @@ import com.yalantis.base.BaseActivity
 import com.yalantis.data.Repository
 import kotlinx.android.synthetic.main.activity_example.*
 
-class RepositoryActivity : BaseActivity<RepositoryPresenter>(), RepositoryContract.View {
+class RepositoryActivity : BaseActivity<RepositoryContract.Presenter>(), RepositoryContract.View {
 
-    override val presenter: RepositoryPresenter = RepositoryPresenter()
+    override val presenter = RepositoryPresenter()
     override val layoutResourceId: Int = R.layout.activity_example
 
     override fun onCreate(savedInstanceState: Bundle?) {

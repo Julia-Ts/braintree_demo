@@ -3,15 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
-apply plugin: 'kotlin-android-extensions'
-
 apply from: '../gradle.properties'
+apply plugin: 'kotlin-android-extensions'
 
 repositories {
     maven { url "http://dl.bintray.com/populov/maven" }
     maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
     mavenLocal()
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
 }
 
 def getDate() {
@@ -19,13 +22,13 @@ def getDate() {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "com.yalantis"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -90,27 +93,27 @@ dependencies {
     kapt 'dk.ilios:realmfieldnameshelper:1.1.0'
 
     // Android
-    compile "com.android.support:appcompat-v7:25.3.1"
-    compile "com.android.support:design:25.3.1"
+    compile "com.android.support:appcompat-v7:$android_support"
+    compile "com.android.support:design:26.1.0"
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // REST
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-
+    compile "com.squareup.retrofit2:retrofit:$retrofit"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+    compile "com.squareup.okhttp3:okhttp:$okhttp"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
     // Rx
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.5'
-    compile "com.jakewharton.rxbinding:rxbinding:0.3.0"
+    compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
+    compile "io.reactivex.rxjava2:rxjava:$rxjava2"
+    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
     // Logging and Crash-reporting
-    compile 'com.jakewharton.timber:timber:4.1.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
 }

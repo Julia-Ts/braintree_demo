@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.yalantis.R
 import com.yalantis.data.Repository
+import kotlinx.android.synthetic.main.item_repository.view.*
 import java.util.*
 
 internal class RepositoryAdapter(val onClick: (Repository) -> Unit) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
@@ -23,23 +24,24 @@ internal class RepositoryAdapter(val onClick: (Repository) -> Unit) : RecyclerVi
         return RepositoryViewHolder(binding, onClick)
     }
 
-    override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RepositoryViewHolder?, position: Int) {
         val repository = mRepositories[position]
+        holder?.bindData(repository)
     }
 
     override fun getItemCount(): Int {
         return mRepositories.size
     }
 
-    internal class RepositoryViewHolder(val binding: View, val onClick: (Repository) -> Unit) : RecyclerView.ViewHolder(binding) {
+    internal class RepositoryViewHolder(val binding: View?, val onClick: (Repository) -> Unit) : RecyclerView.ViewHolder(binding) {
 
         fun bindData(repository: Repository) {
             with(repository) {
-//                text_view_title.text = name
-//                text_view_description.text = description
-                binding.setOnClickListener { onClick(this) }
+                binding?.text_view_title?.text = name
+                binding?.text_view_description?.text = description
+                binding?.setOnClickListener { onClick(this) }
             }
         }
-
     }
+
 }
