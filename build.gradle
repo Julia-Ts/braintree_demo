@@ -25,9 +25,10 @@ allprojects {
 }
 
 ext {
-    android_support = '26.1.0'
+    android_support = '26.0.0'
     retrofit = '2.3.0'
     okhttp = '3.8.1'
     rxjava2 = '2.1.4'
     rxandroid = '2.0.1'
+    googlePlayServices= '11.4.2'
 }
