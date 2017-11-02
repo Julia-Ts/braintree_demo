@@ -3,14 +3,11 @@ package com.yalantis.flow.braintree.sandbox
 import android.content.Context
 import com.yalantis.R
 import com.yalantis.base.BaseActivity
-import android.content.Intent.getIntent
-import android.view.View
-import android.content.Intent.getIntent
-import android.provider.DocumentsContract.EXTRA_ERROR
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.support.v4.app.Fragment
+import android.view.View
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
@@ -20,6 +17,10 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.api.dropin.utils.PaymentMethodType
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.models.CardNonce
+import com.braintreepayments.api.models.PayPalAccountNonce
+import com.braintreepayments.api.PayPal
+import com.braintreepayments.api.models.PayPalRequest
 
 
 /**
@@ -48,7 +49,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         token = getString(R.string.mock_token)
     }
 
-    //This functionality will work only if token on the server is created with using customer_id
+    //This functionality will work only if token on the server is created with specific customer_id
     //https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
     private fun checkPreviousPaymentMethods() {
         DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
@@ -63,6 +64,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     val icon = result.paymentMethodType?.drawable
                     val name = result.paymentMethodType?.localizedName
 
+                    lastPaymentInfoContainer.visibility = View.VISIBLE
                     icon?.let {
                         paymentIcon.setImageResource(it)
                     }
@@ -78,12 +80,33 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                         // Use the payment method show in your UI and charge the user
                         // at the time of checkout.
                         val paymentMethod = result.paymentMethodNonce
+                        if (paymentMethod != null) {
+                            handlePreviousPaymentMethod(paymentMethod)
+                        } else {
+                            onBraintreeSubmit()
+                        }
                     }
                 } else {
                     onBraintreeSubmit()
                 }
             }
         })
+    }
+
+    private fun handlePreviousPaymentMethod(paymentMethod: PaymentMethodNonce) {
+        prepareBraintreeFragment()
+        when (paymentMethod) {
+            is PayPalAccountNonce -> payWithPayPal()
+            is CardNonce -> payWithCreditCard()
+        }
+    }
+
+    private fun payWithPayPal() {
+        startBillingAgreement()
+    }
+
+    private fun payWithCreditCard() {
+        //TODO: handle credit card payment
     }
 
     private fun onBraintreeSubmit() {
@@ -116,10 +139,41 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         try {
             mBraintreeFragment = BraintreeFragment.newInstance(this, token)
             // mBraintreeFragment is ready to use!
+            setFragment(mBraintreeFragment as Fragment, R.id.container)//TODO: check cast
         } catch (e: InvalidArgumentException) {
+            Timber.e(javaClass.simpleName, "Error while initializing braintree fragment")
             // There was an issue with your authorization string.
         }
     }
 
+    fun startBillingAgreement() {
+        val request = PayPalRequest()
+                .localeCode("US")
+                .billingAgreementDescription("Your agreement description")
+        PayPal.requestBillingAgreement(mBraintreeFragment, request)
+    }
+
+    fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
+        // Send nonce to server
+        val nonce = paymentMethodNonce.nonce
+        Timber.d(javaClass.simpleName, "Payment nonce was created: " + nonce)
+
+        when (paymentMethodNonce) {
+            is PayPalAccountNonce -> {
+                // Access additional information
+                val email = paymentMethodNonce.email
+                val firstName = paymentMethodNonce.firstName
+                val lastName = paymentMethodNonce.lastName
+                val phone = paymentMethodNonce.phone
+
+                // See PostalAddress.java for details
+                val billingAddress = paymentMethodNonce.billingAddress
+                val shippingAddress = paymentMethodNonce.shippingAddress
+            }
+            is CardNonce -> {
+                //TODO: handle payment with a card
+            }
+        }
+    }
 
 }
