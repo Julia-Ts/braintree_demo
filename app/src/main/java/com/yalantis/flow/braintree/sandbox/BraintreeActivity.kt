@@ -22,7 +22,6 @@ import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.models.PayPalRequest
 
-
 /**
  * Created by jtsym on 11/2/2017.
  */
@@ -35,6 +34,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private lateinit var token: String
     private lateinit var mBraintreeFragment: BraintreeFragment
+    private var previousPaymentMethod: PaymentMethodNonce? = null
 
     override fun getContext(): Context = this@BraintreeActivity
 
@@ -42,6 +42,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         super.onCreate(savedInstanceState)
         getToken()
         payBtn.setOnClickListener({ checkPreviousPaymentMethods() })
+        repeatPaymentBtn.setOnClickListener({ handlePreviousPaymentMethod() })
     }
 
     private fun getToken() {
@@ -54,7 +55,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
     private fun checkPreviousPaymentMethods() {
         DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
             override fun onError(exception: Exception) {
-                Timber.e("TESTING", "error while checking prev payments " + exception.message)
+                Timber.e(">>> error while checking prev payments " + exception.message)
                 onBraintreeSubmit()
             }
 
@@ -81,7 +82,8 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                         // at the time of checkout.
                         val paymentMethod = result.paymentMethodNonce
                         if (paymentMethod != null) {
-                            handlePreviousPaymentMethod(paymentMethod)
+                            previousPaymentMethod = paymentMethod
+                            handlePreviousPaymentMethod()
                         } else {
                             onBraintreeSubmit()
                         }
@@ -93,9 +95,9 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         })
     }
 
-    private fun handlePreviousPaymentMethod(paymentMethod: PaymentMethodNonce) {
+    private fun handlePreviousPaymentMethod() {
         prepareBraintreeFragment()
-        when (paymentMethod) {
+        when (previousPaymentMethod) {
             is PayPalAccountNonce -> payWithPayPal()
             is CardNonce -> payWithCreditCard()
         }
@@ -107,6 +109,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private fun payWithCreditCard() {
         //TODO: handle credit card payment
+        Timber.e(">>> payment with credit card is not implemented yet")
     }
 
     private fun onBraintreeSubmit() {
@@ -120,16 +123,17 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                 Activity.RESULT_OK -> {
                     // use the result to update your UI and send the payment method nonce to your server
                     val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                    Timber.d(javaClass.simpleName, "payment result: " + result?.deviceData)
+                    Timber.d(">>> payment result: " + result?.paymentMethodNonce)
+                    previousPaymentMethod = result?.paymentMethodNonce
                 }
                 Activity.RESULT_CANCELED -> {
                     // the user canceled
-                    Timber.e(javaClass.simpleName, "payment canceled by user")
+                    Timber.e(">>> payment canceled by user")
                 }
                 else -> {
                     // handle errors here, an exception may be available in
                     val error = data.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
-                    Timber.e(javaClass.simpleName, "payment error " + error?.message)
+                    Timber.e(">>> payment error " + error?.message)
                 }
             }
         }
@@ -139,9 +143,9 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         try {
             mBraintreeFragment = BraintreeFragment.newInstance(this, token)
             // mBraintreeFragment is ready to use!
-            setFragment(mBraintreeFragment as Fragment, R.id.container)//TODO: check cast
+            setFragment(mBraintreeFragment, R.id.container)
         } catch (e: InvalidArgumentException) {
-            Timber.e(javaClass.simpleName, "Error while initializing braintree fragment")
+            Timber.e(">>> Error while initializing braintree fragment")
             // There was an issue with your authorization string.
         }
     }
@@ -156,7 +160,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
     fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
         // Send nonce to server
         val nonce = paymentMethodNonce.nonce
-        Timber.d(javaClass.simpleName, "Payment nonce was created: " + nonce)
+        Timber.d(">>> Payment nonce was created: " + nonce)
 
         when (paymentMethodNonce) {
             is PayPalAccountNonce -> {
@@ -172,6 +176,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
             }
             is CardNonce -> {
                 //TODO: handle payment with a card
+                Timber.e(">>> payment handling with credit card is not implemented yet")
             }
         }
     }

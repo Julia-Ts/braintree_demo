@@ -1,10 +1,11 @@
 package com.yalantis.base
 
+import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
+
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -74,9 +75,9 @@ abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseVi
     }
 
     @JvmOverloads protected fun setFragment(fragment: Fragment, containerId: Int, needBackStack: Boolean = false) {
-        val oldFragment = supportFragmentManager.findFragmentById(containerId)
+        val oldFragment = fragmentManager.findFragmentById(containerId)
 
-        val transaction = supportFragmentManager.beginTransaction()
+        val transaction = fragmentManager.beginTransaction()
         oldFragment?.let {
             transaction.detach(oldFragment)
         }
