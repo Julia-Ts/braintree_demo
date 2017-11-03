@@ -17,6 +17,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.api.dropin.utils.PaymentMethodType
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.Card
 import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.PayPal
@@ -34,6 +35,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private lateinit var token: String
     private lateinit var mBraintreeFragment: BraintreeFragment
+    //Nonce is a one-time-use reference to payment info
     private var previousPaymentMethod: PaymentMethodNonce? = null
 
     override fun getContext(): Context = this@BraintreeActivity
@@ -64,6 +66,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     // use the icon and name to show in your UI
                     val icon = result.paymentMethodType?.drawable
                     val name = result.paymentMethodType?.localizedName
+                    val description = result.paymentMethodNonce?.description
 
                     lastPaymentInfoContainer.visibility = View.VISIBLE
                     icon?.let {
@@ -71,6 +74,9 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     }
                     name?.let {
                         paymentTitle.setText(it)
+                    }
+                    description?.let {
+                        paymentMethodDescription.text = description
                     }
 
                     if (result.paymentMethodType == PaymentMethodType.ANDROID_PAY) {
@@ -97,6 +103,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private fun handlePreviousPaymentMethod() {
         prepareBraintreeFragment()
+        displayPaymentInfo(previousPaymentMethod)
         when (previousPaymentMethod) {
             is PayPalAccountNonce -> payWithPayPal()
             is CardNonce -> payWithCreditCard()
@@ -109,6 +116,9 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private fun payWithCreditCard() {
         //TODO: handle credit card payment
+        (previousPaymentMethod as CardNonce)
+
+//        Card.tokenize(mBraintreeFragment, )
         Timber.e(">>> payment with credit card is not implemented yet")
     }
 
@@ -124,7 +134,6 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     // use the result to update your UI and send the payment method nonce to your server
                     val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                     Timber.d(">>> payment result: " + result?.paymentMethodNonce)
-                    previousPaymentMethod = result?.paymentMethodNonce
                 }
                 Activity.RESULT_CANCELED -> {
                     // the user canceled
@@ -161,7 +170,11 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         // Send nonce to server
         val nonce = paymentMethodNonce.nonce
         Timber.d(">>> Payment nonce was created: " + nonce)
+        displayPaymentInfo(paymentMethodNonce)
+    }
 
+    fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {
+        var text = ""
         when (paymentMethodNonce) {
             is PayPalAccountNonce -> {
                 // Access additional information
@@ -170,15 +183,19 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                 val lastName = paymentMethodNonce.lastName
                 val phone = paymentMethodNonce.phone
 
-                // See PostalAddress.java for details
                 val billingAddress = paymentMethodNonce.billingAddress
                 val shippingAddress = paymentMethodNonce.shippingAddress
+
+                text = getString(R.string.pay_pal_card_info, email, firstName, lastName, phone, billingAddress, shippingAddress)
             }
             is CardNonce -> {
-                //TODO: handle payment with a card
+                val lastTwo = paymentMethodNonce.lastTwo
+                text = getString(R.string.card_info, lastTwo)
                 Timber.e(">>> payment handling with credit card is not implemented yet")
             }
         }
+
+        paymentInfo.text = text
     }
 
 }
