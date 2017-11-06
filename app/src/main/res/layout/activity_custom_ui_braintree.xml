@@ -62,6 +62,55 @@
         android:text="Pay with Card" />
 
     <LinearLayout
+        android:id="@+id/cardInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Card number">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/cardNumberInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="16" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/cardExpirationDayInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Expiration day"
+                android:inputType="number"
+                android:maxLength="2" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/cardExpirationMonthInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Expiration month"
+                android:inputType="number"
+                android:maxLength="2" />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/cardInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

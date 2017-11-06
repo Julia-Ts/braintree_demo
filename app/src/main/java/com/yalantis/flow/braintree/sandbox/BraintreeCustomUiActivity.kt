@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.Card
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
@@ -19,6 +20,8 @@ import com.yalantis.R
 import com.yalantis.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_custom_ui_braintree.*
 import timber.log.Timber
+import com.braintreepayments.api.models.CardBuilder
+
 
 /**
  * Created by jtsym on 11/2/2017.
@@ -53,7 +56,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     fun payWithPayPal(v: View) {
         Timber.d(">>> payment with paypal")
-        PayPal.authorizeAccount(mBraintreeFragment)
+        PayPal.authorizeAccount(mBraintreeFragment)//callback is not called :(((( //TODO: check
 //what is the difference?
 //        startBillingAgreement()//new PayPal authentication
     }
@@ -63,15 +66,21 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val request = PayPalRequest("1")
                 .currencyCode("USD") //Currency codes: https://developer.paypal.com/docs/integration/direct/rest/currency-codes/#paypal-account-payments
                 .intent(PayPalRequest.INTENT_AUTHORIZE)
-        PayPal.requestOneTimePayment(mBraintreeFragment, request)
+        PayPal.requestOneTimePayment(mBraintreeFragment, request)//callback is not called :(((( //TODO: check
     }
 
     fun payWithCreditCard(v: View) {
+        //TODO: add validation
         Timber.d(">>> payment with credit card")
+        val cardBuilder = CardBuilder()
+                .cardNumber(cardNumberInput.text?.toString())
+                .expirationDate(getString(R.string.card_expiration_date,
+                        cardExpirationDayInput.text?.toString(), cardExpirationMonthInput.text?.toString()))
 
-//        Card.tokenize(mBraintreeFragment, )
+        Card.tokenize(mBraintreeFragment, cardBuilder)
     }
 
+    //TODO: check why this callback is not called!!!!!
     fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
         // Send nonce to server (!)
         val nonce = paymentMethodNonce.nonce
