@@ -20,7 +20,6 @@ import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.models.PayPalRequest
-import com.yalantis.App
 
 /**
  * Created by jtsym on 11/2/2017.

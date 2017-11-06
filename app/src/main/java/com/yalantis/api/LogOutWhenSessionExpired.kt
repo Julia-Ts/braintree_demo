@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import com.yalantis.R
 import com.yalantis.api.body.ErrorBody
-import com.yalantis.data.source.repository.ReposRepository
 import com.yalantis.manager.SharedPrefManager
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -38,6 +37,5 @@ class LogOutWhenSessionExpired(private val mContext: Context) : Function<Observa
 
     fun logOut() {
         SharedPrefManager.clear()
-        ReposRepository().clear()
     }
 }
