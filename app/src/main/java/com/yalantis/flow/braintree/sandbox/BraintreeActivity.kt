@@ -137,7 +137,8 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                 Activity.RESULT_OK -> {
                     // use the result to update your UI and send the payment method nonce to your server
                     val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                    Timber.d(">>> payment result: " + result?.paymentMethodNonce)
+                    Timber.d(">>> payment result: " + result?.paymentMethodNonce?.nonce)
+                    previousPaymentMethod = result?.paymentMethodNonce
                 }
                 Activity.RESULT_CANCELED -> {
                     // the user canceled
