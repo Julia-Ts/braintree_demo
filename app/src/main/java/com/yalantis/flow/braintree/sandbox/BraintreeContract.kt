@@ -10,7 +10,7 @@ class BraintreeContract {
 
     interface Presenter : BasePresenter {
 
-
+        fun createTransaction(nonce: String)
 
     }
 

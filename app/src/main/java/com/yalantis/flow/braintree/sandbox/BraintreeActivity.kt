@@ -6,7 +6,6 @@ import com.yalantis.base.BaseActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.View
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
@@ -17,11 +16,11 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.api.dropin.utils.PaymentMethodType
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.BraintreeFragment
-import com.braintreepayments.api.Card
 import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.models.PayPalRequest
+import com.yalantis.App
 
 /**
  * Created by jtsym on 11/2/2017.
@@ -54,6 +53,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     //This functionality will work only if token on the server is created with specific customer_id
     //https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
+    //https://github.com/braintree/braintree-android-drop-in/issues/2
     private fun checkPreviousPaymentMethods() {
         DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
             override fun onError(exception: Exception) {
@@ -111,15 +111,20 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
     }
 
     private fun payWithPayPal() {
+        Timber.d(">>> payment with paypal")
         startBillingAgreement()
+        //or test this:
+//        startTransaction((previousPaymentMethod as PayPalAccountNonce))
     }
 
     private fun payWithCreditCard() {
-        //TODO: handle credit card payment
-        (previousPaymentMethod as CardNonce)
-
+        Timber.d(">>> payment with credit card")
+        startTransaction((previousPaymentMethod as CardNonce))
 //        Card.tokenize(mBraintreeFragment, )
-        Timber.e(">>> payment with credit card is not implemented yet")
+    }
+
+    private fun startTransaction(previousPaymentMethod: PaymentMethodNonce) {
+        presenter.createTransaction(previousPaymentMethod.nonce)
     }
 
     private fun onBraintreeSubmit() {

@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder
 import com.yalantis.BuildConfig
 import com.yalantis.api.ApiSettings
 import com.yalantis.api.deserializer.StringDeserializer
-import com.yalantis.api.services.GithubService
+import com.yalantis.api.services.BraintreeService
 import io.reactivex.schedulers.Schedulers
 import io.realm.RealmObject
 import okhttp3.OkHttpClient
@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 abstract class BaseRemoteDataSource : BaseDataSource {
 
-    protected lateinit var githubService: GithubService
+    protected lateinit var braintreeService: BraintreeService
     private lateinit var retrofit: Retrofit
 
     override fun init() {
@@ -30,7 +30,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
     }
 
     private fun initServices() {
-        githubService = retrofit.create<GithubService>(GithubService::class.java)
+        braintreeService = retrofit.create<BraintreeService>(BraintreeService::class.java)
     }
 
     private fun initRetrofit() {
