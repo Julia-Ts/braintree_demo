@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by jtsym on 11/6/2017.
  */
-class BraintreeDataSource : BaseRemoteDataSource() {
+class BraintreeRemoteDataSource : BaseRemoteDataSource() {
 
     fun createTransaction(nonce: String): Single<Transaction> {
         return braintreeService.createTransaction(nonce)

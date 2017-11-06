@@ -1,8 +1,10 @@
 package com.yalantis.flow.braintree.sandbox
 
 import android.text.TextUtils
+import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenterImplementation
-import com.yalantis.data.source.braintree.BraintreeDataSource
+import com.yalantis.data.source.braintree.BraintreeRemoteDataSource
+import com.yalantis.data.source.braintree.BraintreeRepository
 import timber.log.Timber
 
 /**
@@ -10,10 +12,10 @@ import timber.log.Timber
  */
 class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>(), BraintreeContract.Presenter {
 
-    private val braintreeDataSource = BraintreeDataSource()
+    private val repo = BraintreeRepository()
 
     override fun createTransaction(nonce: String) {
-        addDisposable(braintreeDataSource.createTransaction(nonce)
+        addDisposable(repo.createTransaction(nonce)
                 .subscribe({
                     Timber.d(">>> Response got")
                     //This logic was in an example of Braintree Drop-ui.
@@ -33,6 +35,10 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
                 }, {
                     Timber.e(it)
                 }))
+    }
+
+    override fun saveLastPaymentMethod(nonce: PaymentMethodNonce) {
+
     }
 
 }

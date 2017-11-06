@@ -6,12 +6,11 @@ import com.yalantis.base.BaseActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.view.View
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
-import kotlinx.android.synthetic.main.activity_braintree.*
+import kotlinx.android.synthetic.main.activity_drop_ui_braintree.*
 import timber.log.Timber
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.api.dropin.utils.PaymentMethodType
@@ -25,19 +24,21 @@ import com.braintreepayments.api.models.PayPalRequest
 /**
  * Created by jtsym on 11/2/2017.
  */
-class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View {
+class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View {
 
     private val REQUEST_BRAINTREE = 8391
 
     override val presenter: BraintreeContract.Presenter = BraintreePresenter()
-    override val layoutResourceId: Int = R.layout.activity_braintree
+    override val layoutResourceId: Int = R.layout.activity_drop_ui_braintree
 
     private lateinit var token: String
     private lateinit var mBraintreeFragment: BraintreeFragment
     //Nonce is a one-time-use reference to payment info
     private var previousPaymentMethod: PaymentMethodNonce? = null
 
-    override fun getContext(): Context = this@BraintreeActivity
+    fun newIntent(context: Context): Intent = Intent(context, BraintreeDropUiActivity::class.java)
+
+    override fun getContext(): Context = this@BraintreeDropUiActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +91,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                         if (paymentMethod != null) {
                             previousPaymentMethod = paymentMethod
                             Timber.d(">>> previous payment method was found " + previousPaymentMethod)
+                            presenter.saveLastPaymentMethod(paymentMethod)
                             handlePreviousPaymentMethod()
                         } else {
                             Timber.d(">>> previous payment method wasn't found ")
@@ -115,9 +117,8 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
 
     private fun payWithPayPal() {
         Timber.d(">>> payment with paypal")
-        startBillingAgreement()
-        //or test this:
-//        startTransaction((previousPaymentMethod as PayPalAccountNonce))
+        startBillingAgreement()//new PayPal authentification
+//        startTransaction((previousPaymentMethod as PayPalAccountNonce))//last paypal credentials will be used
     }
 
     private fun payWithCreditCard() {
@@ -146,7 +147,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     previousPaymentMethod = result?.paymentMethodNonce
                     // If you try to make another payment with this nonce (result?.paymentMethodNonce), you will get an error
                     // "Unknown or expired payment_method_nonce"
-                    // because paymentMethodNonce is just a one-time-use payment reference, you cannot reuse it
+                    // because paymentMethodNonce is just a one-time-use payment reference, you cannot reuse it // you can use this nonce only to display info about payment
                 }
                 Activity.RESULT_CANCELED -> {
                     Timber.e(">>> payment canceled by user")
@@ -202,7 +203,6 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
             is CardNonce -> {
                 val lastTwo = paymentMethodNonce.lastTwo
                 text = getString(R.string.card_info, lastTwo)
-                Timber.e(">>> payment handling with credit card is not implemented yet")
             }
         }
 
