@@ -15,6 +15,8 @@ class BraintreeContract {
 
         fun saveLastPaymentMethod(nonce: PaymentMethodNonce)
 
+        fun getLastPaymentMethod(): PaymentMethodNonce?
+
     }
 
     interface View : BaseView

@@ -51,58 +51,58 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         token = getString(R.string.mock_token)
     }
 
-    //This functionality will work only if token on the server is created with specific customer_id
-    //https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
-    //https://github.com/braintree/braintree-android-drop-in/issues/2
-    private fun checkPreviousPaymentMethods() {
-        DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
-            override fun onError(exception: Exception) {
-                Timber.e(">>> error while checking prev payments " + exception.message)
-                onBraintreeSubmit()
-            }
-
-            override fun onResult(result: DropInResult) {
-                if (result.paymentMethodType != null) {
-                    // use the icon and name to show in your UI
-                    val icon = result.paymentMethodType?.drawable
-                    val name = result.paymentMethodType?.localizedName
-                    val description = result.paymentMethodNonce?.description
-
-                    lastPaymentInfoContainer.visibility = View.VISIBLE
-                    icon?.let {
-                        paymentIcon.setImageResource(it)
-                    }
-                    name?.let {
-                        paymentTitle.setText(it)
-                    }
-                    description?.let {
-                        paymentMethodDescription.text = description
-                    }
-
-                    if (result.paymentMethodType == PaymentMethodType.ANDROID_PAY) {
-                        // The last payment method the user used was Android Pay.
-                        // The Android Pay flow will need to be performed by the
-                        // user again at the time of checkout.
-                    } else {
-                        // Use the payment method show in your UI and charge the user
-                        // at the time of checkout.
-                        val paymentMethod = result.paymentMethodNonce
-                        if (paymentMethod != null) {
-                            previousPaymentMethod = paymentMethod
-                            Timber.d(">>> previous payment method was found " + previousPaymentMethod)
-                            handlePreviousPaymentMethod()
-                        } else {
-                            Timber.d(">>> previous payment method wasn't found ")
-                            onBraintreeSubmit()
-                        }
-                    }
-                } else {
-                    Timber.d(">>> previous payment method wasn't found ")
-                    onBraintreeSubmit()
-                }
-            }
-        })
-    }
+//    //This functionality will work only if token on the server is created with specific customer_id
+//    //https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
+//    //https://github.com/braintree/braintree-android-drop-in/issues/2
+//    private fun checkPreviousPaymentMethods() {
+//        DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
+//            override fun onError(exception: Exception) {
+//                Timber.e(">>> error while checking prev payments " + exception.message)
+//                onBraintreeSubmit()
+//            }
+//
+//            override fun onResult(result: DropInResult) {
+//                if (result.paymentMethodType != null) {
+//                    // use the icon and name to show in your UI
+//                    val icon = result.paymentMethodType?.drawable
+//                    val name = result.paymentMethodType?.localizedName
+//                    val description = result.paymentMethodNonce?.description
+//
+//                    lastPaymentInfoContainer.visibility = View.VISIBLE
+//                    icon?.let {
+//                        paymentIcon.setImageResource(it)
+//                    }
+//                    name?.let {
+//                        paymentTitle.setText(it)
+//                    }
+//                    description?.let {
+//                        paymentMethodDescription.text = description
+//                    }
+//
+//                    if (result.paymentMethodType == PaymentMethodType.ANDROID_PAY) {
+//                        // The last payment method the user used was Android Pay.
+//                        // The Android Pay flow will need to be performed by the
+//                        // user again at the time of checkout.
+//                    } else {
+//                        // Use the payment method show in your UI and charge the user
+//                        // at the time of checkout.
+//                        val paymentMethod = result.paymentMethodNonce
+//                        if (paymentMethod != null) {
+//                            previousPaymentMethod = paymentMethod
+//                            Timber.d(">>> previous payment method was found " + previousPaymentMethod)
+//                            handlePreviousPaymentMethod()
+//                        } else {
+//                            Timber.d(">>> previous payment method wasn't found ")
+//                            onBraintreeSubmit()
+//                        }
+//                    }
+//                } else {
+//                    Timber.d(">>> previous payment method wasn't found ")
+//                    onBraintreeSubmit()
+//                }
+//            }
+//        })
+//    }
 
     private fun handlePreviousPaymentMethod() {
         prepareBraintreeFragment()
