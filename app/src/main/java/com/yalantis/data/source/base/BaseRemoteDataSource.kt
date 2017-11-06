@@ -45,7 +45,7 @@ abstract class BaseRemoteDataSource : BaseDataSource {
         }.addInterceptor(HttpLoggingInterceptor().setLevel(level)).build()
 
         retrofit = Retrofit.Builder()
-                .baseUrl(ApiSettings.SERVER)
+                .baseUrl(ApiSettings.SANDBOX_BASE_SERVER_URL)
                 .addConverterFactory(createGsonConverter())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(client)

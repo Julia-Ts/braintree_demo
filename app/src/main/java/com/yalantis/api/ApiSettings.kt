@@ -5,17 +5,12 @@ package com.yalantis.api
  */
 object ApiSettings {
 
-    const val SCHEME = "https://"
-
-    const val HOSTNAME = "api.github.com/"
-
-    const val SERVER = SCHEME + HOSTNAME
-
     const val HEADER_AUTH_TOKEN = "Authorization"
 
-    const val PATH_ORGANIZATION = "organization"
-    const val PARAM_REPOS_TYPE = "type"
-    const val ORGANIZATION_REPOS = "orgs/{$PATH_ORGANIZATION}/repos"
+    const val SANDBOX_BASE_SERVER_URL = "https://braintree-sample-merchant.herokuapp.com"
+    const val PRODUCTION_BASE_SERVER_URL = "https://executive-sample-merchant.herokuapp.com"
 
+    const val SANDBOX_TOKENIZATION_KEY = "sandbox_tmxhyf7d_dcpspy2brwdjr3qn"
+    const val PRODUCTION_TOKENIZATION_KEY = "production_t2wns2y2_dfy45jdj3dxkmz5m"
 
 }

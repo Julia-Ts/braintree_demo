@@ -15,7 +15,7 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
     override fun createTransaction(nonce: String) {
         addDisposable(braintreeDataSource.createTransaction(nonce)
                 .subscribe({
-                    Timber.e(">>> Response got")
+                    Timber.d(">>> Response got")
                     //This logic was in an example of Braintree Drop-ui.
                     //https@ //github.com/braintree/braintree-android-drop-in
                     //So their server in example sends such response and we have to deal with it
@@ -25,14 +25,15 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
                         Timber.d(">>> Transaction was created successfully")
                     } else {
                         if (TextUtils.isEmpty(it.getMessage())) {
-                            view?.showError(">>> Server response was empty or malformed")
+//                            view?.showError(">>> Server response was empty or malformed")
                             Timber.e(">>> Server response was empty or malformed")
                         } else {
-                            view?.showError(it.getMessage())
+//                            view?.showError(it.getMessage())
+                            Timber.e(">>> " + it.getMessage())
                         }
                     }
                 }, {
-                    view?.showError(it.message)
+//                    view?.showError(it.message)
                     Timber.e(it)
                 }))
     }
