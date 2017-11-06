@@ -4,31 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payWithPayPalBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payWithPayPal"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay with PayPal" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payOnceWithPayPalBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payOnceWithPayPal"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay once with PayPal (one-time payment without saving any data about customer)" />
-
     <LinearLayout
         android:id="@+id/payPalInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:visibility="gone">
+        android:padding="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/payPalPaymentTitle"
@@ -52,22 +33,12 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payWithCardBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payWithCreditCard"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay with Card" />
-
     <LinearLayout
         android:id="@+id/cardInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:visibility="gone">
+        android:padding="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/cardPaymentTitle"
@@ -90,6 +61,14 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/payWithCardBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="Pay with the same payment method that was used the last time" />
 
     <FrameLayout
         android:id="@+id/container"

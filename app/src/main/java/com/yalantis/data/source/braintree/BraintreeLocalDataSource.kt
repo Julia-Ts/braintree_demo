@@ -1,7 +1,7 @@
 package com.yalantis.data.source.braintree
 
-import com.braintreepayments.api.models.PaymentMethodNonce
-import com.yalantis.data.model.LastPaymentNonce
+import com.yalantis.data.model.CardNonceInfo
+import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.source.base.BaseLocalDataSource
 
 /**
@@ -9,12 +9,20 @@ import com.yalantis.data.source.base.BaseLocalDataSource
  */
 class BraintreeLocalDataSource : BaseLocalDataSource() {
 
-    fun saveLastPaymentMethod(nonce: LastPaymentNonce) {
+    fun saveLastPayPalAccountInfo(nonce: PayPalNonceInfo) {
         realm.executeTransaction { realm -> realm.copyToRealmOrUpdate(nonce) }
     }
 
-    fun getLastPaymentMethod(): PaymentMethodNonce? {
-        return realm.where(LastPaymentNonce::class.java).findFirst().nonce
+    fun saveLastCardAccountInfo(nonce: CardNonceInfo) {
+        realm.executeTransaction { realm -> realm.copyToRealmOrUpdate(nonce) }
+    }
+
+    fun getLastCardAccountInfo(): CardNonceInfo? {
+        return realm.where(CardNonceInfo::class.java).findFirst()
+    }
+
+    fun getLastPayPalAccountInfo(): PayPalNonceInfo? {
+        return realm.where(PayPalNonceInfo::class.java).findFirst()
     }
 
 }

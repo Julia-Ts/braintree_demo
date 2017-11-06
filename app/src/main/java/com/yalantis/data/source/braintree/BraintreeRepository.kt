@@ -1,7 +1,7 @@
 package com.yalantis.data.source.braintree
 
-import com.braintreepayments.api.models.PaymentMethodNonce
-import com.yalantis.data.model.LastPaymentNonce
+import com.yalantis.data.model.CardNonceInfo
+import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.model.Transaction
 import io.reactivex.Single
 
@@ -17,12 +17,20 @@ class BraintreeRepository {
         return remoteSource.createTransaction(nonce)
     }
 
-    fun saveLastPaymentMethod(nonce: LastPaymentNonce) {
-        localSource.saveLastPaymentMethod(nonce)
+    fun saveLastPayPalAccountInfo(nonce: PayPalNonceInfo) {
+        localSource.saveLastPayPalAccountInfo(nonce)
     }
 
-    fun getLastPaymentMethod(): PaymentMethodNonce? {
-        return localSource.getLastPaymentMethod()
+    fun saveLastCardAccountInfo(nonce: CardNonceInfo) {
+        localSource.saveLastCardAccountInfo(nonce)
+    }
+
+    fun getLastPayPalAccountInfo(): PayPalNonceInfo? {
+        return localSource.getLastPayPalAccountInfo()
+    }
+
+    fun getLastCardAccountInfo(): CardNonceInfo? {
+        return localSource.getLastCardAccountInfo()
     }
 
 }

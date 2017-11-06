@@ -91,7 +91,7 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
                         if (paymentMethod != null) {
                             previousPaymentMethod = paymentMethod
                             Timber.d(">>> previous payment method was found " + previousPaymentMethod)
-                            presenter.saveLastPaymentMethod(paymentMethod)
+                            presenter.saveLastPaymentAccountInfo(paymentMethod)
                             handlePreviousPaymentMethod()
                         } else {
                             Timber.d(">>> previous payment method wasn't found ")

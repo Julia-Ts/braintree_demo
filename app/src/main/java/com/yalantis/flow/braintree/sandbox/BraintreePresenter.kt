@@ -1,10 +1,12 @@
 package com.yalantis.flow.braintree.sandbox
 
 import android.text.TextUtils
+import com.braintreepayments.api.models.CardNonce
+import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenterImplementation
-import com.yalantis.data.model.LastPaymentNonce
-import com.yalantis.data.source.braintree.BraintreeRemoteDataSource
+import com.yalantis.data.model.CardNonceInfo
+import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.source.braintree.BraintreeRepository
 import timber.log.Timber
 
@@ -38,12 +40,19 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
                 }))
     }
 
-    override fun saveLastPaymentMethod(nonce: PaymentMethodNonce) {
-        repo.saveLastPaymentMethod(LastPaymentNonce(nonce))
+    override fun saveLastPaymentAccountInfo(nonce: PaymentMethodNonce) {
+        when (nonce) {
+            is PayPalAccountNonce -> repo.saveLastPayPalAccountInfo(PayPalNonceInfo(nonce.email, nonce.billingAddress.extendedAddress))
+            is CardNonce -> repo.saveLastCardAccountInfo(CardNonceInfo(nonce.lastTwo))
+        }
     }
 
-    override fun getLastPaymentMethod(): PaymentMethodNonce? {
-        return repo.getLastPaymentMethod()
+    override fun getLastPayPalAccountInfo(): PayPalNonceInfo? {
+        return repo.getLastPayPalAccountInfo()
+    }
+
+    override fun getLastCardAccountInfo(): CardNonceInfo? {
+        return repo.getLastCardAccountInfo()
     }
 
 }

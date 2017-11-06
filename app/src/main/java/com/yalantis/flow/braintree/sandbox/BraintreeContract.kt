@@ -3,6 +3,8 @@ package com.yalantis.flow.braintree.sandbox
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenter
 import com.yalantis.base.BaseView
+import com.yalantis.data.model.CardNonceInfo
+import com.yalantis.data.model.PayPalNonceInfo
 
 /**
  * Created by jtsym on 11/2/2017.
@@ -13,10 +15,11 @@ class BraintreeContract {
 
         fun createTransaction(nonce: String)
 
-        fun saveLastPaymentMethod(nonce: PaymentMethodNonce)
+        fun saveLastPaymentAccountInfo(nonce: PaymentMethodNonce)
 
-        fun getLastPaymentMethod(): PaymentMethodNonce?
+        fun getLastPayPalAccountInfo(): PayPalNonceInfo?
 
+        fun getLastCardAccountInfo(): CardNonceInfo?
     }
 
     interface View : BaseView

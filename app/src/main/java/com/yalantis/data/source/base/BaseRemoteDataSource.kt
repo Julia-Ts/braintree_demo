@@ -1,9 +1,9 @@
 package com.yalantis.data.source.base
 
+import com.braintreepayments.api.BuildConfig
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
-import com.yalantis.BuildConfig
 import com.yalantis.api.ApiSettings
 import com.yalantis.api.deserializer.StringDeserializer
 import com.yalantis.api.services.BraintreeService
