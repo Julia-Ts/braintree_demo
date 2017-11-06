@@ -14,9 +14,6 @@ class BraintreeContract {
 
     }
 
-    interface View : BaseView {
-
-
-    }
+    interface View : BaseView
 
 }

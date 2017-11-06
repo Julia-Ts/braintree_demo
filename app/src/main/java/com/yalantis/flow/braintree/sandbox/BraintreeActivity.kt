@@ -6,6 +6,7 @@ import com.yalantis.base.BaseActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.View
 import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
@@ -88,12 +89,15 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                         val paymentMethod = result.paymentMethodNonce
                         if (paymentMethod != null) {
                             previousPaymentMethod = paymentMethod
+                            Timber.d(">>> previous payment method was found " + previousPaymentMethod)
                             handlePreviousPaymentMethod()
                         } else {
+                            Timber.d(">>> previous payment method wasn't found ")
                             onBraintreeSubmit()
                         }
                     }
                 } else {
+                    Timber.d(">>> previous payment method wasn't found ")
                     onBraintreeSubmit()
                 }
             }
@@ -138,14 +142,16 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
                     // use the result to update your UI and send the payment method nonce to your server
                     val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                     Timber.d(">>> payment result: " + result?.paymentMethodNonce?.nonce)
+                    //TODO: this is incorrect. Just to show an example for failing payment
                     previousPaymentMethod = result?.paymentMethodNonce
+                    // If you try to make another payment with this nonce (result?.paymentMethodNonce), you will get an error
+                    // "Unknown or expired payment_method_nonce"
+                    // because paymentMethodNonce is just a one-time-use payment reference, you cannot reuse it
                 }
                 Activity.RESULT_CANCELED -> {
-                    // the user canceled
                     Timber.e(">>> payment canceled by user")
                 }
                 else -> {
-                    // handle errors here, an exception may be available in
                     val error = data.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
                     Timber.e(">>> payment error " + error?.message)
                 }
@@ -201,6 +207,7 @@ class BraintreeActivity : BaseActivity<BraintreeContract.Presenter>(), Braintree
         }
 
         paymentInfo.text = text
+        lastPaymentInfoContainer.visibility = View.VISIBLE
     }
 
 }

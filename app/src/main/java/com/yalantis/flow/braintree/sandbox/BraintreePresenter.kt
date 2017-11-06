@@ -25,15 +25,12 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
                         Timber.d(">>> Transaction was created successfully")
                     } else {
                         if (TextUtils.isEmpty(it.getMessage())) {
-//                            view?.showError(">>> Server response was empty or malformed")
                             Timber.e(">>> Server response was empty or malformed")
                         } else {
-//                            view?.showError(it.getMessage())
                             Timber.e(">>> " + it.getMessage())
                         }
                     }
                 }, {
-//                    view?.showError(it.message)
                     Timber.e(it)
                 }))
     }
