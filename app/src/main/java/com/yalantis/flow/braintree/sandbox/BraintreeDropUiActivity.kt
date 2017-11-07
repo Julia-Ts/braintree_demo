@@ -16,13 +16,16 @@ import com.braintreepayments.api.dropin.utils.PaymentMethodType
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
+import com.braintreepayments.api.interfaces.BraintreeErrorListener
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.*
 import com.yalantis.data.model.ClientToken
 
 /**
  * Created by jtsym on 11/2/2017.
  */
-class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View {
+class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View,
+        PaymentMethodNonceCreatedListener, BraintreeErrorListener {
 
     private val REQUEST_BRAINTREE = 8391
 
@@ -30,7 +33,7 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
     override val layoutResourceId: Int = R.layout.activity_drop_ui_braintree
 
     private var token: String? = null
-    private lateinit var mBraintreeFragment: BraintreeFragment
+    private lateinit var braintreeFragment: BraintreeFragment
     //Nonce is a one-time-use reference to payment info
     private var previousPaymentMethod: PaymentMethodNonce? = null
 
@@ -45,15 +48,28 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
 
     override fun onTokenReceived(token: ClientToken) {
         this.token = token.getClientToken()
+        prepareBraintreeFragment()
         payBtn.setOnClickListener({ checkPreviousPaymentMethods() })
         repeatPaymentBtn.setOnClickListener({ handlePreviousPaymentMethod() })
         //This mocked token can be used for testing purposes until it is not implemented on backend
         //token = getString(R.string.mock_token)
     }
 
-    //This functionality will work only if token on the server is created with specific customer_id
-    //https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
-    //https://github.com/braintree/braintree-android-drop-in/issues/2
+    override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
+        // Nonce is sent to server here in order to create transaction
+        startTransaction(paymentMethodNonce)
+        Timber.d(">>> Payment nonce was created: " + paymentMethodNonce.nonce)
+        displayPaymentInfo(paymentMethodNonce)
+    }
+
+    override fun onError(error: java.lang.Exception?) {
+        Timber.e(">>> payment failed, error: " + error?.message)
+    }
+
+    /** This functionality will work only if token on the server is created with specific customer_id
+     * https://developers.braintreepayments.com/reference/request/client-token/generate/ruby#customer_id
+     * https://github.com/braintree/braintree-android-drop-in/issues/2
+     **/
     private fun checkPreviousPaymentMethods() {
         DropInResult.fetchDropInResult(this, token, object : DropInResult.DropInResultListener {
             override fun onError(exception: Exception) {
@@ -106,7 +122,6 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
     }
 
     private fun handlePreviousPaymentMethod() {
-        prepareBraintreeFragment()
         displayPaymentInfo(previousPaymentMethod)
         when (previousPaymentMethod) {
             is PayPalAccountNonce -> payWithPayPal()
@@ -123,7 +138,6 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
     private fun payWithCreditCard() {
         Timber.d(">>> payment with credit card")
         startTransaction((previousPaymentMethod as CardNonce))
-//        Card.tokenize(mBraintreeFragment, )
     }
 
     private fun startTransaction(previousPaymentMethod: PaymentMethodNonce) {
@@ -142,11 +156,10 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
                     // use the result to update your UI and send the payment method nonce to your server
                     val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                     Timber.d(">>> payment result: " + result?.paymentMethodNonce?.nonce)
-                    //TODO: this is incorrect. Just to show an example for failing payment
-                    previousPaymentMethod = result?.paymentMethodNonce
                     // If you try to make another payment with this nonce (result?.paymentMethodNonce), you will get an error
                     // "Unknown or expired payment_method_nonce"
-                    // because paymentMethodNonce is just a one-time-use payment reference, you cannot reuse it // you can use this nonce only to display info about payment
+                    // because paymentMethodNonce is just a one-time-use payment reference, you cannot reuse it
+                    // You can use this nonce only to display info about payment
                 }
                 Activity.RESULT_CANCELED -> {
                     Timber.e(">>> payment canceled by user")
@@ -159,11 +172,15 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
         }
     }
 
+    /**
+     * BraintreeFragment - core Braintree class that handles network requests and managing callbacks.
+     * Designed as a fragment in order to be tied to lifecycle events
+     * https://developers.braintreepayments.com/guides/client-sdk/migration/android/v2#braintreefragment
+     */
     private fun prepareBraintreeFragment() {
         try {
-            mBraintreeFragment = BraintreeFragment.newInstance(this, token)
-            // mBraintreeFragment is ready to use!
-            setFragment(mBraintreeFragment, R.id.container)
+            braintreeFragment = BraintreeFragment.newInstance(this, token)
+            // braintreeFragment is ready to use!
         } catch (e: InvalidArgumentException) {
             Timber.e(">>> Error while initializing braintree fragment")
             // There was an issue with your authorization string.
@@ -174,14 +191,7 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
         val request = PayPalRequest()
                 .localeCode("US")
                 .billingAgreementDescription("Your agreement description")
-        PayPal.requestBillingAgreement(mBraintreeFragment, request)
-    }
-
-    fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
-        // Send nonce to server
-        val nonce = paymentMethodNonce.nonce
-        Timber.d(">>> Payment nonce was created: " + nonce)
-        displayPaymentInfo(paymentMethodNonce)
+        PayPal.requestBillingAgreement(braintreeFragment, request)
     }
 
     fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {

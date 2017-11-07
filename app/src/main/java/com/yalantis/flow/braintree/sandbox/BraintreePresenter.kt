@@ -2,14 +2,12 @@ package com.yalantis.flow.braintree.sandbox
 
 import android.text.TextUtils
 import com.braintreepayments.api.models.CardNonce
-import com.braintreepayments.api.models.ClientToken
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenterImplementation
 import com.yalantis.data.model.CardNonceInfo
 import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.source.braintree.BraintreeRepository
-import io.reactivex.Single
 import timber.log.Timber
 
 /**
@@ -28,23 +26,30 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
     }
 
     override fun createTransaction(nonce: String) {
+        view?.showProgress()
         addDisposable(repo.createTransaction(nonce)
                 .subscribe({
+                    view?.hideProgress()
                     Timber.d(">>> Response got")
                     //This logic was taken from example of Braintree Drop-ui.
                     //https://github.com/braintree/braintree-android-drop-in
                     //https://github.com/braintree/braintree_spring_example
                     val message = it.getMessage()
                     if (message != null && message.startsWith("created")) { //I hope you will have to deal with better backend response
+                        view?.showMessage("Transaction was created successfully")
                         Timber.d(">>> Transaction was created successfully")
                     } else {
                         if (TextUtils.isEmpty(it.getMessage())) {
+                            view?.showError("Server response was empty or malformed")
                             Timber.e(">>> Server response was empty or malformed")
                         } else {
+                            view?.showError(it.getMessage())
                             Timber.e(">>> " + it.getMessage())
                         }
                     }
                 }, {
+                    view?.hideProgress()
+                    view?.showError(it?.message)
                     Timber.e(it)
                 }))
     }

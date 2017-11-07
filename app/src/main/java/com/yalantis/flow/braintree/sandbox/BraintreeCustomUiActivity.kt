@@ -1,6 +1,5 @@
 package com.yalantis.flow.braintree.sandbox
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +7,6 @@ import android.view.View
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.Card
 import com.braintreepayments.api.PayPal
-import com.braintreepayments.api.dropin.DropInActivity
-import com.braintreepayments.api.dropin.DropInRequest
-import com.braintreepayments.api.dropin.DropInResult
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
@@ -32,13 +28,10 @@ import com.braintreepayments.api.exceptions.ErrorWithResponse
 class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View,
         PaymentMethodNonceCreatedListener, BraintreeErrorListener {
 
-    private val REQUEST_BRAINTREE = 8391
-
     override val presenter: BraintreeContract.Presenter = BraintreePresenter()
     override val layoutResourceId: Int = R.layout.activity_custom_ui_braintree
 
-    private var token: String? = null
-    private lateinit var mBraintreeFragment: BraintreeFragment
+    private lateinit var braintreeFragment: BraintreeFragment
 
     fun newIntent(context: Context): Intent = Intent(context, BraintreeCustomUiActivity::class.java)
 
@@ -50,10 +43,9 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
     }
 
     override fun onTokenReceived(token: ClientToken) {
-        this.token = token.getClientToken()
         //This mocked token can be used for testing purposes until it is not implemented on backend
-        //token = getString(R.string.mock_token)
-        prepareBraintreeFragment()
+        //getString(R.string.mock_token)
+        prepareBraintreeFragment(token.getClientToken())
     }
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
@@ -105,9 +97,8 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     fun payWithPayPal(v: View) {
         Timber.d(">>> payment with paypal")
-        PayPal.authorizeAccount(mBraintreeFragment)
-//what is the difference?
-//        startBillingAgreement()//new PayPal authentication
+        startBillingAgreement()
+//        reAuthPayPalAndPay() // Use if you want to make user login into PayPal again
     }
 
     fun payOnceWithPayPal(v: View) {
@@ -115,67 +106,48 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val request = PayPalRequest("1")
                 .currencyCode("USD") //Currency codes: https://developer.paypal.com/docs/integration/direct/rest/currency-codes/#paypal-account-payments
                 .intent(PayPalRequest.INTENT_AUTHORIZE)
-        PayPal.requestOneTimePayment(mBraintreeFragment, request)
+        PayPal.requestOneTimePayment(braintreeFragment, request)
     }
 
     fun payWithCreditCard(v: View) {
-        //TODO: add validation
         Timber.d(">>> payment with credit card")
         val cardBuilder = CardBuilder()
                 .cardNumber(cardNumberInput.text?.toString())
                 .expirationDate(getString(R.string.card_expiration_date,
                         cardExpirationMonthInput.text?.toString(), cardExpirationYearInput.text?.toString()))
                 .cvv(cardCvvInput.text?.toString())
-                .validate(true)
+                .validate(true)//This is Braintree client-side validation
 
-        Card.tokenize(mBraintreeFragment, cardBuilder)
+        Card.tokenize(braintreeFragment, cardBuilder)
     }
 
-    private fun startTransaction(previousPaymentMethod: PaymentMethodNonce) {
-
-    }
-
-    private fun onBraintreeSubmit() {
-        val dropInRequest = DropInRequest().clientToken(token)
-        startActivityForResult(dropInRequest.getIntent(this), REQUEST_BRAINTREE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        Timber.d(">>> onActivityResult: requestCode: $requestCode; resultCode: $resultCode")
-        if (requestCode == REQUEST_BRAINTREE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    // use the result to update your UI and send the payment method nonce to your server
-                    val result: DropInResult? = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                    Timber.d(">>> payment result: " + result?.paymentMethodNonce?.nonce)
-                }
-                Activity.RESULT_CANCELED -> {
-                    Timber.e(">>> payment canceled by user")
-                }
-                else -> {
-                    val error = data.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
-                    Timber.e(">>> payment error " + error?.message)
-                }
-            }
-        }
-    }
-
-    private fun prepareBraintreeFragment() {
+    private fun prepareBraintreeFragment(token: String?) {
         try {
-            mBraintreeFragment = BraintreeFragment.newInstance(this, token)
-            // mBraintreeFragment is ready to use!
-            setFragment(mBraintreeFragment, R.id.container)
+            braintreeFragment = BraintreeFragment.newInstance(this, token)
+            // braintreeFragment is ready to use
         } catch (e: InvalidArgumentException) {
             Timber.e(">>> Error while initializing braintree fragment")
             // There was an issue with your authorization string.
         }
     }
 
-    fun startBillingAgreement() {
+    /**
+     * Requests new PayPal authentication
+     */
+    private fun reAuthPayPalAndPay() {
+        PayPal.authorizeAccount(braintreeFragment)
+    }
+
+    /**
+     * Billing Agreement should be used if you want to perform recurring payments
+     * https://developers.braintreepayments.com/guides/paypal/vault/android/v2
+     * about billing agreements: https://developer.paypal.com/docs/integration/direct/billing-plans-and-agreements/
+     */
+    private fun startBillingAgreement() {
         val request = PayPalRequest()
                 .localeCode("US")
                 .billingAgreementDescription("Your agreement description")
-        PayPal.requestBillingAgreement(mBraintreeFragment, request)
+        PayPal.requestBillingAgreement(braintreeFragment, request)
     }
 
     private fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {
