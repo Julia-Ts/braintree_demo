@@ -12,14 +12,12 @@ import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import kotlinx.android.synthetic.main.activity_drop_ui_braintree.*
 import timber.log.Timber
-import com.braintreepayments.api.models.PaymentMethodNonce
 import com.braintreepayments.api.dropin.utils.PaymentMethodType
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.BraintreeFragment
-import com.braintreepayments.api.models.CardNonce
-import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.PayPal
-import com.braintreepayments.api.models.PayPalRequest
+import com.braintreepayments.api.models.*
+import com.yalantis.data.model.ClientToken
 
 /**
  * Created by jtsym on 11/2/2017.
@@ -31,7 +29,7 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
     override val presenter: BraintreeContract.Presenter = BraintreePresenter()
     override val layoutResourceId: Int = R.layout.activity_drop_ui_braintree
 
-    private lateinit var token: String
+    private var token: String? = null
     private lateinit var mBraintreeFragment: BraintreeFragment
     //Nonce is a one-time-use reference to payment info
     private var previousPaymentMethod: PaymentMethodNonce? = null
@@ -42,14 +40,15 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getToken()
-        payBtn.setOnClickListener({ checkPreviousPaymentMethods() })
-        repeatPaymentBtn.setOnClickListener({ handlePreviousPaymentMethod() })
+        presenter.getToken()
     }
 
-    private fun getToken() {
-        //It should be replaced with real token from server. This one is only for testing purposes
-        token = getString(R.string.mock_token)
+    override fun onTokenReceived(token: ClientToken) {
+        this.token = token.getClientToken()
+        payBtn.setOnClickListener({ checkPreviousPaymentMethods() })
+        repeatPaymentBtn.setOnClickListener({ handlePreviousPaymentMethod() })
+        //This mocked token can be used for testing purposes until it is not implemented on backend
+        //token = getString(R.string.mock_token)
     }
 
     //This functionality will work only if token on the server is created with specific customer_id

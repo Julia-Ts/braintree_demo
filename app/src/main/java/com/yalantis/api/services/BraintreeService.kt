@@ -1,6 +1,6 @@
 package com.yalantis.api.services
 
-import com.braintreepayments.api.models.ClientToken
+import com.yalantis.data.model.ClientToken
 import com.yalantis.data.model.Transaction
 import io.reactivex.Single
 import retrofit2.http.*
@@ -9,6 +9,9 @@ import retrofit2.http.*
  * Created by jtsym on 11/3/2017.
  */
 interface BraintreeService {
+
+    @GET("/client_token")
+    fun getClientToken(): Single<ClientToken>
 
     @GET("/client_token")
     fun getClientToken(@Query("customer_id") customerId: String,

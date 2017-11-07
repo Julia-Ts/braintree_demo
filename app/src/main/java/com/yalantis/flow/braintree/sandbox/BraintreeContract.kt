@@ -4,6 +4,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenter
 import com.yalantis.base.BaseView
 import com.yalantis.data.model.CardNonceInfo
+import com.yalantis.data.model.ClientToken
 import com.yalantis.data.model.PayPalNonceInfo
 
 /**
@@ -12,6 +13,8 @@ import com.yalantis.data.model.PayPalNonceInfo
 class BraintreeContract {
 
     interface Presenter : BasePresenter {
+
+        fun getToken()
 
         fun createTransaction(nonce: String)
 
@@ -22,6 +25,10 @@ class BraintreeContract {
         fun getLastCardAccountInfo(): CardNonceInfo?
     }
 
-    interface View : BaseView
+    interface View : BaseView {
+
+        fun onTokenReceived(token: ClientToken)
+
+    }
 
 }

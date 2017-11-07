@@ -2,12 +2,14 @@ package com.yalantis.flow.braintree.sandbox
 
 import android.text.TextUtils
 import com.braintreepayments.api.models.CardNonce
+import com.braintreepayments.api.models.ClientToken
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.yalantis.base.BasePresenterImplementation
 import com.yalantis.data.model.CardNonceInfo
 import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.source.braintree.BraintreeRepository
+import io.reactivex.Single
 import timber.log.Timber
 
 /**
@@ -17,16 +19,23 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
 
     private val repo = BraintreeRepository()
 
+    override fun getToken() {
+        addDisposable(repo.getToken().subscribe({
+            view?.onTokenReceived(it)
+        }, {
+            Timber.e(it)
+        }))
+    }
+
     override fun createTransaction(nonce: String) {
         addDisposable(repo.createTransaction(nonce)
                 .subscribe({
                     Timber.d(">>> Response got")
-                    //This logic was in an example of Braintree Drop-ui.
-                    //https@ //github.com/braintree/braintree-android-drop-in
-                    //So their server in example sends such response and we have to deal with it
+                    //This logic was taken from example of Braintree Drop-ui.
+                    //https://github.com/braintree/braintree-android-drop-in
                     //https://github.com/braintree/braintree_spring_example
                     val message = it.getMessage()
-                    if (message != null && message.startsWith("created")) {
+                    if (message != null && message.startsWith("created")) { //I hope you will have to deal with better backend response
                         Timber.d(">>> Transaction was created successfully")
                     } else {
                         if (TextUtils.isEmpty(it.getMessage())) {

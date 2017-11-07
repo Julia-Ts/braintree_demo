@@ -21,4 +21,5 @@
     <string name="test_card_number_visa">41111111111111111</string>
     <string name="test_card_expiration_month">01</string>
     <string name="test_card_expiration_year">20</string>
+    <string name="test_card_cvv">123</string>
 </resources>

@@ -12,16 +12,15 @@ import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
-import com.braintreepayments.api.models.CardNonce
-import com.braintreepayments.api.models.PayPalAccountNonce
-import com.braintreepayments.api.models.PayPalRequest
-import com.braintreepayments.api.models.PaymentMethodNonce
+import com.braintreepayments.api.models.*
 import com.yalantis.R
 import com.yalantis.base.BaseActivity
+import com.yalantis.data.model.ClientToken
 import kotlinx.android.synthetic.main.activity_custom_ui_braintree.*
 import timber.log.Timber
-import com.braintreepayments.api.models.CardBuilder
+import com.braintreepayments.api.exceptions.ErrorWithResponse
 
 
 /**
@@ -30,14 +29,15 @@ import com.braintreepayments.api.models.CardBuilder
 
 //TODO: create class BraintreeRepeatPaymentActivity
 
-class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View, PaymentMethodNonceCreatedListener {
+class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View,
+        PaymentMethodNonceCreatedListener, BraintreeErrorListener {
 
     private val REQUEST_BRAINTREE = 8391
 
     override val presenter: BraintreeContract.Presenter = BraintreePresenter()
     override val layoutResourceId: Int = R.layout.activity_custom_ui_braintree
 
-    private lateinit var token: String
+    private var token: String? = null
     private lateinit var mBraintreeFragment: BraintreeFragment
 
     fun newIntent(context: Context): Intent = Intent(context, BraintreeCustomUiActivity::class.java)
@@ -46,21 +46,61 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getToken()
+        presenter.getToken()
+    }
+
+    override fun onTokenReceived(token: ClientToken) {
+        this.token = token.getClientToken()
+        //This mocked token can be used for testing purposes until it is not implemented on backend
+        //token = getString(R.string.mock_token)
         prepareBraintreeFragment()
     }
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
-        // Send nonce to server (!)
         val nonce = paymentMethodNonce.nonce
-
         Timber.d(">>> Payment nonce was created: " + nonce)
+
+        // Nonce is sent to server here in order to create transaction
+        presenter.createTransaction(nonce)
         displayPaymentInfo(paymentMethodNonce)
     }
 
-    private fun getToken() {
-        //It should be replaced with real token from server. This one is only for testing purposes
-        token = getString(R.string.mock_token)
+    /**
+     * ErrorWithResponse is called when there are validations errors with the request.
+     * Exception is thrown when an error such as a network issue or server error occurs.
+     * https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#register-listeners
+     */
+    override fun onError(error: java.lang.Exception?) {
+        Timber.e(">>> payment failed, error: " + error?.message)
+        if (error is ErrorWithResponse) {
+            val cardErrors = error.errorFor("creditCard")
+            if (cardErrors != null) {
+                // There is an issue with the credit card.
+                val cardNumberError = cardErrors.errorFor("number")
+                if (cardNumberError != null) {
+                    // There is an issue with the card number.
+                    cardNumberInput.error = cardNumberError.message
+                }
+                val expirationYearError = cardErrors.errorFor("expirationYear")
+                if (expirationYearError != null) {
+                    // There is an issue with the expiration year.
+                    cardExpirationYearInput.error = expirationYearError.message
+                }
+                val expirationMonthError = cardErrors.errorFor("expirationMonth")
+                if (expirationMonthError != null) {
+                    // There is an issue with the expiration month.
+                    cardExpirationMonthInput.error = expirationMonthError.message
+                }
+                val cvvError = cardErrors.errorFor("cvv")
+                if (cvvError != null) {
+                    // There is an issue with the expiration cvv.
+                    cardCvvInput.error = cvvError.message
+                }
+                //TODO: There are may be other issues, handle them all
+            }
+        } else {
+            showError(error?.message)
+        }
     }
 
     fun payWithPayPal(v: View) {
@@ -85,13 +125,14 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
                 .cardNumber(cardNumberInput.text?.toString())
                 .expirationDate(getString(R.string.card_expiration_date,
                         cardExpirationMonthInput.text?.toString(), cardExpirationYearInput.text?.toString()))
+                .cvv(cardCvvInput.text?.toString())
                 .validate(true)
 
         Card.tokenize(mBraintreeFragment, cardBuilder)
     }
 
     private fun startTransaction(previousPaymentMethod: PaymentMethodNonce) {
-        presenter.createTransaction(previousPaymentMethod.nonce)
+
     }
 
     private fun onBraintreeSubmit() {

@@ -1,5 +1,6 @@
 package com.yalantis.data.source.braintree
 
+import com.braintreepayments.api.models.ClientToken
 import com.yalantis.data.model.CardNonceInfo
 import com.yalantis.data.model.PayPalNonceInfo
 import com.yalantis.data.model.Transaction
@@ -12,6 +13,10 @@ class BraintreeRepository {
 
     private val remoteSource = BraintreeRemoteDataSource().apply { init() }
     private val localSource = BraintreeLocalDataSource().apply { init() }
+
+    fun getToken(): Single<com.yalantis.data.model.ClientToken> {
+        return remoteSource.getToken()
+    }
 
     fun createTransaction(nonce: String): Single<Transaction> {
         return remoteSource.createTransaction(nonce)
