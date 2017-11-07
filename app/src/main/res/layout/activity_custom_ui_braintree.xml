@@ -1,148 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payWithPayPalBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payWithPayPal"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay with PayPal" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payOnceWithPayPalBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payOnceWithPayPal"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay once with PayPal (one-time payment without saving any data about customer)" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/payPalInfoContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:visibility="gone">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/payPalPaymentTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/payPalPaymentIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/payPalPaymentMethodDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/payPalPaymentInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payWithCardBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="payWithCreditCard"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay with Card" />
-
-    <LinearLayout
-        android:id="@+id/cardInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/payWithPayPalBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Card number">
+            android:layout_gravity="center"
+            android:onClick="payWithPayPal"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Pay with PayPal" />
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/cardNumberInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLength="16" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/payOnceWithPayPalBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="payOnceWithPayPal"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Pay once with PayPal (one-time payment without saving any data about customer)" />
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/cardExpirationDayInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Expiration day"
-                android:inputType="number"
-                android:maxLength="2" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+            android:id="@+id/payPalInfoContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:visibility="gone">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/cardExpirationMonthInput"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/payPalPaymentTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/payPalPaymentIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/payPalPaymentMethodDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/payPalPaymentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/payWithCardBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="payWithCreditCard"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Pay with Card" />
+
+        <LinearLayout
+            android:id="@+id/cardInputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Expiration month"
-                android:inputType="number"
-                android:maxLength="2" />
-        </android.support.design.widget.TextInputLayout>
+                android:hint="Card number">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/cardNumberInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="16"
+                    android:text="@string/test_card_number_visa" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/cardExpirationMonthInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Expiration month"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:text="@string/test_card_expiration_month" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/cardExpirationYearInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Expiration year"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:text="@string/test_card_expiration_year" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cardInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:visibility="gone">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/cardPaymentTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/cardPaymentIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cardPaymentMethodDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cardPaymentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/cardInfoContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:visibility="gone">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/cardPaymentTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/cardPaymentIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/cardPaymentMethodDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/cardPaymentInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+</ScrollView>

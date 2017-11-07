@@ -12,6 +12,7 @@ import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PayPalRequest
@@ -29,7 +30,7 @@ import com.braintreepayments.api.models.CardBuilder
 
 //TODO: create class BraintreeRepeatPaymentActivity
 
-class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View {
+class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View, PaymentMethodNonceCreatedListener {
 
     private val REQUEST_BRAINTREE = 8391
 
@@ -49,6 +50,14 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         prepareBraintreeFragment()
     }
 
+    override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
+        // Send nonce to server (!)
+        val nonce = paymentMethodNonce.nonce
+
+        Timber.d(">>> Payment nonce was created: " + nonce)
+        displayPaymentInfo(paymentMethodNonce)
+    }
+
     private fun getToken() {
         //It should be replaced with real token from server. This one is only for testing purposes
         token = getString(R.string.mock_token)
@@ -56,7 +65,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     fun payWithPayPal(v: View) {
         Timber.d(">>> payment with paypal")
-        PayPal.authorizeAccount(mBraintreeFragment)//callback is not called :(((( //TODO: check
+        PayPal.authorizeAccount(mBraintreeFragment)
 //what is the difference?
 //        startBillingAgreement()//new PayPal authentication
     }
@@ -66,7 +75,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val request = PayPalRequest("1")
                 .currencyCode("USD") //Currency codes: https://developer.paypal.com/docs/integration/direct/rest/currency-codes/#paypal-account-payments
                 .intent(PayPalRequest.INTENT_AUTHORIZE)
-        PayPal.requestOneTimePayment(mBraintreeFragment, request)//callback is not called :(((( //TODO: check
+        PayPal.requestOneTimePayment(mBraintreeFragment, request)
     }
 
     fun payWithCreditCard(v: View) {
@@ -75,18 +84,10 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val cardBuilder = CardBuilder()
                 .cardNumber(cardNumberInput.text?.toString())
                 .expirationDate(getString(R.string.card_expiration_date,
-                        cardExpirationDayInput.text?.toString(), cardExpirationMonthInput.text?.toString()))
+                        cardExpirationMonthInput.text?.toString(), cardExpirationYearInput.text?.toString()))
+                .validate(true)
 
         Card.tokenize(mBraintreeFragment, cardBuilder)
-    }
-
-    //TODO: check why this callback is not called!!!!!
-    fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
-        // Send nonce to server (!)
-        val nonce = paymentMethodNonce.nonce
-
-        Timber.d(">>> Payment nonce was created: " + nonce)
-        displayPaymentInfo(paymentMethodNonce)
     }
 
     private fun startTransaction(previousPaymentMethod: PaymentMethodNonce) {
@@ -99,6 +100,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        Timber.d(">>> onActivityResult: requestCode: $requestCode; resultCode: $resultCode")
         if (requestCode == REQUEST_BRAINTREE) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
