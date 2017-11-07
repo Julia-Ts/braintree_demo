@@ -26,10 +26,8 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
     }
 
     override fun createTransaction(nonce: String) {
-        view?.showProgress()
         addDisposable(repo.createTransaction(nonce)
                 .subscribe({
-                    view?.hideProgress()
                     Timber.d(">>> Response got")
                     //This logic was taken from example of Braintree Drop-ui.
                     //https://github.com/braintree/braintree-android-drop-in
@@ -48,7 +46,6 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
                         }
                     }
                 }, {
-                    view?.hideProgress()
                     view?.showError(it?.message)
                     Timber.e(it)
                 }))
