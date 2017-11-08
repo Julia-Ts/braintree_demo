@@ -33,18 +33,14 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-    
+
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/payWithCardBtn"
+        android:id="@+id/payBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:enabled="false"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="Pay with the same payment method that was used the last time" />
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:text="Pay using the same payment method that was used the last time" />
 
 </LinearLayout>

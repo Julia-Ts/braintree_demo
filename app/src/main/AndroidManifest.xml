@@ -23,6 +23,7 @@
 
         <activity android:name=".flow.braintree.sandbox.BraintreeDropUiActivity" />
         <activity android:name=".flow.braintree.sandbox.BraintreeCustomUiActivity" />
+        <activity android:name=".flow.braintree.sandbox.BraintreeRepeatPaymentActivity" />
 
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"

@@ -18,12 +18,9 @@ import kotlinx.android.synthetic.main.activity_custom_ui_braintree.*
 import timber.log.Timber
 import com.braintreepayments.api.exceptions.ErrorWithResponse
 
-
 /**
  * Created by jtsym on 11/2/2017.
  */
-
-//TODO: create class BraintreeRepeatPaymentActivity
 
 class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), BraintreeContract.View,
         PaymentMethodNonceCreatedListener, BraintreeErrorListener {
@@ -54,6 +51,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
         // Nonce is sent to server here in order to create transaction
         presenter.createTransaction(nonce)
+        presenter.saveLastPaymentAccountInfo(paymentMethodNonce)
         displayPaymentInfo(paymentMethodNonce)
     }
 
@@ -147,6 +145,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val request = PayPalRequest()
                 .localeCode("US")
                 .billingAgreementDescription("Your agreement description")
+
         PayPal.requestBillingAgreement(braintreeFragment, request)
     }
 

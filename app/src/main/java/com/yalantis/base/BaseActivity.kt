@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.yalantis.dialog.ProgressDialogFragment
 
 abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseView {
@@ -43,7 +44,8 @@ abstract class BaseActivity<out T : BasePresenter> : AppCompatActivity(), BaseVi
 
     override fun showMessage(message: String?) {
         message?.let {
-            Snackbar.make(currentFocus, message, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()
+//            Snackbar.make(currentFocus, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 
