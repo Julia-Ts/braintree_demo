@@ -22,4 +22,6 @@
     <string name="test_card_expiration_month">01</string>
     <string name="test_card_expiration_year">20</string>
     <string name="test_card_cvv">123</string>
+    <string name="test_amount">1</string>
+    <string name="test_currency">USD</string>
 </resources>

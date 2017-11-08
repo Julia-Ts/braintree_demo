@@ -101,13 +101,13 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     fun payOnceWithPayPal(v: View) {
         Timber.d(">>> one-time payment with paypal")
-        val request = PayPalRequest("1")
-                .currencyCode("USD") //Currency codes: https://developer.paypal.com/docs/integration/direct/rest/currency-codes/#paypal-account-payments
+        val request = PayPalRequest(amountInput.text?.toString())
+                .currencyCode(currencyTextView.text.toString()) //About currencies: https://developers.braintreepayments.com/reference/general/currencies //https://articles.braintreepayments.com/get-started/try-it-out#testing-currencies
                 .intent(PayPalRequest.INTENT_AUTHORIZE)
         PayPal.requestOneTimePayment(braintreeFragment, request)
     }
 
-    fun payWithCreditCard(v: View) {
+    fun payWithCreditCard(v: View) { //TODO: can we add amount and currency here?
         Timber.d(">>> payment with credit card")
         val cardBuilder = CardBuilder()
                 .cardNumber(cardNumberInput.text?.toString())
@@ -142,7 +142,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
      * about billing agreements: https://developer.paypal.com/docs/integration/direct/billing-plans-and-agreements/
      */
     private fun startBillingAgreement() {
-        val request = PayPalRequest()
+        val request = PayPalRequest() //TODO: can we add amount and currency here?
                 .localeCode("US")
                 .billingAgreementDescription("Your agreement description")
 

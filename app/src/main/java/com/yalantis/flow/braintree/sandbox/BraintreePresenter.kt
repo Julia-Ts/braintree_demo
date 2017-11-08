@@ -53,8 +53,8 @@ class BraintreePresenter : BasePresenterImplementation<BraintreeContract.View>()
 
     override fun saveLastPaymentAccountInfo(nonce: PaymentMethodNonce) {
         when (nonce) {
-            is PayPalAccountNonce -> repo.saveLastPayPalAccountInfo(PayPalNonceInfo(nonce.email, nonce.billingAddress.extendedAddress))
-            is CardNonce -> repo.saveLastCardAccountInfo(CardNonceInfo(nonce.lastTwo))
+            is PayPalAccountNonce -> repo.saveLastPayPalAccountInfo(PayPalNonceInfo(1, nonce.email, nonce.billingAddress.extendedAddress))
+            is CardNonce -> repo.saveLastCardAccountInfo(CardNonceInfo(1, nonce.lastTwo))
         }
     }
 
