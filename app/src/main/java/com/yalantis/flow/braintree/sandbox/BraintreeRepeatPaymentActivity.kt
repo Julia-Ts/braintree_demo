@@ -44,6 +44,7 @@ class BraintreeRepeatPaymentActivity : BaseActivity<BraintreeContract.Presenter>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.getToken()
+        payBtn.setOnClickListener({ handlePreviousPaymentMethod() })
     }
 
     override fun onTokenReceived(token: ClientToken) {
@@ -51,7 +52,6 @@ class BraintreeRepeatPaymentActivity : BaseActivity<BraintreeContract.Presenter>
         this.token = token.getClientToken()
         prepareBraintreeFragment()
         checkPreviousPaymentMethods()
-        payBtn.setOnClickListener({ handlePreviousPaymentMethod() })
     }
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {

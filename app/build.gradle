@@ -120,5 +120,6 @@ dependencies {
     //Payments
     compile 'com.braintreepayments.api:braintree:2.7.0'
     compile 'com.braintreepayments.api:drop-in:3.1.0'
+    compile 'io.card:android-sdk:5.5.1'
     compile "com.google.android.gms:play-services-wallet:$googlePlayServices"
 }

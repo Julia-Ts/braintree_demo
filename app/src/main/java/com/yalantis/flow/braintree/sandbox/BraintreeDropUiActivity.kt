@@ -35,12 +35,13 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.getToken()
+        payBtn.setOnClickListener({ onBraintreeSubmit() })
+        repeatPaymentBtn.setOnClickListener({ startActivity(BraintreeRepeatPaymentActivity().newIntent(this)) })
     }
 
     override fun onTokenReceived(token: ClientToken) {
         this.token = token.getClientToken()
-        payBtn.setOnClickListener({ onBraintreeSubmit() })
-        repeatPaymentBtn.setOnClickListener({ startActivity(BraintreeRepeatPaymentActivity().newIntent(this)) })
+        payBtn.isEnabled = true
         //This mocked token can be used for testing purposes until it is not implemented on backend
         //token = getString(R.string.mock_token)
     }
