@@ -17,6 +17,8 @@ import com.yalantis.data.model.ClientToken
 import kotlinx.android.synthetic.main.activity_custom_ui_braintree.*
 import timber.log.Timber
 import com.braintreepayments.api.exceptions.ErrorWithResponse
+import com.braintreepayments.api.models.PayPalRequest
+
 
 /**
  * Created by jtsym on 11/2/2017.
@@ -95,14 +97,17 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
 
     fun payWithPayPal(v: View) {
         Timber.d(">>> payment with paypal")
-        startBillingAgreement()
-//        reAuthPayPalAndPay() // Use if you want to make user login into PayPal again
+        startBillingAgreement()   // Use it if you want to make a payment and save user logged in for future payments
+        // reAuthPayPalAndPay()   // Use if you want to make user login into PayPal again
+        // startExpressCheckout() // Use it if you want to make a one-time payment and don't make user stay logged in
     }
 
     fun payOnceWithPayPal(v: View) {
         Timber.d(">>> one-time payment with paypal")
-        val request = PayPalRequest(amountInput.text?.toString())
-                .currencyCode(currencyTextView.text.toString()) //About currencies: https://developers.braintreepayments.com/reference/general/currencies //https://articles.braintreepayments.com/get-started/try-it-out#testing-currencies
+        val amount = amountInput.text?.toString()
+        val currencyCode = currencyTextView.text.toString()
+        val request = PayPalRequest(amount)
+                .currencyCode(currencyCode) //About currencies: https://developers.braintreepayments.com/reference/general/currencies //https://articles.braintreepayments.com/get-started/try-it-out#testing-currencies
                 .intent(PayPalRequest.INTENT_AUTHORIZE)
         PayPal.requestOneTimePayment(braintreeFragment, request)
     }
@@ -119,14 +124,20 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         Card.tokenize(braintreeFragment, cardBuilder)
     }
 
-    private fun prepareBraintreeFragment(token: String?) {
-        try {
-            braintreeFragment = BraintreeFragment.newInstance(this, token)
-            // braintreeFragment is ready to use
-        } catch (e: InvalidArgumentException) {
-            Timber.e(">>> Error while initializing braintree fragment")
-            // There was an issue with your authorization string.
-        }
+    /**
+     * Billing Agreement should be used if you want to perform recurring payments
+     * https://developers.braintreepayments.com/guides/paypal/vault/android/v2
+     * about billing agreements: https://developer.paypal.com/docs/integration/direct/billing-plans-and-agreements/
+     */
+    private fun startBillingAgreement() {
+        val amount = amountInput.text?.toString()
+        val currencyCode = currencyTextView.text.toString()
+        val request = PayPalRequest(amount)
+                .currencyCode(currencyCode)
+                .localeCode("US")
+                .billingAgreementDescription("Billing agreement description") // TODO: Which text should be here?
+
+        PayPal.requestBillingAgreement(braintreeFragment, request)
     }
 
     /**
@@ -137,16 +148,26 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
     }
 
     /**
-     * Billing Agreement should be used if you want to perform recurring payments
-     * https://developers.braintreepayments.com/guides/paypal/vault/android/v2
-     * about billing agreements: https://developer.paypal.com/docs/integration/direct/billing-plans-and-agreements/
+     * One-Time Checkouts are an easy way to create single transactions using PayPal
+     * (future payments will require login again)
+     * https://developers.braintreepayments.com/guides/paypal/checkout-with-paypal/android/v2#invoking-the-checkout-with-paypal-flow
      */
-    private fun startBillingAgreement() {
-        val request = PayPalRequest() //TODO: can we add amount and currency here?
-                .localeCode("US")
-                .billingAgreementDescription("Your agreement description")
+    private fun startExpressCheckout() {
+        val request = PayPalRequest(amountInput.text?.toString())
+                .currencyCode(currencyTextView.text?.toString())
+                .intent(PayPalRequest.INTENT_AUTHORIZE)
 
-        PayPal.requestBillingAgreement(braintreeFragment, request)
+        PayPal.requestOneTimePayment(braintreeFragment, request)
+    }
+
+    private fun prepareBraintreeFragment(token: String?) {
+        try {
+            braintreeFragment = BraintreeFragment.newInstance(this, token)
+            // braintreeFragment is ready to use
+        } catch (e: InvalidArgumentException) {
+            Timber.e(">>> Error while initializing braintree fragment")
+            // There was an issue with your authorization string.
+        }
     }
 
     private fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {
