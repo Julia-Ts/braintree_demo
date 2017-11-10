@@ -134,10 +134,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
      * about billing agreements: https://developer.paypal.com/docs/integration/direct/billing-plans-and-agreements/
      */
     private fun startBillingAgreement() {
-        val amount = amountInput.text?.toString()
-        val currencyCode = currencyTextView.text.toString()
-        val request = PayPalRequest(amount)
-                .currencyCode(currencyCode)
+        val request = PayPalRequest() //You should not specify here an amount in Billing Agreement flow (!) otherwise you will get an error as a result
                 .localeCode("US")
                 .billingAgreementDescription("Billing agreement description") // TODO: Which text should be here?
 
@@ -168,6 +165,9 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         try {
             braintreeFragment = BraintreeFragment.newInstance(this, token)
             // braintreeFragment is ready to use
+            payWithPayPalBtn.isEnabled = true
+            payOnceWithPayPalBtn.isEnabled = true
+            payWithCardBtn.isEnabled = true
         } catch (e: InvalidArgumentException) {
             Timber.e(">>> Error while initializing braintree fragment")
             // There was an issue with your authorization string.
