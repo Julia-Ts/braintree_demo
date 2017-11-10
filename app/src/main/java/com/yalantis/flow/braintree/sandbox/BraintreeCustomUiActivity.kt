@@ -116,7 +116,8 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         PayPal.requestOneTimePayment(braintreeFragment, request)
     }
 
-    fun payWithCreditCard(v: View) { //TODO: can we add amount and currency here?
+    fun payWithCreditCard(v: View) {
+        // It seems amount can be specified only on backend side https://developers.braintreepayments.com/guides/credit-cards/server-side/node
         Timber.d(">>> payment with credit card")
         val cardBuilder = CardBuilder()
                 .cardNumber(cardNumberInput.text?.toString())
@@ -180,7 +181,7 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
      * https://developers.braintreepayments.com/guides/paypal/vault/android/v2#collecting-device-data
      */
     private fun collectData() {
-        DataCollector.collectDeviceData(braintreeFragment, object: BraintreeResponseListener<String> {
+        DataCollector.collectDeviceData(braintreeFragment, object : BraintreeResponseListener<String> {
             override fun onResponse(deviceData: String?) {
                 //send device data to your server
                 //TODO: implement sending device data according to your server logic
