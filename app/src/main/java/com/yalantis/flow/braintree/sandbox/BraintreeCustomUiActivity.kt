@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.Card
+import com.braintreepayments.api.DataCollector
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
@@ -17,6 +18,7 @@ import com.yalantis.data.model.ClientToken
 import kotlinx.android.synthetic.main.activity_custom_ui_braintree.*
 import timber.log.Timber
 import com.braintreepayments.api.exceptions.ErrorWithResponse
+import com.braintreepayments.api.interfaces.BraintreeResponseListener
 import com.braintreepayments.api.models.PayPalRequest
 
 
@@ -51,6 +53,8 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
         val nonce = paymentMethodNonce.nonce
         Timber.d(">>> Payment nonce was created: " + nonce)
 
+        //Collect device data
+        collectData()
         // Nonce is sent to server here in order to create transaction
         presenter.createTransaction(nonce)
         presenter.saveLastPaymentAccountInfo(paymentMethodNonce)
@@ -168,6 +172,20 @@ class BraintreeCustomUiActivity : BaseActivity<BraintreeContract.Presenter>(), B
             Timber.e(">>> Error while initializing braintree fragment")
             // There was an issue with your authorization string.
         }
+    }
+
+    /**
+     * DataCollector enables you to collect data about a customer's device and correlate it with a session identifier on your server.
+     * Collecting device data from your customers is required when initiating non-recurring transactions from Vault records.
+     * https://developers.braintreepayments.com/guides/paypal/vault/android/v2#collecting-device-data
+     */
+    private fun collectData() {
+        DataCollector.collectDeviceData(braintreeFragment, object: BraintreeResponseListener<String> {
+            override fun onResponse(deviceData: String?) {
+                //send device data to your server
+                //TODO: implement sending device data according to your server logic
+            }
+        })
     }
 
     private fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {

@@ -57,6 +57,9 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
 
     private fun onBraintreeSubmit() {
         val dropInRequest = DropInRequest().clientToken(token)
+        //DataCollector enables you to collect data about a customer's device and correlate it with a session identifier on your server.
+        //https://developers.braintreepayments.com/guides/paypal/vault/android/v2#collecting-device-data
+        dropInRequest.collectDeviceData(true)
         startActivityForResult(dropInRequest.getIntent(this), REQUEST_BRAINTREE)
     }
 
@@ -69,6 +72,7 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
                     val paymentMethodNonce = result?.paymentMethodNonce
                     Timber.d(">>> payment result: " + paymentMethodNonce?.nonce)
                     displayPaymentInfo(paymentMethodNonce)
+                    sendDeviceData(result?.deviceData)
                     paymentMethodNonce?.let {
                         startTransaction(paymentMethodNonce)
                         presenter.saveLastPaymentAccountInfo(paymentMethodNonce)
@@ -89,7 +93,16 @@ class BraintreeDropUiActivity : BaseActivity<BraintreeContract.Presenter>(), Bra
         }
     }
 
-    fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {
+    /**
+     * Send the device data string response from Drop-in to your server to be included in verification or transaction requests
+     * Collecting device data from your customers is required when initiating non-recurring transactions from Vault records.
+     * https://developers.braintreepayments.com/guides/paypal/vault/android/v2#collecting-device-data
+     */
+    private fun sendDeviceData(deviceData: String?) {
+        //TODO: implement sending device data according to your server logic
+    }
+
+    private fun displayPaymentInfo(paymentMethodNonce: PaymentMethodNonce?) {
         var text = ""
         when (paymentMethodNonce) {
             is PayPalAccountNonce -> {
