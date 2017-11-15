@@ -13,8 +13,10 @@ object SharedPrefManager {
     private val USER_ID = "user_id"
     const val NAME = "sharedPrefs"
 
-    fun init(context: Context) {
-        CachedValue.initialize(context.getSharedPreferences(NAME, Context.MODE_PRIVATE))
+    fun init(context: Context?) {
+        context?.let {
+            CachedValue.initialize(context.getSharedPreferences(NAME, Context.MODE_PRIVATE))
+        }
     }
 
     var userAuthToken: String? by CachedValue(USER_TOKEN, "", String::class.java)

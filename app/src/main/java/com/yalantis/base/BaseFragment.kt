@@ -16,9 +16,9 @@ abstract class BaseFragment<out T : BasePresenter> : Fragment(), BaseView {
     abstract protected val layoutResourceId: Int
     abstract val fragmentTag: String
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater?.inflate(layoutResourceId, container, false)
+        val view = inflater.inflate(layoutResourceId, container, false)
         presenter.attachView(this)
         return view
     }

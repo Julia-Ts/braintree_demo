@@ -5,7 +5,7 @@ import android.support.annotation.StringRes
 
 interface BaseView {
 
-    fun getContext(): Context
+    fun getContext(): Context?
 
     fun showProgress()
 

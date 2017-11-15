@@ -22,13 +22,13 @@ def getDate() {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.yalantis"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -93,8 +93,8 @@ dependencies {
     kapt 'dk.ilios:realmfieldnameshelper:1.1.0'
 
     // Android
-    compile "com.android.support:appcompat-v7:$android_support"
-    compile "com.android.support:design:$android_support"
+    implementation "com.android.support:appcompat-v7:$android_support"
+    implementation "com.android.support:design:$android_support"
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -118,6 +118,9 @@ dependencies {
     }
 
     //Payments
+    compile 'com.stripe:stripe-android:6.0.0'
+
+
     compile 'com.braintreepayments.api:braintree:2.7.0'
     compile 'com.braintreepayments.api:drop-in:3.1.0'
     compile 'io.card:android-sdk:5.5.1'
